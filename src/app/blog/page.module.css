@@ -5,12 +5,13 @@
   margin-bottom: 50px;
 }
 
-.image{
-  object-fit: cover;
+.image {
+  object-fit: contain;
+  position: none;
 }
 
-.content {
-}
+
+
 
 .title{
   margin-bottom: 10px;
@@ -19,4 +20,10 @@
 .desc{
   font-size: 18px;
   color: #999;
+}
+
+.imageContainer {
+  flex: 1;
+  height: 200px;
+  position: relative;
 }
