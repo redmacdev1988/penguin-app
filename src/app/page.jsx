@@ -13,7 +13,7 @@ export default function Home() {
         <p className={styles.desc}>
           Divide and Conquer
         </p>
-        <Button url="/portfolio" text="Start Here"/>
+        <Button url="/tutorial" text="Start Here"/>
       </div>
       <div className={styles.item}>
         <Image src={Hero} alt="" className={styles.img} />

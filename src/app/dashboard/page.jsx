@@ -70,11 +70,22 @@ const Dashboard = () => {
   if (session.status === "authenticated") {
     return (
       <div className={styles.container}>
-        <h2>Session Status: {session && session.status}</h2>
-        <ul>
-        <li>name {session && session.data?.user.name}</li>
-        <li>email {session && session.data?.user.email}</li>
-      </ul>
+        
+        <form className={styles.new} onSubmit={handleSubmit}>
+          <h1>Add New Homework</h1>
+          <input type="text" placeholder="Title" className={styles.input} />
+          <input type="text" placeholder="Desc" className={styles.input} />
+          <input type="text" placeholder="Image" className={styles.input} />
+          <textarea
+            placeholder="Content"
+            className={styles.textArea}
+            cols="30"
+            rows="10"
+          ></textarea>
+          <button className={styles.button}>Send</button>
+        </form>
+
+        <h1>Your Homework</h1>
         <div className={styles.posts}>
           {isLoading
             ? "loading"
@@ -93,19 +104,7 @@ const Dashboard = () => {
                 </div>
               ))}
         </div>
-        <form className={styles.new} onSubmit={handleSubmit}>
-          <h1>Add New Post</h1>
-          <input type="text" placeholder="Title" className={styles.input} />
-          <input type="text" placeholder="Desc" className={styles.input} />
-          <input type="text" placeholder="Image" className={styles.input} />
-          <textarea
-            placeholder="Content"
-            className={styles.textArea}
-            cols="30"
-            rows="10"
-          ></textarea>
-          <button className={styles.button}>Send</button>
-        </form>
+       
       </div>
     );
   }

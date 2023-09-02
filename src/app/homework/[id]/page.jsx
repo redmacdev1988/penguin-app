@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getDataById(id) {
-  console.log('Get blog from : ', `http://localhost:3000/api/posts/${id}`)
+  console.log('Get homework from : ', `http://localhost:3000/api/posts/${id}`)
   const res = await fetch(`http://localhost:3000/api/posts/${id}`, {cache: "no-store"});
   return (!res.ok) ? notFound() : res.json();
 }
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const BlogPost = async ({ params }) => {
-  console.log('BlogPost', params);
+const HomeworkPost = async ({ params }) => {
+  console.log('HomeworkPost', params);
   const { id } = params;
   if (id) {
     const data = await getDataById(id);
@@ -32,7 +32,7 @@ const BlogPost = async ({ params }) => {
             <Image
               src={data.img}
               fill={true}
-              alt="Picture of the book"
+              alt=""
               className={styles.image}
             />
           </div>
@@ -47,8 +47,6 @@ const BlogPost = async ({ params }) => {
             <span className={styles.username}>{data.username}</span>
             </div>
 
-          
-
           </div>
           <div className={styles.content}>
             <p className={styles.text}>
@@ -60,43 +58,6 @@ const BlogPost = async ({ params }) => {
     );
   }
   
-  /*
-  return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.info}>
-          <h1 className={styles.title}>{data.title}</h1>
-          <p className={styles.desc}>
-            {data.desc}
-          </p>
-          <div className={styles.author}>
-            <Image
-              src={data.img}
-              alt=""
-              width={40}
-              height={40}
-              className={styles.avatar}
-            />
-            <span className={styles.username}>{data.username}</span>
-          </div>
-        </div>
-        <div className={styles.imageContainer}>
-          <Image
-            src={data.img}
-            alt=""
-            fill={true}
-            className={styles.image}
-          />
-        </div>
-      </div>
-      <div className={styles.content}>
-        <p className={styles.text}>
-         {data.content}
-        </p>
-      </div>
-    </div>
-  );
-  */
 };
 
-export default BlogPost;
+export default HomeworkPost;

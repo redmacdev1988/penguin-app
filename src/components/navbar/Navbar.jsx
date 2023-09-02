@@ -15,13 +15,13 @@ const links = [
     },
     {
       id: 2,
-      title: "Portfolio",
-      url: "/portfolio",
+      title: "Tutorial",
+      url: "/tutorial",
     },
     {
       id: 3,
-      title: "Blog",
-      url: "/blog",
+      title: "Homework",
+      url: "/homework",
     },
     {
       id: 4,
