@@ -14,11 +14,6 @@ const Register = () => {
     const name = e.target[0].value;
     const email = e.target[1].value;
     const password = e.target[2].value;
-
-    console.log('You have entered', `${name}, ${email}, ${password}`);
-
-  // calls api/auth/register's route.js
-
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",

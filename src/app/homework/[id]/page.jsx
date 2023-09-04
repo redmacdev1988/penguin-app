@@ -18,26 +18,22 @@ export async function generateMetadata({ params }) {
 }
 
 const HomeworkPost = async ({ params }) => {
-  console.log('HomeworkPost', params);
   const { id } = params;
   if (id) {
     const data = await getDataById(id);
-    console.log('data', data);
-    
     return (
       <div className={styles.container}>
         <div className={styles.top}>
 
         <div className={styles.imageContainer}>
-            <Image
-              src={data.img}
-              fill={true}
-              alt=""
-              className={styles.image}
-            />
-          </div>
+          <Image
+            src={data.img}
+            fill={true}
+            alt=""
+            className={styles.image}
+          />
+        </div>
 
-          
           <div className={styles.info}>
             <h1 className={styles.title}>{data.title}</h1>
             <p className={styles.desc}>

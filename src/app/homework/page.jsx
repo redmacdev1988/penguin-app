@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
@@ -18,13 +18,17 @@ const Homework = () => {
     fetcher
   );
 
-  if (session.status === "loading") {
-    return <p>Loading...</p>;
-  }
+  useEffect(() => {
+    if (session.status === "loading") {
+      return <p>Loading...</p>;
+    }
+  
+    if (session.status === "unauthenticated") {
+      localStorage.setItem("fromUrl", "homework");
+      router?.push("/dashboard/login");
+    }
+  }, [session]);
 
-  if (session.status === "unauthenticated") {
-    router?.push("/dashboard/login");
-  }
 
   if (session.status === "authenticated") {
     return (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
@@ -17,19 +17,27 @@ const Dashboard = () => {
     fetcher
   );
 
-  console.log(data);
+  // if (session.status === "loading") {
+  //   return <p>Loading...</p>;
+  // }
 
+  // if (session.status === "unauthenticated") {
+  //   router?.push("/dashboard/login");
+  // }
 
-  if (session.status === "loading") {
-    return <p>Loading...</p>;
-  }
+  useEffect(() => {
+    if (session.status === "loading") {
+      return <p>Loading...</p>;
+    }
+  
+    if (session.status === "unauthenticated") {
+      localStorage.setItem("fromUrl", "homework");
+      router?.push("/dashboard/login");
+    }
+  }, [session]);
 
-  if (session.status === "unauthenticated") {
-    router?.push("/dashboard/login");
-  }
 
   const handleSubmit = async (e) => {
-    console.log('click handler for Create Post');
     e.preventDefault();
     const title = e.target[0].value;
     const desc = e.target[1].value;
@@ -55,8 +63,6 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    console.log('Delete Post handler clicked');
-
     try {
       await fetch(`/api/posts/${id}`, {
         method: "DELETE",
@@ -70,22 +76,16 @@ const Dashboard = () => {
   if (session.status === "authenticated") {
     return (
       <div className={styles.container}>
-        
         <form className={styles.new} onSubmit={handleSubmit}>
           <h1>Add New Homework</h1>
           <input type="text" placeholder="Title" className={styles.input} />
           <input type="text" placeholder="Desc" className={styles.input} />
           <input type="text" placeholder="Image" className={styles.input} />
-          <textarea
-            placeholder="Content"
-            className={styles.textArea}
-            cols="30"
-            rows="10"
-          ></textarea>
+          <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
           <button className={styles.button}>Send</button>
         </form>
 
-        <h1>Your Homework</h1>
+        <h1>Your Past Homework</h1>
         <div className={styles.posts}>
           {isLoading
             ? "loading"
@@ -95,16 +95,10 @@ const Dashboard = () => {
                     <Image src={post.img} alt="" width={200} height={100} />
                   </div>
                   <h2 className={styles.postTitle}>{post.title}</h2>
-                  <span
-                    className={styles.delete}
-                    onClick={() => handleDelete(post._id)}
-                  >
-                    Delete
-                  </span>
+                  <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
                 </div>
               ))}
         </div>
-       
       </div>
     );
   }

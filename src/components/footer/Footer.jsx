@@ -5,7 +5,6 @@ import styles from "./footer.module.css";
 import Image from "next/image";
 
 const Footer = () => {
-    console.log('------------------- hello ------------------');
     return (
       <div className={styles.container}>
         <div>©2023 RickyABC. All rights reserved.</div>

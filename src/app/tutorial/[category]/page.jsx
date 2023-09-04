@@ -6,9 +6,7 @@ import { items } from "./data.js";
 import { notFound } from "next/navigation";
 
 const getData = (cat) => {
-  console.log('getData', cat);
   const data = items[cat];
-  console.log('getData - data',data);
   if (data) {
     return data;
   }
