@@ -12,30 +12,25 @@ const Login = ({ from }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   
-
   useEffect(() => {
+    console.log('useEffect dashboard/login', 'params')  
     setError(params.get("error"));
-  setSuccess(params.get("success"));
+    setSuccess(params.get("success"));
   }, [params]);
 
-  // if (session.status === "loading") {
-  //   return <p>Loading...</p>;
-  // }
-
-  // if (session.status === "authenticated") {
-  //   router?.push("/dashboard");
-  // }
-
   useEffect(() => {
+    console.log('useEffect dashboard/login')
     if (session.status === "loading") {
       return <p>Loading...</p>;
     }
-  
     if (session.status === "unauthenticated") {
-      localStorage.setItem("fromUrl", "homework");
-      router?.push("/dashboard");
+      // should not push routert! we stay here!!!!!
+      // router?.push("/dashboard");
     }
-  }, [session]);
+  }, [session.status]);
+
+  
+
 
   const handleSubmit = (e) => {
     const fromUrl = localStorage.getItem("fromUrl");
@@ -53,12 +48,15 @@ const Login = ({ from }) => {
       <h2 className={styles.subtitle}>Please sign in to see the dashboard.</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
+          id ="email"
           type="text"
           placeholder="Email"
           required
+          autoComplete="on"
           className={styles.input}
         />
         <input
+        id="password"
           type="password"
           placeholder="Password"
           required

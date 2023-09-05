@@ -11,20 +11,14 @@ const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
 
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const { data, mutate, error, isLoading } = useSWR(
-    `/api/posts?username=${session?.data?.user.name}`,
-    fetcher
-  );
-
-  // if (session.status === "loading") {
-  //   return <p>Loading...</p>;
-  // }
-
-  // if (session.status === "unauthenticated") {
-  //   router?.push("/dashboard/login");
-  // }
-
+  if (session && session?.data?.user.name) {
+    const fetcher = (...args) => fetch(...args).then((res) => res.json());
+    const { data, mutate, error, isLoading } = useSWR(
+      `/api/posts?username=${session?.data?.user.name}`,
+      fetcher
+    );
+  }
+  
   useEffect(() => {
     if (session.status === "loading") {
       return <p>Loading...</p>;
@@ -34,8 +28,37 @@ const Dashboard = () => {
       localStorage.setItem("fromUrl", "homework");
       router?.push("/dashboard/login");
     }
-  }, [session]);
 
+    if (session.status === "authenticated") {
+      return (
+        <div className={styles.container}>
+          <form className={styles.new} onSubmit={handleSubmit}>
+            <h1>Add New Homework</h1>
+            <input type="text" placeholder="Title" className={styles.input} />
+            <input type="text" placeholder="Desc" className={styles.input} />
+            <input type="text" placeholder="Image" className={styles.input} />
+            <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
+            <button className={styles.button}>Send</button>
+          </form>
+  
+          <h1>Your Past Homework</h1>
+          <div className={styles.posts}>
+            {isLoading
+              ? "loading"
+              : data?.map((post) => (
+                  <div className={styles.post} key={post._id}>
+                    <div className={styles.imgContainer}>
+                      <Image src={post.img} alt="" width={200} height={100} />
+                    </div>
+                    <h2 className={styles.postTitle}>{post.title}</h2>
+                    <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
+                  </div>
+                ))}
+          </div>
+        </div>
+      );
+    }
+  }, [session.status]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,35 +96,7 @@ const Dashboard = () => {
     }
   };
 
-  if (session.status === "authenticated") {
-    return (
-      <div className={styles.container}>
-        <form className={styles.new} onSubmit={handleSubmit}>
-          <h1>Add New Homework</h1>
-          <input type="text" placeholder="Title" className={styles.input} />
-          <input type="text" placeholder="Desc" className={styles.input} />
-          <input type="text" placeholder="Image" className={styles.input} />
-          <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
-          <button className={styles.button}>Send</button>
-        </form>
-
-        <h1>Your Past Homework</h1>
-        <div className={styles.posts}>
-          {isLoading
-            ? "loading"
-            : data?.map((post) => (
-                <div className={styles.post} key={post._id}>
-                  <div className={styles.imgContainer}>
-                    <Image src={post.img} alt="" width={200} height={100} />
-                  </div>
-                  <h2 className={styles.postTitle}>{post.title}</h2>
-                  <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
-                </div>
-              ))}
-        </div>
-      </div>
-    );
-  }
+ 
 };
 
 export default Dashboard;
