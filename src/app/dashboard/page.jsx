@@ -18,14 +18,14 @@ const Dashboard = () => {
       fetcher
     );
   }
-  
+
   useEffect(() => {
     if (session.status === "loading") {
       return <p>Loading...</p>;
     }
   
     if (session.status === "unauthenticated") {
-      localStorage.setItem("fromUrl", "homework");
+      console.log('dashboard unauthenticated, going to /dashboard/login');
       router?.push("/dashboard/login");
     }
 

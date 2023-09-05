@@ -1,47 +1,39 @@
 
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const Homework = () => {
+const loadingHTML = () => {
+  return <p>Loading...</p>;
+}
 
+const Homework = () => {
   const session = useSession();
   const router = useRouter();
+  const [node, setNode] = useState();
 
-  if (session && session?.data?.user.name) {
-    const fetcher = (...args) => fetch(...args).then((res) => res.json());
-    const { data, mutate, error, isLoading } = useSWR(
-      `/api/posts?username=${session?.data?.user.name}`,
-      fetcher
-    );
-  }
-  
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, mutate, error, isLoading } = useSWR(
+    `/api/posts?username=${session?.data?.user.name}`,
+    fetcher
+  );
 
-  useEffect(() => {
+  console.log('session', session && session?.data?.user.name);
+  console.log('data is: ', data);
 
-    if (session.status === "loading") {
-      return <p>Loading...</p>;
-    }
-  
-    if (session.status === "unauthenticated") {
-      console.log('UNauthenticated!!!!');
-
-      // localStorage.setItem("fromUrl", "homework");
-      router?.push("/dashboard/login");
-    }
-
-    if (session.status === "authenticated") {
-      return (
-        <div className={styles.container}>
-          <h1>Your Homework</h1>
-          <div className={styles.mainContainer}>
-            {data && data.map((item) => (
-              <div>
-                <div className={styles.imageContainer}>
+  const authenticatedHTML = () => {
+    return (
+      <div className={styles.container}>
+        <h1>Your Homework</h1>
+        <div className={styles.mainContainer}>
+          <ul>
+          {data && data.map((item) => (
+            <li key={item.title} style={{border: '1px solid red', padding: '10px'}}>
+              <div className={styles.imageContainer}>
                 <Image
                   src={item.img}
                   alt=""
@@ -49,28 +41,42 @@ const Homework = () => {
                   className={styles.image}
                 />
               </div>
-            <a href={`/homework/${item._id}`} className={styles.container} key={item.id}>
-              
-              <div className={styles.content}>
-                <h1 className={styles.title}>{item.title}</h1>
-                <p className={styles.desc}>{item.desc}</p>
-              </div>
-              
-            </a>
-          </div>
+              <a href={`/homework/${item._id}`} className={styles.container} key={item.id}>
+                <div className={styles.content}>
+                  <h1 className={styles.title}>{item.title}</h1>
+                  <p className={styles.desc}>{item.desc}</p>
+                </div>
+              </a>
+            </li>
           ))}
-          </div>
-         
+          </ul>
         </div>
-      );
+      </div>
+    );
+  }
+  
+  useEffect(() => {
+    console.log('data has changed', data);
+    setNode(authenticatedHTML());
+  }, [data]);
+
+  useEffect(() => {
+    if (session.status === "loading") {
+      setNode(loadingHTML);
+    }
+  
+    if (session.status === "unauthenticated") {
+      console.log('UNauthenticated!!!!');
+      localStorage.setItem("fromUrl", "homework");
+      router?.push("/dashboard/login");
+    }
+
+    if (session.status === "authenticated") {
+      setNode(authenticatedHTML());
     } 
-    
   }, [session.status]);
 
-    
-
-
-
+    return (node);
 };
 
 export default Homework;

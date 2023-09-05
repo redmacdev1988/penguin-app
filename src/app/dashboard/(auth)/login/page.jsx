@@ -13,19 +13,25 @@ const Login = ({ from }) => {
   const [success, setSuccess] = useState("");
   
   useEffect(() => {
-    console.log('useEffect dashboard/login', 'params')  
+    console.log('useEffect dashboard/login', params);
     setError(params.get("error"));
     setSuccess(params.get("success"));
   }, [params]);
 
   useEffect(() => {
-    console.log('useEffect dashboard/login')
+    console.log('useEffect dashboard/login', session.status);
+
     if (session.status === "loading") {
-      return <p>Loading...</p>;
+      console.log('here!');
     }
-    if (session.status === "unauthenticated") {
-      // should not push routert! we stay here!!!!!
-      // router?.push("/dashboard");
+    else if (session.status === "unauthenticated") {
+      console.log('dashboard/login unauthenticated!!!!!!!!!!!!!!!!!!!!!!!');
+    }
+    else if (session.status === "authenticated") {
+      console.log('dashboard/login AUTHENTICATED');
+      const fromUrl = localStorage.getItem("fromUrl");
+      console.log('fromUrl=====>', fromUrl);
+      router?.push("/tutorial");
     }
   }, [session.status]);
 
