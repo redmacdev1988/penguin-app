@@ -1,3 +1,5 @@
+# This is a sample app where students can create accounts, log in, look at tutorials, and turn in homework.
+
 
 # 20:06
 
