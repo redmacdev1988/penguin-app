@@ -22,9 +22,6 @@ const Homework = () => {
     fetcher
   );
 
-  console.log('session', session && session?.data?.user.name);
-  console.log('data is: ', data);
-
   const authenticatedHTML = () => {
     return (
       <div className={styles.container}>

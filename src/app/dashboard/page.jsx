@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
@@ -10,18 +10,64 @@ const Dashboard = () => {
 
   const session = useSession();
   const router = useRouter();
+  const [node, setNode] = useState();
 
-  if (session && session?.data?.user.name) {
-    const fetcher = (...args) => fetch(...args).then((res) => res.json());
-    const { data, mutate, error, isLoading } = useSWR(
-      `/api/posts?username=${session?.data?.user.name}`,
-      fetcher
+  console.log(session?.data?.user.name);
+
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, mutate, error, isLoading } = useSWR(
+    `/api/posts?username=${session?.data?.user.name}`,
+    fetcher
+  );  
+
+  console.log('Dashboard', data);
+
+  
+
+  const loadingHTML = () => {
+    return (<p>Loading...</p>);
+  }
+  const authenticatedHTML = () => {
+    return (
+      <div className={styles.container}>
+        <form className={styles.new} onSubmit={handleSubmit}>
+          <h1>Add New Homework</h1>
+          <input type="text" placeholder="Title" className={styles.input} />
+          <input type="text" placeholder="Desc" className={styles.input} />
+          <input type="text" placeholder="Image" className={styles.input} />
+          <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
+          <button className={styles.button}>Send</button>
+        </form>
+
+        <h1>Your Past Homework</h1>
+        <div className={styles.posts}>
+          <ul>
+          {isLoading
+            ? "loading"
+            : data?.map((post) => (
+                <li className={styles.post} key={post._id}>
+                  <div className={styles.imgContainer}>
+                    <Image src={post.img} alt="" width={200} height={100} />
+                  </div>
+                  <h2 className={styles.postTitle}>{post.title}</h2>
+                  <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </div>
     );
   }
 
+  // when the data is updated, we need to re-render the react node
+  useEffect(() => {
+    setNode(authenticatedHTML);
+  }, [data])
+
   useEffect(() => {
     if (session.status === "loading") {
-      return <p>Loading...</p>;
+      setNode(loadingHTML);
     }
   
     if (session.status === "unauthenticated") {
@@ -30,33 +76,7 @@ const Dashboard = () => {
     }
 
     if (session.status === "authenticated") {
-      return (
-        <div className={styles.container}>
-          <form className={styles.new} onSubmit={handleSubmit}>
-            <h1>Add New Homework</h1>
-            <input type="text" placeholder="Title" className={styles.input} />
-            <input type="text" placeholder="Desc" className={styles.input} />
-            <input type="text" placeholder="Image" className={styles.input} />
-            <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
-            <button className={styles.button}>Send</button>
-          </form>
-  
-          <h1>Your Past Homework</h1>
-          <div className={styles.posts}>
-            {isLoading
-              ? "loading"
-              : data?.map((post) => (
-                  <div className={styles.post} key={post._id}>
-                    <div className={styles.imgContainer}>
-                      <Image src={post.img} alt="" width={200} height={100} />
-                    </div>
-                    <h2 className={styles.postTitle}>{post.title}</h2>
-                    <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
-                  </div>
-                ))}
-          </div>
-        </div>
-      );
+        setNode(authenticatedHTML);
     }
   }, [session.status]);
 
@@ -97,6 +117,7 @@ const Dashboard = () => {
   };
 
  
+  return (node);
 };
 
 export default Dashboard;
