@@ -29,7 +29,7 @@ const Homework = () => {
         <div className={styles.mainContainer}>
           <ul>
           {data && data.map((item) => (
-            <li key={item.title} style={{border: '1px solid red', padding: '10px'}}>
+            <li key={item.title}>
               <div className={styles.imageContainer}>
                 <Image
                   src={item.img}

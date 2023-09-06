@@ -15,7 +15,7 @@ export const metadata = {
         <div className={styles.content}>
           <div className={styles.imgContainer}>
             <Image
-              src="/contact.png"
+              src="/contact-us.png"
               alt=""
               fill={true}
               className={styles.image}
