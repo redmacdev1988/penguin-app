@@ -31,12 +31,9 @@ const Login = ({ from }) => {
       console.log('dashboard/login AUTHENTICATED');
       const fromUrl = localStorage.getItem("fromUrl");
       console.log('fromUrl=====>', fromUrl);
-      router?.push("/tutorial");
+      router?.push(`/${fromUrl}`);
     }
   }, [session.status]);
-
-  
-
 
   const handleSubmit = (e) => {
     const fromUrl = localStorage.getItem("fromUrl");

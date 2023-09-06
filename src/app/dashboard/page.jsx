@@ -72,6 +72,7 @@ const Dashboard = () => {
   
     if (session.status === "unauthenticated") {
       console.log('dashboard unauthenticated, going to /dashboard/login');
+      localStorage.setItem("fromUrl", "dashboard");
       router?.push("/dashboard/login");
     }
 
