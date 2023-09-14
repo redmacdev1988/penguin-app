@@ -72,6 +72,10 @@ const createArray = (length) => {
   return arr;
 }
 
+// note RESULTS_PER_PAGE
+// totalPages - # of pages (links at the bottom)
+// totalItems - # of items
+
 
 const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalItems) => {
   if (!data) { return (<h1>No Data</h1>); }
@@ -97,7 +101,7 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
     {pageIndex <= 1 ? <></> : <button onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>}
     <ul style={{display:'flex', flexDirection: 'row'}}>
       {pageArr.map((item, index) => {
-        return <li key={item+index}><button onClick={() => {}}>Page {item}</button></li>
+        return <li key={item+index}><button onClick={() => setPageIndex(index * RESULTS_PER_PAGE + 1)}>Page {item}</button></li>
       })}
     </ul>
     {pageIndex >= totalPages ? <></> : <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button> }
@@ -131,6 +135,8 @@ const TutorialList = () => {
   */
 
   useEffect(() => {
+    console.log('AAAA');
+
     fetch(`https://chineseruleof8.com/wp-json/wp/v2/posts?categories=48&page=${page}&per_page=${RESULTS_PER_PAGE}&Authorization=BearerJ7Kcu42AoGxne4tQVwPcjtxh`)
       .then((res) => { 
         console.log('x-wp-total', res.headers.get('x-wp-total'));
@@ -144,13 +150,15 @@ const TutorialList = () => {
           console.log('received data: ', data);
           setTutorialsData(data);
       });
-  }, [])
+
+  }, [page])
 
 
   useEffect(() => {
-    console.log('tutorialsData has been updated. totalPages: ', totalPages);
+    console.log('You are on page: ', page);
     setNode(renderPaginatedData(tutorialsData, page, setPage, totalPages, totalItems));
   }, [tutorialsData, page]);
+
 
   /*
   useEffect(() => {
