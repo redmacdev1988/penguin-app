@@ -29,7 +29,7 @@ const Homework = () => {
         <div className={styles.mainContainer}>
           <ul>
           {data && data.map((item) => (
-            <li key={item.title}>
+            <li key={item._id}>
               <div className={styles.imageContainer}>
                 <Image
                   src={item.img}
@@ -59,7 +59,7 @@ const Homework = () => {
 
   useEffect(() => {
     if (session.status === "loading") {
-      setNode(loadingHTML);
+      setNode(loadingHTML());
     }
   
     if (session.status === "unauthenticated") {

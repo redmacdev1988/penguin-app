@@ -10,28 +10,15 @@ const handler = NextAuth({
       id: "credentials",
       name: "Credentials",
       async authorize(credentials) {
-
-        console.log('credentials came through: ', credentials);
-
-        //Check if the user exists.
         await connect();
-
         try {
-          const user = await User.findOne({
-            email: credentials.email,
-          });
-
+          const user = await User.findOne({email: credentials.email});
           if (user) {
-            const isPasswordCorrect =  await bcrypt.compare(
+            const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
             );
-
-            if (isPasswordCorrect) {
-              return user;
-            } else {
-              throw new Error("Wrong Credentials!");
-            }
+            return (isPasswordCorrect) ? user : new Error("Wrong Credentials");
           } else {
             throw new Error("User not found!");
           }

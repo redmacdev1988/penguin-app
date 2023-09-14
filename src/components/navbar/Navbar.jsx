@@ -16,7 +16,7 @@ const links = [
     },
     {
       id: 2,
-      title: "Tutorial",
+      title: "Tutorials",
       url: "/tutorial",
     },
     {
@@ -44,10 +44,7 @@ const links = [
 export const Navbar = () => {
   const { toggle, mode } = useContext(ThemeContext);
   const session = useSession();
-  console.log('Navbar session', session);
-
   const username = session && session?.data?.user?.name || "";
-
   return (
     <div className={styles.container}>
         <Link href="/" className={styles.logo}>
@@ -69,7 +66,10 @@ export const Navbar = () => {
         </div>
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
-          <button className={styles.logout} onClick={signOut}>
+          <button className={styles.logout} onClick={() => { 
+            localStorage.setItem("refetchTutorials", "refetch");
+            signOut(); 
+          }}>
             Logout
           </button>
         )}

@@ -30,15 +30,11 @@ const Login = ({ from }) => {
     else if (session.status === "authenticated") {
       console.log('dashboard/login AUTHENTICATED');
       const fromUrl = localStorage.getItem("fromUrl");
-      console.log('fromUrl=====>', fromUrl);
       router?.push(`/${fromUrl}`);
     }
   }, [session.status]);
 
   const handleSubmit = (e) => {
-    const fromUrl = localStorage.getItem("fromUrl");
-    console.log('=========>', fromUrl);
-
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
@@ -47,6 +43,7 @@ const Login = ({ from }) => {
 
   return (
     <div className={styles.container}>
+     
       <h1 className={styles.title}>{success ? success : "Welcome Back"}</h1>
       <h2 className={styles.subtitle}>Please sign in to see the dashboard.</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
