@@ -7,6 +7,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import styles from "./navbar.module.css";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { signOut, useSession } from "next-auth/react";
+import { deleteTutorialsInDB } from "@/app/tutorial/page";
 
 const links = [
     {
@@ -67,7 +68,9 @@ export const Navbar = () => {
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
           <button className={styles.logout} onClick={() => { 
-            localStorage.setItem("refetchTutorials", "refetch");
+            localStorage.setItem("cacheTutorials", JSON.stringify([false, false, false]));
+            localStorage.setItem('shouldCacheTutorials', 'yes');
+            localStorage.setItem('shouldCacheTutorials', Date.now());
             signOut(); 
           }}>
             Logout

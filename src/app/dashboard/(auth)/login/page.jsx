@@ -4,6 +4,11 @@ import styles from "./page.module.css";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { initLocalStorageForTut } from '@/app/tutorial/page';
+
+const cacheTutPropMissing = () => {
+  return !localStorage.getItem('cacheTimeStamp') || !localStorage.getItem('cacheTutorials') || !localStorage.getItem('shouldCacheTutorials');
+}
 
 const Login = ({ from }) => {
   const session = useSession();
@@ -29,6 +34,13 @@ const Login = ({ from }) => {
     }
     else if (session.status === "authenticated") {
       console.log('dashboard/login AUTHENTICATED');
+
+      // we need to check for tutorial cache
+      if (cacheTutPropMissing()) {
+        console.log('local storage variables initiated for Tutorials √')
+        initLocalStorageForTut();
+      } 
+
       const fromUrl = localStorage.getItem("fromUrl");
       router?.push(`/${fromUrl}`);
     }
