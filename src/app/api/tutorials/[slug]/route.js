@@ -10,6 +10,7 @@ import Tutorial from "@/models/Tutorial";
 
 
 export const GET = async (request, { params }) => {
+    debugger
     const { slug } = params;
     await connect();
     const tutorial = await Tutorial.findOne({slug});

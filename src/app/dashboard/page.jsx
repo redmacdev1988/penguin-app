@@ -83,11 +83,13 @@ const Dashboard = () => {
     }
 
     if (session.status === "authenticated") {
+        debugger
         setNode(authenticatedHTML());
     }
   }, [session.status]);
 
   const handleSubmit = async (e) => {
+    debugger
     console.log('handle submit..................');
     e.preventDefault();
     const title = e.target[0].value;

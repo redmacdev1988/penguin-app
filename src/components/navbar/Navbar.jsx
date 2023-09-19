@@ -70,6 +70,7 @@ export const Navbar = () => {
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
           <button className={styles.logout} onClick={() => { 
+            debugger
             localStorage.setItem(csCacheTutorials, JSON.stringify([false, false, false]));
             localStorage.setItem(csShouldCacheTutorials, 'yes');
             localStorage.setItem(csCacheTimeStamp, Date.now());

@@ -24,6 +24,11 @@ export const DELETE = async (request) => {
 export const POST = async (request) => {
     const body = await request.json();
     const { content: arrayOfContents } = body;
+    if (!arrayOfContents) {
+      console.log('no array of contents in body', body);
+      return;
+    }
+    
     console.log(' ------ array of tutorials ------- ', arrayOfContents.length);
 
     let error;
