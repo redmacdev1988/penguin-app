@@ -1,17 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { GlobalContext } from "@/context/GlobalContext";
 
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
   const [node, setNode] = useState();
-
-  console.log('---> session name: ', session?.data?.user.name);
+  const { csFromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const { data, mutate, error, isLoading } = useSWR(
@@ -76,7 +76,9 @@ const Dashboard = () => {
     }
   
     if (session.status === "unauthenticated") {
-      localStorage.setItem("fromUrl", "dashboard");
+      console.log('csFromUrl: ', csFromUrl);
+
+      localStorage.setItem(csFromUrl, "dashboard");
       router?.push("/dashboard/login");
     }
 

@@ -4,10 +4,10 @@
 import Link from 'next/link'
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
+import { GlobalContext } from "../../context/GlobalContext";
 import styles from "./navbar.module.css";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { signOut, useSession } from "next-auth/react";
-import { deleteTutorialsInDB } from "@/app/tutorial/page";
 
 const links = [
     {
@@ -43,7 +43,9 @@ const links = [
   ];
 
 export const Navbar = () => {
-  const { toggle, mode } = useContext(ThemeContext);
+  const { mode } = useContext(ThemeContext);
+  const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
+
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
   return (
@@ -68,9 +70,9 @@ export const Navbar = () => {
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
           <button className={styles.logout} onClick={() => { 
-            localStorage.setItem("cacheTutorials", JSON.stringify([false, false, false]));
-            localStorage.setItem('shouldCacheTutorials', 'yes');
-            localStorage.setItem('shouldCacheTutorials', Date.now());
+            localStorage.setItem(csCacheTutorials, JSON.stringify([false, false, false]));
+            localStorage.setItem(csShouldCacheTutorials, 'yes');
+            localStorage.setItem(csCacheTimeStamp, Date.now());
             signOut(); 
           }}>
             Logout

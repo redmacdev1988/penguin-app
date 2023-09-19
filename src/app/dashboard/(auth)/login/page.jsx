@@ -1,13 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { initLocalStorageForTut } from '@/app/tutorial/page';
+import { GlobalContext } from '@/context/GlobalContext';
 
-const cacheTutPropMissing = () => {
-  return !localStorage.getItem('cacheTimeStamp') || !localStorage.getItem('cacheTutorials') || !localStorage.getItem('shouldCacheTutorials');
+const cacheTutPropMissing = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
+  return !localStorage.getItem(csCacheTimeStamp) || !localStorage.getItem(csCacheTutorials) || !localStorage.getItem(csShouldCacheTutorials);
 }
 
 const Login = ({ from }) => {
@@ -16,6 +17,7 @@ const Login = ({ from }) => {
   const params = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   
   useEffect(() => {
     console.log('useEffect dashboard/login', params);
@@ -24,7 +26,6 @@ const Login = ({ from }) => {
   }, [params]);
 
   useEffect(() => {
-    console.log('useEffect dashboard/login', session.status);
 
     if (session.status === "loading") {
       console.log('here!');
@@ -36,12 +37,12 @@ const Login = ({ from }) => {
       console.log('dashboard/login AUTHENTICATED');
 
       // we need to check for tutorial cache
-      if (cacheTutPropMissing()) {
+      if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
         console.log('local storage variables initiated for Tutorials √')
         initLocalStorageForTut();
       } 
 
-      const fromUrl = localStorage.getItem("fromUrl");
+      const fromUrl = localStorage.getItem(csFromUrl);
       router?.push(`/${fromUrl}`);
     }
   }, [session.status]);

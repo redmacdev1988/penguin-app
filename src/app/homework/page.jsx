@@ -1,11 +1,12 @@
 
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const loadingHTML = () => {
   return <p>Loading...</p>;
@@ -15,9 +16,10 @@ const Homework = () => {
   const session = useSession();
   const router = useRouter();
   const [node, setNode] = useState();
+  const { csFromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const { data, mutate, error, isLoading } = useSWR(
+  const { data } = useSWR(
     `/api/posts?username=${session?.data?.user.name}`,
     fetcher
   );
@@ -53,7 +55,6 @@ const Homework = () => {
   }
   
   useEffect(() => {
-    console.log('data has changed', data);
     setNode(authenticatedHTML());
   }, [data]);
 
@@ -63,8 +64,8 @@ const Homework = () => {
     }
   
     if (session.status === "unauthenticated") {
-      console.log('UNauthenticated!!!!');
-      localStorage.setItem("fromUrl", "homework");
+      console.log('csFromUrl: ', csFromUrl);
+      localStorage.setItem(csFromUrl, "homework");
       router?.push("/dashboard/login");
     }
 

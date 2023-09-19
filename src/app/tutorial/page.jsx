@@ -1,8 +1,9 @@
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import styles from "./page.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const RESULTS_PER_PAGE = 8;
 const HOURS = 8;
@@ -14,7 +15,6 @@ const loadingObj = () => {
 const createHref = (slug) => {
   return "/tutorial/" + slug;
 }
-
 
 export const deleteTutorialsInDB = async () => {
   try {
@@ -30,7 +30,7 @@ export const deleteTutorialsInDB = async () => {
 }
 
 export const cacheTutorialContents = async (data) => {
-  console.log(`cacheTutorialContents: ${data.length} # of contents`, data.length);
+
   try {
     return await fetch("/api/tutorials", {
         method: "POST",
@@ -66,9 +66,7 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
         {data && data.map((item) => (
           <li key={item.id}>
             <h2>{item.title?.rendered}</h2>
-            <a href={createHref(item.slug)} key={item.id}>
-              read more
-            </a>
+            <a href={createHref(item.slug)} key={item.id}>read more</a>
           </li>
         ))}
       </ul>
@@ -88,29 +86,22 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
   )
 }
 
-// ref - https://stackoverflow.com/questions/59803923/how-to-get-response-headers-from-wp-rest-api-in-next-js
-
-
 const withinHours = (timestamp) => (Math.floor((Date.now() - timestamp)/1000) < HOURS * 3600);
 
-export const initLocalStorageForTut = () => {
-  localStorage.setItem('cacheTimeStamp', Date.now());
-  localStorage.setItem("cacheTutorials", JSON.stringify([false, false, false]));
-  localStorage.setItem('shouldCacheTutorials', 'yes');
+export const initLocalStorageForTut = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
+  localStorage.setItem(csCacheTimeStamp, Date.now());
+  localStorage.setItem(csCacheTutorials, JSON.stringify([false, false, false]));
+  localStorage.setItem(csShouldCacheTutorials, 'yes');
 }
 
-
-// returns true if:
-// 1) should cache flag has been turned to no
-// 2) last cache timestamp has been within our TIME limit
-const alreadyCachedWithinHours = () => {
-  const strShouldCache = localStorage.getItem('shouldCacheTutorials');
-  const lastCacheTimeStamp = localStorage.getItem('cacheTimeStamp');
+const alreadyCachedWithinHours = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
+  const strShouldCache = localStorage.getItem(csShouldCacheTutorials);
+  const lastCacheTimeStamp = localStorage.getItem(csCacheTimeStamp);
   const bWithinHours = withinHours(lastCacheTimeStamp);
 
   if (!bWithinHours) {
     deleteTutorialsInDB();
-    initLocalStorageForTut();
+    initLocalStorageForTut(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials);
   }
 
   return (strShouldCache === 'no' && bWithinHours);
@@ -118,6 +109,13 @@ const alreadyCachedWithinHours = () => {
 
 const TutorialList = () => {
   
+  const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
+
+  console.log('csCacheTimeStamp', csCacheTimeStamp);
+  console.log('csCacheTutorials', csCacheTutorials);
+  console.log('csShouldCacheTutorials', csShouldCacheTutorials);
+  console.log('csFromUrl', csFromUrl);
+
   const session = useSession();
   const router = useRouter();
 
@@ -161,13 +159,13 @@ const TutorialList = () => {
   // this is about caching the data
   useEffect(() => {
     console.log(`~ tutorials data has been updated ~`);
-    if (alreadyCachedWithinHours()) {
+    if (alreadyCachedWithinHours(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
       console.log('caching already done within hours. No need to cache anymore.')
       return;
     } 
 
-    const cacheArr = JSON.parse(localStorage.getItem("cacheTutorials"));
-    const strShouldCacheTuts = localStorage.getItem('shouldCacheTutorials');
+    const cacheArr = JSON.parse(localStorage.getItem(csCacheTutorials));
+    const strShouldCacheTuts = localStorage.getItem(csShouldCacheTutorials);
     const bAllTutsCached = allCached(cacheArr);
 
     if (!bAllTutsCached) {
@@ -175,13 +173,13 @@ const TutorialList = () => {
         cacheTutorialContents(tutorialsData).then((response) => {
           if(response.status === 201) {
             cacheArr[page-1] = true;
-            localStorage.setItem('cacheTutorials', JSON.stringify(cacheArr));
+            localStorage.setItem(csCacheTutorials, JSON.stringify(cacheArr));
           }
         })
       }
     } else if (bAllTutsCached && strShouldCacheTuts === 'yes') {
-      localStorage.setItem('shouldCacheTutorials', 'no');
-      localStorage.setItem('cacheTimeStamp', Date.now() );
+      localStorage.setItem(csShouldCacheTutorials, 'no');
+      localStorage.setItem(csCacheTimeStamp, Date.now() );
     }
 
   }, [tutorialsData]);
@@ -192,8 +190,8 @@ const TutorialList = () => {
       setNode(loadingObj());
     }
   
-    if (session.status === "unauthenticated") {
-      localStorage.setItem("fromUrl", "tutorial");
+    if (session.status === "unauthenticated") { 
+      localStorage.setItem(csFromUrl, "tutorial");
       router?.push("/dashboard/login");
     }
 
