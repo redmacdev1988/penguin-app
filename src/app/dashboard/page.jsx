@@ -36,18 +36,18 @@ const Dashboard = () => {
 
   const renderPastHomeworkHTML = () => {
     return (
-      data && data?.map((post) => (
-        <ul>
-          <li className={styles.post} key={post._id}>
-            <span>key: {post._id}</span>
-            <div className={styles.imgContainer}>
-              <Image src={post.img} alt="" width={200} height={100} />
-            </div>
-            <h2 className={styles.postTitle}>{post.title}</h2>
-            <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
-          </li>
-        </ul>
-      ))
+      <ul>
+      {data && data?.map((post) => (
+        <li className={styles.post} key={post._id}>
+          <span>key: {post._id}</span>
+          <div className={styles.imgContainer}>
+            <Image src={post.img} alt="" width={200} height={100} />
+          </div>
+          <h2 className={styles.postTitle}>{post.title}</h2>
+          <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
+        </li>
+      ))}
+      </ul>
     )
   }
 
@@ -89,7 +89,6 @@ const Dashboard = () => {
   }, [session.status]);
 
   const handleSubmit = async (e) => {
-    debugger
     console.log('handle submit..................');
     e.preventDefault();
     const title = e.target[0].value;
