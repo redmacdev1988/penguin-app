@@ -5,8 +5,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getDataBySlug(slug) {
-  const dataUrl = `http://localhost:3000/api/tutorials/${slug}`;
-  console.log('Get tutorial from : ', dataUrl)
+  const dataUrl = `api/tutorials/${slug}`;
   const res = await fetch(dataUrl, {cache: "no-store"});
   return (!res.ok) ? notFound() : res.json();
 }

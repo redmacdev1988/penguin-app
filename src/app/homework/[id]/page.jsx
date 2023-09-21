@@ -4,8 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getDataById(id) {
-  console.log('Get homework from : ', `http://localhost:3000/api/posts/${id}`)
-  const res = await fetch(`http://localhost:3000/api/posts/${id}`, {cache: "no-store"});
+  const res = await fetch(`api/posts/${id}`, {cache: "no-store"});
   return (!res.ok) ? notFound() : res.json();
 }
 
