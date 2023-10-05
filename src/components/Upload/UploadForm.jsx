@@ -28,6 +28,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
             return file;
           }
         })
+
+        console.log(`Setting ${newFiles.length} # of image files`);
     
         setFiles(newFiles);
         formRef.current.reset();
@@ -52,7 +54,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             throw Error("Error, no user associated with Sesion");
         }
 
-        const res = await uploadHomework(formData, session?.data?.user.name);
+        const res = await uploadHomework(formData, session?.data?.user);
         if(res?.errMsg) {
             alert(`Error: ${res?.errMsg}`);
             console.log(`Error: ${res?.errMsg}`);

@@ -40,23 +40,25 @@ async function saveHomeworkToLocal(formData) {
       return await Promise.all(multiplePhotoBuffersPromises)
 }
 
-async function uploadHomeworkToCloudinary(newFiles) {
+// todo make sure folder matches names
+async function uploadHomeworkToCloudinary(newFiles, user) {
     console.log('uploadHomeworkToCloudinary - # of files to upload to cloudinary:', newFiles.length);
     const multipleHmPhotosPromise = newFiles.map(file => (
-        cloudinary.v2.uploader.upload(file.filepath, { folder: 'nextjs_upload' })
+        cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
     ));
     return await Promise.all(multipleHmPhotosPromise)
 }
 
-export async function uploadHomework(formData, author) {
-    console.log(`* Upload Homework for user ${author}`);
+export async function uploadHomework(formData, user) {
+    console.log(`* Upload Homework for user: `, user);
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
 
-        const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles);
+        const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
     
-        if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length) {
-    
+        if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
+            console.log('uploaded to Cloudinary √');
+
              // Delete photo files in temp folder after successful upload!
              hmPhotoFiles.map(file => fs.unlink(file.filepath))
     
@@ -64,7 +66,7 @@ export async function uploadHomework(formData, author) {
                 const newHomework = new PenguinHomework({
                     publicId: hmObj.public_id, 
                     secureUrl: hmObj.secure_url,
-                    name: author,
+                    name: user.name,
                     slug: ""
                     // todo: insert homework title
                     // todo: homework description
@@ -73,10 +75,15 @@ export async function uploadHomework(formData, author) {
             });
     
             console.log('# of homework Models: ', homeworkModelArr.length);
-    
-            await PenguinHomework.insertMany(homeworkModelArr);
-            revalidatePath("/homework/page")
-            return { msg: 'Upload Success!' }
+            const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
+            console.log('dbOpResponse', dbOpResponse);
+            if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
+                console.log('uploaded to Mongodb √');
+                revalidatePath("/homework/page");
+                return { msg: 'Upload Success!' }
+            } else {
+                throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
+            }
         }
     } catch (error) { return { errMsg: error.message } }
 }
