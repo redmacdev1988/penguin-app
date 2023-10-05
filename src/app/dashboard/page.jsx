@@ -89,7 +89,7 @@ const Dashboard = () => {
   }, [session.status]);
 
   const handleSubmit = async (e) => {
-    console.log('handle submit..................');
+
     e.preventDefault();
     const title = e.target[0].value;
     const desc = e.target[1].value;

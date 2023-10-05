@@ -12,13 +12,12 @@ import Tutorial from "@/models/Tutorial";
 export const GET = async (request, { params }) => {
     debugger
     const { slug } = params;
-    console.log('GET one tutorial, slug: ', slug);
+
     await connect();
     const tutorial = await Tutorial.findOne({slug});
     if (tutorial) {
         return new NextResponse(JSON.stringify(tutorial), { status: 200 });
     } else {
-        console.log(' DID NOT FIND ');
         return new NextResponse("Database Error", { status: 500 });
     }
   };

@@ -18,8 +18,6 @@ export const GET = async (request) => {
         const filter = (name === 'rtsao' || name === 'admin') ? { name: {$ne: name} } : { name };
         
         const allHmForUser = await PenguinHomework.find(filter).sort('-createdAt');
-        
-        console.log('allHmForUser', allHmForUser);
 
         return new NextResponse(JSON.stringify(allHmForUser), { status: 200 });
     } catch (err) {

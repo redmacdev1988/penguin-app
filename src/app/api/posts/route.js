@@ -4,8 +4,9 @@ import Post from "@/models/Post";
 
 
 export const GET = async (request) => {
+    
     const url = new URL(request.url);
-    // console.log('\n√ YOU ARE TRYING TO MAKE A (GET) REQUEST AT: ', request.url);
+
     const username = url.searchParams.get("username");
     try {
         await connect();
@@ -17,8 +18,7 @@ export const GET = async (request) => {
 };
 
 export const POST = async (request) => {
-    // console.log('\n√ YOU ARE TRYING TO MAKE A (POST) REQUEST AT: ', request.url);
-  
+
     const body = await request.json();
     const newPost = new Post(body);
     try {

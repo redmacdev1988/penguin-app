@@ -1,6 +1,5 @@
 
 
-// todo
 
 import { NextResponse } from "next/server";
 import connect from "@/utils/db";
@@ -10,7 +9,7 @@ import Tutorial from "@/models/Tutorial";
 // this is simply to cache the content of each tutorial
 
 export const DELETE = async (request) => {
-    console.log('API - You are trying to (DELETE) all tutorials');
+
     try {
       await connect();
       await Tutorial.deleteMany({});
@@ -28,8 +27,6 @@ export const POST = async (request) => {
       console.log('no array of contents in body', body);
       return;
     }
-    
-    console.log(' ------ array of tutorials ------- ', arrayOfContents.length);
 
     let error;
 
