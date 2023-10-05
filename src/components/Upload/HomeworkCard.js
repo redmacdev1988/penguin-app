@@ -7,7 +7,7 @@ function parseTimeStampToDateTime(str_date) {
   return moment(str_date, "YYYY-MM-DDTHH:mm").utc().format('l LT');
 }
 
-const strUrlToGetCorrectionLink = (inputSlug) => `http://chineseruleof8.com/wp-json/wp/v2/posts?slug=${inputSlug}`;
+const strUrlToGetCorrectionLink = (inputSlug) => `https://chineseruleof8.com/wp-json/wp/v2/posts?slug=${inputSlug}`;
 
 const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
 

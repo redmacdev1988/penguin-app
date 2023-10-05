@@ -29,7 +29,6 @@ const HomeworkPage = () => {
 
   const authenticatedHTML = () => {
     const bUserAdmin = isAdmin(session?.data?.user.name);
-    console.log('bUserAdmin:', bUserAdmin);
     return (
       <div className={styles.container}>
 
@@ -47,7 +46,6 @@ const HomeworkPage = () => {
   }
   
   useEffect(() => {
-    console.log('===> updated data:', data);
     setNode(authenticatedHTML());
   }, [data]);
 
@@ -57,7 +55,6 @@ const HomeworkPage = () => {
     }
   
     if (session.status === "unauthenticated") {
-      console.log('csFromUrl: ', csFromUrl);
       localStorage.setItem(csFromUrl, "homework");
       router?.push("/dashboard/login");
     }
