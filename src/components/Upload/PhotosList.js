@@ -39,7 +39,7 @@ const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
             updatedAt={photo?.updatedAt}
             slug={photo?.slug}
             improvementsURL={photo?.improvementsURL}
-            onClickUpdateCorrection={() => refreshHomeworkData()}
+            onClickRefreshHomework={() => refreshHomeworkData()}
             onClickDelete={async () => {
                 const deleteRes = await handleDeletePhoto(photo?.publicId);
                 if (deleteRes && deleteRes.status === 200) {

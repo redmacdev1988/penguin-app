@@ -9,7 +9,7 @@ function parseTimeStampToDateTime(str_date) {
 
 const strUrlToGetCorrectionLink = (inputSlug) => `https://chineseruleof8.com/wp-json/wp/v2/posts?slug=${inputSlug}`;
 
-const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickUpdateCorrection, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
+const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickRefreshHomework, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
 
   const [isPending, startTransition] = useTransition();
 
@@ -32,9 +32,13 @@ const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickUpdateCo
           body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink.replace('http', 'https') }),
         });
 
-        console.log('res', res);
-        onClickUpdateCorrection();
-        
+        if (res && res.status === 200) {
+          console.log('response ok', 'lets update corrections');
+          onClickRefreshHomework();
+        } else {
+          // todo error box
+        }
+  
       } else {
         alert(`Sorry, correction link for ${inputSlug} not available.`);
         return;
