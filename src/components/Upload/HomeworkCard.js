@@ -29,7 +29,7 @@ const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickRefreshH
         console.log('confirmedSlug', confirmedSlug);
         const res = await fetch(`/api/homework`, {
           method: "PUT",
-          body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink.replace('http', 'https') }),
+          body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink }),
         });
 
         if (res && res.status === 200) {
