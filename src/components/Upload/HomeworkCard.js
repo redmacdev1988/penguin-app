@@ -9,7 +9,7 @@ function parseTimeStampToDateTime(str_date) {
 
 const strUrlToGetCorrectionLink = (inputSlug) => `https://chineseruleof8.com/wp-json/wp/v2/posts?slug=${inputSlug}`;
 
-const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
+const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickUpdateCorrection, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
 
   const [isPending, startTransition] = useTransition();
 
@@ -23,11 +23,18 @@ const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickDelete, 
       });
       const data = await response.json();
       if (data && data[0]) {
+        
         const { link: foundLink, slug: confirmedSlug } = data[0];
-        return await fetch(`/api/homework`, {
+        console.log('foundLink', foundLink);
+        console.log('confirmedSlug', confirmedSlug);
+        const res = await fetch(`/api/homework`, {
           method: "PUT",
           body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink.replace('http', 'https') }),
         });
+
+        console.log('res', res);
+        onClickUpdateCorrection();
+        
       } else {
         alert(`Sorry, correction link for ${inputSlug} not available.`);
         return;
