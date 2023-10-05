@@ -59,6 +59,7 @@ const createArray = (length) => {
 const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalItems) => {
   if (!data) { return (<h1>No Data</h1>); }
   const pageArr = createArray(totalPages)
+  console.log('pageArr', pageArr);
   return (
     <main>
       <h3>Total # of Tutorials {totalItems}, Total # of Pages {totalPages}</h3>
@@ -66,6 +67,7 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
         {data && data.map((item) => (
           <li key={item.id}>
             <h2>{item.title?.rendered}</h2>
+            <h3>{item.slug}, {item.id}</h3>
             <a href={createHref(item.slug)} key={item.id}>read more</a>
           </li>
         ))}
@@ -111,11 +113,6 @@ const TutorialList = () => {
   
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
 
-  console.log('csCacheTimeStamp', csCacheTimeStamp);
-  console.log('csCacheTutorials', csCacheTutorials);
-  console.log('csShouldCacheTutorials', csShouldCacheTutorials);
-  console.log('csFromUrl', csFromUrl);
-
   const session = useSession();
   const router = useRouter();
 
@@ -131,7 +128,7 @@ const TutorialList = () => {
 
   // we need to update data on our page.
   useEffect(() => {
-    console.log('~ page index has changed ~ ');
+
     setNode(<h1>Loading</h1>);
 
     let _totalPages = 0;
@@ -158,7 +155,6 @@ const TutorialList = () => {
 
   // this is about caching the data
   useEffect(() => {
-    console.log(`~ tutorials data has been updated ~`);
     if (alreadyCachedWithinHours(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
       console.log('caching already done within hours. No need to cache anymore.')
       return;

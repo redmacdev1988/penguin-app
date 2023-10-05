@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental:{
+      serverActions: true
+    },
     images: {
-      domains: ["images.pexels.com", "chineseruleof8.com"],
+      domains: ["res.cloudinary.com", "images.pexels.com", "chineseruleof8.com"],
     },
   };
   

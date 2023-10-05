@@ -70,7 +70,7 @@ const Login = ({ from }) => {
           className={styles.input}
         />
         <input
-        id="password"
+          id="password"
           type="password"
           placeholder="Password"
           required

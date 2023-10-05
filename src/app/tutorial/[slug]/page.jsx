@@ -5,9 +5,10 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getDataBySlug(slug) {
-  const dataUrl = `https://${process.env.VERCEL_URL}/api/tutorials/${slug}`;
-  console.log(`get data from ${dataUrl}`);
-  const res = await fetch(dataUrl, {cache: "no-store"});
+  const dataURL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/tutorials/${slug}` :
+  `http://${process.env.LOCALHOST_URL}/api/tutorials/${slug}`;
+  console.log('dataURL: ', dataURL);
+  const res = await fetch(dataURL, {cache: "no-store"});
   return (!res.ok) ? notFound() : res.json();
 }
 
@@ -24,7 +25,7 @@ const Tutorial = async ({ params }) => {
     );
   } else {
     return (
-      <h3>Tutorial Not Found</h3>
+      <h3>Tutorial with slug {slug} Not Found</h3>
     )
   }
 };
