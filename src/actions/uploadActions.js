@@ -7,7 +7,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import PenguinHomework from '@/models/PenguinHomework';
 import { revalidatePath } from 'next/cache';
-
+import connect from "@/utils/db";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -50,7 +50,7 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-    console.log(`* Upload Homework for user: `, user);
+    console.log(`uploadHomework - user: `, user);
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
 
@@ -74,11 +74,13 @@ export async function uploadHomework(formData, user) {
                 return newHomework;
             });
     
-            console.log('# of homework Models: ', homeworkModelArr.length);
+            console.log('uploadHomework - # of homework Models: ', homeworkModelArr.length);
+            await connect();
+            console.log('uploadHomework - db connected √');
             const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
-            console.log('dbOpResponse', dbOpResponse);
+            console.log('uploadHomework - dbOpResponse', dbOpResponse);
             if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
-                console.log('uploaded to Mongodb √');
+                console.log('uploadHomework - uploaded to Mongodb √');
                 revalidatePath("/homework/page");
                 return { msg: 'Upload Success!' }
             } else {

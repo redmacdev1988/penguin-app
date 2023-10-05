@@ -31,6 +31,7 @@ export const PUT = async(request) => {
     try {
         await connect();
         const res = await PenguinHomework.findOneAndUpdate({ publicId }, { slug,improvementsURL: link });
+        console.log('PUT res: ', res);
         return new NextResponse(JSON.stringify(res), { status: 200 });
     } catch (err) {
         return new NextResponse("Database Error", { status: 500 });
