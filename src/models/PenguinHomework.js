@@ -4,15 +4,19 @@ const { Schema } = mongoose;
 
 const penguinHomeworkSchema = new Schema(
   {
+    title: {
+      type: String
+    },
+    desc: {
+      type: String
+    },
     publicId: {
       type: String,
       unique: true,
-      required: true,
     },
     secureUrl: {
       type: String,
       unique: true,
-      required: true
     },
     name: {
       type: String,
@@ -20,7 +24,6 @@ const penguinHomeworkSchema = new Schema(
     },
     slug: {
       type: String,
-      required: false
     },
     improvementsURL: {
       type: String,

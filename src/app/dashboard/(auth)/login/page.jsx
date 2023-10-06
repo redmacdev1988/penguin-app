@@ -51,7 +51,6 @@ const Login = ({ from }) => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
-    debugger
     signIn("credentials", { email, password });
   };
 

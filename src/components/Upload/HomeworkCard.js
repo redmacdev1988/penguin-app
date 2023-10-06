@@ -9,7 +9,20 @@ function parseTimeStampToDateTime(str_date) {
 
 const strUrlToGetCorrectionLink = (inputSlug) => `https://chineseruleof8.com/wp-json/wp/v2/posts?slug=${inputSlug}`;
 
-const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickRefreshHomework, onClickDelete, createdAt, updatedAt, slug, improvementsURL }) => {
+const HomeworkCard = ({ 
+  isAdmin, 
+  publicId, 
+  secureImageUrl, 
+  name, 
+  onClickRefreshHomework, 
+  onClickDelete, 
+  createdAt, 
+  updatedAt, 
+  slug, 
+  improvementsURL,
+  title,
+  desc
+}) => {
 
   const [isPending, startTransition] = useTransition();
 
@@ -69,12 +82,17 @@ const HomeworkCard = ({ isAdmin, publicId, secureImageUrl, name, onClickRefreshH
             />
         </div>
 
-        {improvementsURL && (<Link href={improvementsURL}>
-            {improvementsURL}
-        </Link>)}
+        <div style={{padding: 10}}>
+          {improvementsURL && (<Link href={improvementsURL}>
+              {improvementsURL}
+          </Link>)}
+        </div>
 
-        {createdAt && <b>created at {parseTimeStampToDateTime(createdAt)}</b>}
-        {updatedAt && <mark>updated at {parseTimeStampToDateTime(updatedAt)}</mark>}
+        <div style={{padding: 10}}>
+        {createdAt && updatedAt && <b>created at {parseTimeStampToDateTime(createdAt)}, <mark>updated at {parseTimeStampToDateTime(updatedAt)}</mark></b>}
+        </div>
+        
+        {<div style={{padding: 10}}>{!title ? "no title" : title}, {!desc ? "no desc" : desc}</div>}
         <button type='button' onClick={() => startTransition(onClickDelete)} disabled={isPending}>
           { isPending ? 'Loading...' : 'Delete' }
         </button>

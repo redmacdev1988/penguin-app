@@ -11,6 +11,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
     const session = useSession();
     const formRef = useRef();
     const [files, setFiles] = useState([]);
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
 
     async function handleInputFiles(e) {
         const files = e.target.files;
@@ -40,18 +42,35 @@ const UploadForm = ({ refreshHomeworkData }) => {
         setFiles(newFiles) // set our files again
     }
 
-    async function handleUpload(e) {
+    const handleInputTitle = async (e) => {
         e.preventDefault();
+        setTitle(e.target.value);    
+    }
+
+    const handleInputDesc = async (e) => {
+        e.preventDefault();
+        setDesc(e.target.value);
+    }
+
+    const handleUpload = async (e) => {
+
+        e.preventDefault();
+ 
+        console.log(`title - ${title} description - ${desc}`);
+
         if(!files.length) return alert('No image files are selected.')
         if(files.length > 3) return alert('Upload up to 3 image files.')
     
         const formData = new FormData();
+        // image files
         files.forEach(file => {
             formData.append('files', file)
         })
-    
+        formData.append('title', title);
+        formData.append('desc', desc);
+
         if (!session || !session?.data?.user) {
-            throw Error("Error, no user associated with Sesion");
+            throw Error("Error, no user associated with Session");
         }
 
         const res = await uploadHomework(formData, session?.data?.user);
@@ -71,6 +90,9 @@ const UploadForm = ({ refreshHomeworkData }) => {
     
                 <input type="file" accept='image/*' multiple onChange={handleInputFiles} />
         
+                <input type="text" placeholder="homework title" onChange={handleInputTitle} />
+                <input type="text" placeholder="homework description" onChange={handleInputDesc} />
+
                 <h5 style={{background: 'red', minHeight: 100, margin: '10px 0', padding: '10px'}}>
                     (*) Only accept image files less than 1mb in size. Up to 3 photo files.
                 </h5>

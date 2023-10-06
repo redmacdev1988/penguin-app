@@ -16,24 +16,16 @@ cloudinary.config({
 });
 
 async function saveHomeworkToLocal(formData) {
-    
     const hmPhotoFiles = formData.getAll('files');
-    // TODO make sure you get other stuff (hm title, body, description) from formData here.
-    // formData.get('title')
-    // formData.get('body')
-    // formData.get('description')
-
     const multiplePhotoBuffersPromises = hmPhotoFiles.map(photo => (
         photo.arrayBuffer()
           .then(data => {
             const buffer = Buffer.from(data)
             const name = uuidv4()
             const ext = photo.type.split("/")[1]
-    
             const tempdir = os.tmpdir();
             const uploadDir = path.join(tempdir, `/${name}.${ext}`) // work in Vercel
             fs.writeFile(uploadDir, buffer)
-    
             return { filepath: uploadDir, filename: photo.name }
           })
       ))
@@ -51,6 +43,10 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 
 export async function uploadHomework(formData, user) {
     console.log(`uploadHomework - user: `, user);
+
+    const title = formData.get('title')
+    const desc = formData.get('desc');
+
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
 
@@ -67,9 +63,9 @@ export async function uploadHomework(formData, user) {
                     publicId: hmObj.public_id, 
                     secureUrl: hmObj.secure_url,
                     name: user.name,
-                    slug: ""
-                    // todo: insert homework title
-                    // todo: homework description
+                    slug: "",
+                    title,
+                    desc
                 })
                 return newHomework;
             });

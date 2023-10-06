@@ -25,7 +25,6 @@ const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
         gap: 6, 
         flexWrap: 'wrap',
         margin: '10px 0', 
-        border: '2px solid #53c28b'
     }}>
       {
         homeworkArr.map(photo => (
@@ -45,7 +44,10 @@ const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
                 if (deleteRes && deleteRes.status === 200) {
                 }
                 refreshHomeworkData();
-            }} />
+            }} 
+            title={photo?.title}
+            desc={photo?.desc}
+            />
         ))
       }
     </div>
