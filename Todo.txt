@@ -4,11 +4,10 @@
 1)
 use npm alert box component
 
-2)
-give [title, description] to Homework
 
-3)
-give [textarea] to Homework
+10/6
+
+Pagination for homework list (follow tutorials way)
 
 
 

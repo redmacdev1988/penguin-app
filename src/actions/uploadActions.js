@@ -42,7 +42,6 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-    console.log(`uploadHomework - user: `, user);
 
     const title = formData.get('title')
     const desc = formData.get('desc');

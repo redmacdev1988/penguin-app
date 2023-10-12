@@ -1,9 +1,15 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomeworkCard from './HomeworkCard'
+import useInView from '@/hooks/useInView'
 
+// renders the data
 
-const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
+const PhotoList = ({  isAdmin, homeworkArr, author, refreshHomeworkData }) => {
+  console.log('-- PhotoList --')
+  const {ref, inView} = useInView();
+
+  const [loading, setLoading] = useState(false);
 
   async function handleDeletePhoto(publicId) {
 
@@ -18,8 +24,12 @@ const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
       }
   }
 
-  {return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ?
-   (
+  useEffect(() => {
+    console.log('----- homework array was updated in PhotoList -----');
+  }, [homeworkArr]);
+
+  return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
+  <>
     <div style={{
         display: 'flex', 
         gap: 6, 
@@ -51,9 +61,16 @@ const PhotoList = ({ isAdmin, homeworkArr, author, refreshHomeworkData }) => {
         ))
       }
     </div>
-  ) : (
+  
+  <button className='btn_loadmore' disabled={loading} ref={ref}
+      // onClick={handleLoadMore} style={{display: next ? 'block' : 'none'}}
+  >
+        { loading ? 'Loading...' : 'Load More' }
+  </button>
+
+  </> : (
     <h3>No homeworks yet</h3>
-  ) }
+  ) 
 }
 
 export default PhotoList
