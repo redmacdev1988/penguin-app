@@ -104,7 +104,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                         <HomeworkCard 
                             key={index} 
                             secureImageUrl={URL.createObjectURL(file)} 
-                            onClick={() => handleDeleteLocalStateFile(index)} 
+                            onClickDelete={() => handleDeleteLocalStateFile(index)} 
                         />
                     ))
                     }
