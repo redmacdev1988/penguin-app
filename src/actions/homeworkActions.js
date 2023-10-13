@@ -1,43 +1,35 @@
 
-import PenguinHomework from "@/models/PenguinHomework";
-import { dynamicBlurDataUrl } from "@/utils/dynamicBlurDataUrl";
-import connect from "@/utils/db";
 
-connect();
+const firstPageURL = (name) => `/api/homework?name=${name}`;
+const nthPageURL = (name, nextCursor) => `/api/homework?name=${name}&searchParams=${nextCursor}`;
+const pageWithLimitURL = (name, limit) => `/api/homework?name=${name}&limit=${limit}`;
 
-export async function getAllHomeworks(searchParams) {
-  console.log('getAllPhotos - searchParams', searchParams);
 
-  try {
-    const sort = '-_id';
-    const limit = 10;
-    const next = searchParams?.next || null;
+export const fetchHomework = async ({name, nextCursor, limit}) => {
 
-    console.log('getAllPhotos - next', next);
+  if (!name && !nextCursor && !limit) return;
 
-    const homeworks = await PenguinHomework.find({
-      _id: next
-        ? sort === '_id'
-          ? { $gt: next } : { $lt: next }
-        : { $exists: true } 
-    }).limit(limit).sort(sort)
+  let url;
 
-  
-    const next_cursor = homeworks[limit - 1]?._id.toString() || undefined; 
-
-    console.log('getAllHomeworks - ==> next_cursor', next_cursor);
-
-    const blurDataPromise = homeworks.map(photo => dynamicBlurDataUrl(photo.imgUrl));
-    const blurData = await Promise.all(blurDataPromise);
-
-    const hmData = homeworks.map((hm, index) => ({
-      ...hm._doc,
-      blurHash: blurData[index]
-    }))
-
-    console.log('getAllHomeworks ==> data: ', data);
-    return { homeworkData: JSON.stringify(hmData), next_cursor };
-  } catch (error) {
-    return { errMsg: error.message }
+  if (name && !nextCursor && !limit) {
+    url = firstPageURL(name);
+  } else if (name && nextCursor && !limit) {
+    url = nthPageURL(name, nextCursor);
+  } else if (name && !nextCursor && limit) {
+    url = pageWithLimitURL(name, limit);
   }
+
+  if (url) {
+    try {
+      const res = await fetch(url);
+      if (res && res.status === 200) {
+        return await res.json();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.log('error: ', e);
+    }
+  }
+
 }

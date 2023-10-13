@@ -1,17 +1,7 @@
-9/30
 
+10/14
 
-1)
-use npm alert box component
-
-
-10/6
-
-Pagination for homework list (follow tutorials way)
-
-
-
-
+apply CSS
 
 
 

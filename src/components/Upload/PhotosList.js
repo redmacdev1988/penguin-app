@@ -2,17 +2,40 @@
 import React, { useState, useEffect } from "react";
 import HomeworkCard from './HomeworkCard'
 import useInView from '@/hooks/useInView'
+import { fetchHomework } from '@/actions/homeworkActions';
 
-// renders the data
 
-const PhotoList = ({  isAdmin, homeworkArr, author, refreshHomeworkData }) => {
-  console.log('-- PhotoList --')
+const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkData }) => {
   const {ref, inView} = useInView();
-
   const [loading, setLoading] = useState(false);
+  const [next, setNext] = useState(true);
+
+  const handleLoadMore = async () => {
+
+    if (!nextCursor || loading) {
+      if (!nextCursor && !loading) {
+        setNext(false);
+        return;
+      }
+      return;
+    }
+
+    setLoading(true);
+
+    const responseData = await fetchHomework({name: author, nextCursor});
+    if (responseData) {
+      const { allHmForUser, next_cursor} = responseData;
+      refreshHomeworkData(allHmForUser, next_cursor);
+      if (Array.isArray(allHmForUser) && allHmForUser.length === 0 && !next_cursor) {
+        setNext(false);
+      }
+    }
+
+    setLoading(false);
+  }
+
 
   async function handleDeletePhoto(publicId) {
-
     try {
         return await fetch("/api/homework", {
           method: "DELETE",
@@ -25,8 +48,10 @@ const PhotoList = ({  isAdmin, homeworkArr, author, refreshHomeworkData }) => {
   }
 
   useEffect(() => {
-    console.log('----- homework array was updated in PhotoList -----');
-  }, [homeworkArr]);
+    if (inView) {
+      handleLoadMore();
+    }
+  }, [inView]);
 
   return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
   <>
@@ -62,12 +87,16 @@ const PhotoList = ({  isAdmin, homeworkArr, author, refreshHomeworkData }) => {
       }
     </div>
   
-  <button className='btn_loadmore' disabled={loading} ref={ref}
-      // onClick={handleLoadMore} style={{display: next ? 'block' : 'none'}}
+  <button 
+    className='btn_loadmore' 
+    disabled={loading} 
+    ref={ref}
+    style={{display: next ? 'block' : 'none'}}
+    onClick={handleLoadMore}
   >
-        { loading ? 'Loading...' : 'Load More' }
+    { loading ? 'Loading...' : 'Load More' }
   </button>
-
+    <h3>{ next ? 'Loading' : 'No more to load'}</h3>
   </> : (
     <h3>No homeworks yet</h3>
   ) 

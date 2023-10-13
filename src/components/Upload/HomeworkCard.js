@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useTransition } from 'react'
+import React, { useTransition, useState } from 'react'
 import moment from 'moment'
 import Link from "next/link";
 
@@ -38,12 +38,10 @@ const HomeworkCard = ({
       if (data && data[0]) {
         
         const { link: foundLink, slug: confirmedSlug } = data[0];
-        console.log('foundLink', foundLink);
-        console.log('confirmedSlug', confirmedSlug);
-      const res = await fetch(`/api/homework`, {
-        method: "PUT",
-        body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink }),
-      });
+        const res = await fetch(`/api/homework`, {
+          method: "PUT",
+          body: JSON.stringify({ slug: confirmedSlug, publicId, link: foundLink }),
+        });
 
         if (res && res.status === 200) {
           console.log('response ok', 'lets update corrections');

@@ -9,36 +9,23 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// export const GET = async (request) => {
-//     const url = new URL(request.url);
-//     const name = url.searchParams.get("name");
-//     try {
-//         await connect();
-
-//         const filter = (name === 'rtsao' || name === 'admin') ? { name: {$ne: name} } : { name };
-        
-//         const allHmForUser = await PenguinHomework.find(filter).sort('-createdAt');
-
-//         return new NextResponse(JSON.stringify(allHmForUser), { status: 200 });
-//     } catch (err) {
-//         return new NextResponse("Database Error", { status: 500 });
-//     }
-// };
-
 export const GET = async (request) => {
     const url = new URL(request.url);
     const name = url.searchParams.get("name");
     const searchParams = url.searchParams.get("searchParams");
-
+    const reqLimit = url.searchParams.get("limit");
+    
+    console.log(`GET - name - ${name}, searchParams - ${searchParams}`)
     try {
         await connect();
 
         const sort = '-_id';
-        const limit = 10;
-        const next = searchParams?.next || null;
+        const limit = reqLimit || 5;
+        const next = searchParams || null;
 
-        // fix this, we don't want to get all homework.
 
+        console.log('FETCH limit is: ', limit);
+        
         // if its me or admin, search result should be all entries that are NOT rtsao or admin
         // if its the normal student name, then give me entries with the student name
         const nameFilter = (name === 'rtsao' || name === 'admin') ?  {$ne: name}  :  name;
@@ -51,10 +38,8 @@ export const GET = async (request) => {
             name: nameFilter
           }).limit(limit).sort(sort)
 
-        // const filter = (name === 'rtsao' || name === 'admin') ? { name: {$ne: name} } : { name };
-        // const allHmForUser = await PenguinHomework.find(filter).sort('-createdAt');
-
-        return new NextResponse(JSON.stringify(allHmForUser), { status: 200 });
+        const next_cursor = allHmForUser[limit - 1]?._id.toString() || null; 
+        return new NextResponse(JSON.stringify({allHmForUser, next_cursor}), { status: 200 });
     } catch (err) {
         console.log('GET - err', err);
         return new NextResponse("Database Error", { status: 500 });
@@ -70,6 +55,7 @@ export const PUT = async(request) => {
         console.log('PUT res: ', res);
         return new NextResponse(JSON.stringify(res), { status: 200 });
     } catch (err) {
+        console.log('error', error);
         return new NextResponse("Database Error", { status: 500 });
     }
 }
