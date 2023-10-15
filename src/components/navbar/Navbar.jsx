@@ -25,16 +25,16 @@ const links = [
       title: "Homework",
       url: "/homework",
     },
-    {
-      id: 4,
-      title: "About",
-      url: "/about",
-    },
-    {
-      id: 5,
-      title: "Contact",
-      url: "/contact",
-    },
+    // {
+    //   id: 4,
+    //   title: "About",
+    //   url: "/about",
+    // },
+    // {
+    //   id: 5,
+    //   title: "Contact",
+    //   url: "/contact",
+    // },
     {
       id: 6,
       title: "Dashboard",
@@ -50,7 +50,7 @@ export const Navbar = () => {
   const username = session && session?.data?.user?.name || "";
   return (
     <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        {/* <Link href="/" className={styles.logo}>
           <img
             src={mode === "dark" ? '/rickyabc-light-logo-370X280.png' : '/rickyabc-dark-logo-370X280.png'}
             height={'80%'}
@@ -58,7 +58,7 @@ export const Navbar = () => {
             alt=""
             className={styles.img}
           />
-        </Link>
+        </Link> */}
         <div className={styles.links}> 
             <DarkModeToggle />
             {links.map((link) => (

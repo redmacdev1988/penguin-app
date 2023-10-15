@@ -1,8 +1,19 @@
 
 10/14
 
-apply CSS
+1 apply CSS
+
+remove logo √
+remove About √
+remove Contact √
+remove Home texts √
+
+Apply button css √
+
+improvement URL is a open external button √
 
 
+be able to open image link in homework row in a separate tab with full image
 
+save image as 50% of size 
 

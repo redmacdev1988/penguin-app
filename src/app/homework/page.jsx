@@ -73,6 +73,7 @@ const HomeworkPage = () => {
 
 
   useEffect(() => {
+    console.log('session updated');
     (async () => {
       const responseData = await fetchHomework({ name: session?.data?.user.name });
       if (responseData) {
@@ -81,10 +82,10 @@ const HomeworkPage = () => {
         setNextCursor(next_cursor);
       }
     })();
-  }, [session]);
+  }, []);
 
   useEffect(() => {
-
+    console.log('data updated');
     if (data) {
       console.log('update Node');
       setNode(authenticatedHTML());
@@ -93,6 +94,7 @@ const HomeworkPage = () => {
   }, [data]);
 
   useEffect(() => {
+    console.log('session.status updated');
     if (session.status === "loading") {
       setNode(loadingHTML());
     }

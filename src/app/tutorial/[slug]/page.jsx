@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./page.module.css";
-import Button from "@/components/Button/Button";
+import Button from "@/components/NavLinkButton/NavLinkButton";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 

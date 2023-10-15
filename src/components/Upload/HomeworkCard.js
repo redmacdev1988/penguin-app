@@ -1,7 +1,11 @@
 import Image from 'next/image'
-import React, { useTransition, useState } from 'react'
+import React, { useTransition, useContext } from 'react'
+import { ThemeContext } from "../../context/ThemeContext";
 import moment from 'moment'
 import Link from "next/link";
+import styles from "./upload.module.css";
+import lightExternalIcon from "../../../public/icons/external-link.svg"
+import darkExternalIcon from "../../../public/icons/external-link-dark.svg"
 
 function parseTimeStampToDateTime(str_date) {
   return moment(str_date, "YYYY-MM-DDTHH:mm").utc().format('l LT');
@@ -23,6 +27,8 @@ const HomeworkCard = ({
   title,
   desc
 }) => {
+
+  const { mode } = useContext(ThemeContext);
 
   const [isPending, startTransition] = useTransition();
 
@@ -59,42 +65,67 @@ const HomeworkCard = ({
 
   return (
     <>
-    <h3>Name: {name}</h3>
-    {isAdmin && (
-      <form onSubmit={handleUpdateSlug} style={{width: '100%'}}>
-        <input
-          style={{width: '100%'}}
-          type="text"
-          placeholder="slug URL"
-        />
-        <button>Update Correction</button>
-      </form>
-    )}
+      <div style={{
+        borderTop: '2px solid green', 
+        borderTopStyle: 'dotted',
+        paddingTop: '30px',
+        paddingBottom: '30px',
+        display: 'flex', 
+        flex: '1 100%',  
+        justifyContent: 'space-evenly', 
+        flexDirection: 'row' 
+      }}>
 
-      <div style={{display: 'flex', flex: '3 100%',  justifyContent: 'space-between', flexDirection: 'row' }}>
-        <div style={{padding: 5}}>
-            <Image src={secureImageUrl} 
-              alt='image' 
-              height={250}
-              width={250}
-            />
-        </div>
+        {secureImageUrl && <div style={{padding: 5}}>
+          <Link href={secureImageUrl} target='_blank'>
+              <Image src={secureImageUrl} 
+                alt='image' 
+                height={250}
+                width={250}
+              />
+            </Link>
+        </div>}
+      
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          
+          <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
+            {improvementsURL && (<i>see improvements</i>)}
+            {improvementsURL && (<Link href={improvementsURL} target='_blank'>
+              <Image priority height={48} width={48} src={mode==="dark" ? darkExternalIcon : lightExternalIcon} alt={improvementsURL} />
+            </Link>)}
+          </div>
 
-        <div style={{padding: 10}}>
-          {improvementsURL && (<Link href={improvementsURL}>
-              {improvementsURL}
-          </Link>)}
-        </div>
+          <div style={{padding: 10}}>
+          {createdAt && updatedAt && <b>created at {parseTimeStampToDateTime(createdAt)}, <mark>updated at {parseTimeStampToDateTime(updatedAt)}</mark></b>}
+          </div>
+          
+          {<div style={{padding: 10}}>
+          <span style={{fontSize: 18}}>{name}</span> - <span style={{color: '#53c28b'}}>{!title ? "no title" : title}</span>, <i>{!desc ? "no desc" : desc}</i>
+          </div>}
+          
+          <div style={{padding: '20px', border: '1px solid #53c28b', display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+            {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
+              <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
+                <input style={{width: '70%'}} type="text" placeholder="slug URL" />
+                <button className={styles.defaultBtn}  style={{float: 'right', width: '20%'}}>Update Correction</button>
+              </form>
+              </div>
+            )}
 
-        <div style={{padding: 10}}>
-        {createdAt && updatedAt && <b>created at {parseTimeStampToDateTime(createdAt)}, <mark>updated at {parseTimeStampToDateTime(updatedAt)}</mark></b>}
+            <button
+              className={styles.defaultBtn} 
+              type='button' 
+              onClick={() => startTransition(onClickDelete)} 
+              disabled={isPending}
+            >
+              { isPending ? 'Loading...' : 'Delete Homework' }
+            </button>
+
+          </div>
+
         </div>
-        
-        {<div style={{padding: 10}}>{!title ? "no title" : title}, {!desc ? "no desc" : desc}</div>}
-        <button type='button' onClick={() => startTransition(onClickDelete)} disabled={isPending}>
-          { isPending ? 'Loading...' : 'Delete' }
-        </button>
       </div>
+ 
     </>
   )
 
