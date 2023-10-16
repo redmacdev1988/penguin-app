@@ -12,8 +12,13 @@ Apply button css √
 
 improvement URL is a open external button √
 
+be able to open image link in homework row in a separate tab with full image √
 
-be able to open image link in homework row in a separate tab with full image
+save image as 500k √
 
-save image as 50% of size 
+Tutorials
 
+navigation buttons
+css for viewing
+
+'upload homework' needs to be disabled when sending pics

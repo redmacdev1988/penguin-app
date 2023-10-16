@@ -1,9 +1,11 @@
 'use client'
 
+import styles from "./upload.module.css";
+
 const ButtonSubmit = ({ value, ...props }) => {
   
   return (
-    <button {...props}>
+    <button {...props} className={styles.defaultBtn} >
       {value}
     </button>
   )

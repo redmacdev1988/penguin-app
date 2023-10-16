@@ -6,3 +6,26 @@
     cursor: pointer;
     border-radius: 3px;
   }
+
+  .test {
+    border: 1px solid red;
+  }
+  
+  .textBox {
+
+    width: 100%;
+    margin-top: 10px;
+    border: 3px solid #53c28b;
+    line-height: 35px;
+    border-radius: 0px 10px 10px 10px;
+  }
+
+  .enabled {
+    background-color: #53c28b;
+    color: white;
+  }
+
+  .disabled {
+    background-color: darkgray; 
+    color: lightgrey;
+  }

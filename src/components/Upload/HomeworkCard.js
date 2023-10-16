@@ -96,7 +96,7 @@ const HomeworkCard = ({
           </div>
 
           <div style={{padding: 10}}>
-          {createdAt && updatedAt && <b>created at {parseTimeStampToDateTime(createdAt)}, <mark>updated at {parseTimeStampToDateTime(updatedAt)}</mark></b>}
+          {createdAt && updatedAt && <b>created at {parseTimeStampToDateTime(createdAt)}, updated at {parseTimeStampToDateTime(updatedAt)}</b>}
           </div>
           
           {<div style={{padding: 10}}>

@@ -35,7 +35,7 @@ const HomeworkPage = () => {
     return (
       <div className={styles.container}>
 
-        {!bUserAdmin && <h1>Upload Image Files for {session?.data?.user.name}</h1>}
+        {!bUserAdmin && <h1>Your Homework</h1>}
         {!bUserAdmin && <UploadForm refreshHomeworkData={ async() => {
           const responseData = await fetchHomework({name: session?.data?.user.name, limit: data.length + 1});
           if (responseData) {
@@ -44,7 +44,7 @@ const HomeworkPage = () => {
             setNextCursor(next_cursor);
           }
         }}/>}
-        <h1>{bUserAdmin ? `Welcome Administrator ${session?.data?.user.name}` : `${session?.data?.user.name}'s Homework`}</h1>
+        <h1>{bUserAdmin ? `Welcome Administrator ${session?.data?.user.name}` : ``}</h1>
 
         {data && data && Array.isArray(data) && data.length > 0 && 
         <PhotoList

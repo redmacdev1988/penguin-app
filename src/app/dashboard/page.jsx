@@ -83,7 +83,6 @@ const Dashboard = () => {
     }
 
     if (session.status === "authenticated") {
-        debugger
         setNode(authenticatedHTML());
     }
   }, [session.status]);
