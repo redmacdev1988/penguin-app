@@ -27,10 +27,8 @@ const Login = ({ from }) => {
   useEffect(() => {
 
     if (session.status === "loading") {
-      console.log('here!');
     }
     else if (session.status === "unauthenticated") {
-      console.log('dashboard/login unauthenticated!!');
     }
     else if (session.status === "authenticated") {
 

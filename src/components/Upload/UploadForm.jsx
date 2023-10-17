@@ -82,7 +82,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
     }
 
     const handleUpload = async (e) => {
-        console.log('handleUpload - files', files);
         if (!disabled) {
             setDisabled(true);
             e.preventDefault();
