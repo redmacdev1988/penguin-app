@@ -2,7 +2,7 @@ import './globals.css'
 import { Inter, Roboto, Poppins } from 'next/font/google'
 import Navbar from '@/components/navbar/Navbar'
 import Footer from '@/components/footer/Footer'
-import { ThemeProvider } from "@/context/ThemeContext"
+import { MyThemeProvider } from "@/context/MyThemeContext"
 import { GlobalProvider } from "@/context/GlobalContext"
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
@@ -19,15 +19,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <GlobalProvider>
-          <ThemeProvider>
-            <AuthProvider>
-              <div className="container">
-                <Navbar />
-                {children}
-                <Footer />
-              </div>
-            </AuthProvider>
-          </ThemeProvider>
+            <MyThemeProvider>
+              <AuthProvider>
+                <div className="container">
+                  <Navbar />
+                  {children}
+                  <Footer />
+                </div>
+              </AuthProvider>
+            </MyThemeProvider>
         </GlobalProvider>
       </body>
     </html>

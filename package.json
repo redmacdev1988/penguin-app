@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.5",
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "axios": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "browser-image-compression": "^2.0.2",
@@ -16,6 +20,7 @@
     "dompurify": "^3.0.5",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
+    "framer-motion": "^10.16.4",
     "html-to-react": "^1.6.0",
     "moment": "^2.29.4",
     "mongodb": "^6.1.0",

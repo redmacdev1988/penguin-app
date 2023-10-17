@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import React, { useContext } from "react";
-import { ThemeContext } from "../../context/ThemeContext";
+import { MyThemeContext } from "../../context/MyThemeContext";
 import { GlobalContext } from "../../context/GlobalContext";
 import styles from "./navbar.module.css";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
@@ -43,7 +43,7 @@ const links = [
   ];
 
 export const Navbar = () => {
-  const { mode } = useContext(ThemeContext);
+  const { mode } = useContext(MyThemeContext);
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
 
   const session = useSession();

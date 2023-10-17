@@ -5,29 +5,37 @@ import { uploadHomework } from '@/actions/uploadActions';
 import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
-import { ToastContainer } from 'react-toastify';
-import { showErrorToast  } from "@/utils/toastMsgs";
+import { useToast } from '@chakra-ui/react'
+import { ChakraProvider, CircularProgress } from '@chakra-ui/react'
+
 
 const UploadForm = ({ refreshHomeworkData }) => {
-
+    const toast = useToast()
     const session = useSession();
     const formRef = useRef();
     const [files, setFiles] = useState([]);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [disabled, setDisabled] = useState(false);
+    const [progressing, setProgressing] = useState(false);
 
     async function handleInputFiles(e) {
         const files = e.target.files;
+        console.log('files', files);
+
         if (files.length > 3) {
-            return showErrorToast('Upload up to 3 image files only.')
+            formRef.current.reset();
+            return toast({
+                position: 'top',
+                title: 'Upload Warning',
+                description: 'Upload up to 3 image files only.',
+                status: 'warning',
+                duration: 9000,
+                isClosable: true,
+            });
+
         }
 
-        // name : "simple-get-route.png"
-        // size : 132148
-        // type : "image/png"
-        // console.log(files[0]);
-        
         const options = {
             maxSizeMB: 0.2,
             maxWidthOrHeight: 1280,
@@ -74,27 +82,37 @@ const UploadForm = ({ refreshHomeworkData }) => {
     }
 
     const handleUpload = async (e) => {
+        console.log('handleUpload - files', files);
         if (!disabled) {
             setDisabled(true);
-
             e.preventDefault();
      
-            console.log(`Uploading homework: title - ${title} description - ${desc}`);
-    
-            if(!files.length) {
+            if(!files.length || files.length === 0)  {
                 setDisabled(false);
-                return showErrorToast('Please select an image file');
+                return toast({
+                    position: 'top',
+                    title: 'Upload Warning',
+                    description: 'You must select an image file',
+                    status: 'warning',
+                    duration: 9000,
+                    isClosable: true,
+                });
             }
 
-            if(files.length > 3) {
-                setDisabled(false);
-                return showErrorToast('Please select 3 images or less.');
-            }
 
             if (!title || !desc) {
                 setDisabled(false);
-                return showErrorToast('Please enter both title and description');
+                return toast({
+                    position: 'top',
+                    title: 'Upload Warning',
+                    description: 'Please enter a title and a description',
+                    status: 'warning',
+                    duration: 9000,
+                    isClosable: true,
+                });
             }
+
+            setProgressing(true);
 
             const formData = new FormData();
             files.forEach(file => {
@@ -110,6 +128,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             }
     
             const res = await uploadHomework(formData, session?.data?.user);
+
             if(res?.errMsg) {
                 console.log(`Error: ${res?.errMsg}`);
                 showErrorToast(`Error: ${res?.errMsg}`);
@@ -118,6 +137,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
             setFiles([]);
             formRef.current.reset();
             setDisabled(false);
+
+            setProgressing(false);
             refreshHomeworkData();
 
         } else {
@@ -127,9 +148,11 @@ const UploadForm = ({ refreshHomeworkData }) => {
     }
 
     return (
+        <ChakraProvider>
         <form onSubmit={handleUpload} ref={formRef}>
+
+            
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
-    
                 <div>
                     <input className={styles.defaultBtn} type="file" accept='image/*' multiple onChange={handleInputFiles} />
                 </div>
@@ -138,7 +161,15 @@ const UploadForm = ({ refreshHomeworkData }) => {
                     <input className={styles.textBox} type="text" placeholder="homework title" onChange={handleInputTitle} />
                     <input className={styles.textBox} type="text" placeholder="homework description" onChange={handleInputDesc} />
                 </div>
-        
+                <button 
+                    className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
+                    disabled={disabled}
+                    style={{ marginTop: '30px', marginBottom: '20px'}}
+                >
+                    Upload Homework
+                    {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
+                </button>
+
                 {/* Preview Images */}
                 <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
                     {
@@ -153,16 +184,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 </div>
                 <h5>3 images or less</h5>
             </div>
-
-
-            <button 
-                className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
-                disabled={disabled}
-            >
-                Upload Homework
-            </button>
-            <ToastContainer />
       </form>
+      </ChakraProvider>
     )
 }
 

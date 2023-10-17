@@ -4,12 +4,12 @@ import HomeworkCard from './HomeworkCard'
 import useInView from '@/hooks/useInView'
 import { fetchHomework } from '@/actions/homeworkActions';
 import { ToastContainer } from 'react-toastify';
-import { showInfoToast  } from "@/utils/toastMsgs";
+// import { showInfoToast  } from "@/utils/toastMsgs";
 
-
-
+import { useToast } from '@chakra-ui/react'
 
 const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkData }) => {
+  const toast = useToast()
   const {ref, inView} = useInView();
   const [loading, setLoading] = useState(false);
   const [next, setNext] = useState(true);
@@ -76,7 +76,6 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
                 if (deleteRes && deleteRes.status === 200) {
                     const { msg } = await deleteRes.json();
                     console.log('Deleted: ', msg);
-                    showInfoToast(msg);
                 }
                 refreshHomeworkData();
             }} 

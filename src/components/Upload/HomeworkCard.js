@@ -1,11 +1,23 @@
 import Image from 'next/image'
 import React, { useTransition, useContext } from 'react'
-import { ThemeContext } from "../../context/ThemeContext";
+import { MyThemeContext } from "../../context/MyThemeContext";
 import moment from 'moment'
 import Link from "next/link";
 import styles from "./upload.module.css";
 import lightExternalIcon from "../../../public/icons/external-link.svg"
 import darkExternalIcon from "../../../public/icons/external-link-dark.svg"
+import { ChakraProvider,  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton, 
+  Button,
+  useDisclosure
+} from '@chakra-ui/react'
+
+
 
 function parseTimeStampToDateTime(str_date) {
   return moment(str_date, "YYYY-MM-DDTHH:mm").utc().format('l LT');
@@ -28,7 +40,9 @@ const HomeworkCard = ({
   desc
 }) => {
 
-  const { mode } = useContext(ThemeContext);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const { mode } = useContext(MyThemeContext);
 
   // isPending - a boolean indicating whether the transition is currently in progress or not.
   // startTransition - a function that can be used to start the transition.
@@ -66,6 +80,7 @@ const HomeworkCard = ({
   };
 
   return (
+    <ChakraProvider>
     <>
       <div style={{
         borderTop: '2px solid green', 
@@ -102,10 +117,10 @@ const HomeworkCard = ({
           </div>
           
           {<div style={{padding: 10}}>
-          <span style={{fontSize: 18}}>{name}</span> - <span style={{color: '#53c28b'}}>{!title ? "no title" : title}</span>, <i>{!desc ? "no desc" : desc}</i>
+          {createdAt && (<span style={{fontSize: 18}}>{name}</span> - <span style={{color: '#53c28b'}}>{!title ? "no title" : title}</span>, <i>{!desc ? "no desc" : desc}</i>)}
           </div>}
           
-          <div style={{padding: '20px', border: '1px solid #53c28b', display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+          <div style={{padding: '20px',  display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
             {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
               <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
                 <input style={{width: '70%'}} type="text" placeholder="slug URL" />
@@ -114,24 +129,42 @@ const HomeworkCard = ({
               </div>
             )}
 
-            <button
-              className={styles.defaultBtn} 
-              type='button' 
-              onClick={() => startTransition(onClickDelete)} 
+            {createdAt ? (<Button  
+              className={styles.defaultBtn}  
               disabled={isPending}
-            >
-              { isPending ? 'Loading...' : 'Delete Homework' }
-            </button>
+              onClick={onOpen}>{ isPending ? 'Loading...' : 'Delete Homework' }
+            </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
+              </button>)}
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Are you sure?</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <h1>Delete Homework <b><mark>{title}</mark></b></h1>
+                </ModalBody>
+
+                <ModalFooter>
+                  <Button colorScheme='blue' mr={3} onClick={() => {
+                    startTransition(onClickDelete);
+                    onClose();
+                  }}>Yes</Button>
+                  <Button variant='ghost' onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
 
           </div>
-
         </div>
       </div>
- 
+
+     
     </>
+    </ChakraProvider>
   )
 
-   
 
 }
 

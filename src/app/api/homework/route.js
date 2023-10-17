@@ -57,6 +57,7 @@ export const PUT = async(request) => {
 export const DELETE = async (request) => {
     const body = await request.json();
     const { publicId } = body;
+    console.log('publicId', publicId);
     try {
         await connect();
         const deletedDoc = await PenguinHomework.findOneAndDelete({publicId});

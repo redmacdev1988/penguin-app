@@ -27,9 +27,9 @@ async function saveHomeworkToLocal(formData) {
             const uploadDir = path.join(tempdir, `/${name}.${ext}`) // work in Vercel
             fs.writeFile(uploadDir, buffer)
             return { filepath: uploadDir, filename: photo.name }
-          })
-      ))
-      return await Promise.all(multiplePhotoBuffersPromises)
+        })
+    ));
+    return await Promise.all(multiplePhotoBuffersPromises)
 }
 
 // todo make sure folder matches names
@@ -41,7 +41,6 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-
     console.log('Ready to upload Homework √');
 
     const title = formData.get('title')
@@ -51,9 +50,7 @@ export async function uploadHomework(formData, user) {
     
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
-
         const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
-    
         if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
             console.log('uploaded to Cloudinary √');
 
@@ -71,7 +68,7 @@ export async function uploadHomework(formData, user) {
                 })
                 return newHomework;
             });
-    
+            
             await connect();
             console.log('uploadHomework - db connected √');
             const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
