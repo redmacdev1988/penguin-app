@@ -92,17 +92,23 @@ const HomeworkCard = ({
         justifyContent: 'space-evenly', 
         flexDirection: 'row' 
       }}>
-
-        {secureImageUrl && <div style={{padding: 5}}>
+        <div style={{width: '20%'}}>
+        {createdAt ? (<div style={{padding: 5}}>
           <Link href={secureImageUrl} target='_blank'>
               <Image src={secureImageUrl} 
                 alt='image' 
-                height={250}
                 width={250}
+                height={200}
               />
             </Link>
-        </div>}
-      
+          </div>) : (<Image src={secureImageUrl} 
+              alt='image' 
+              width={250}
+              height={200}
+          />)
+        }
+        </div>
+
         <div style={{display: 'flex', flexDirection: 'column'}}>
           
           <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
