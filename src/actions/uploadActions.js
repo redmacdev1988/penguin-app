@@ -72,7 +72,6 @@ export async function uploadHomework(formData, user) {
                 return newHomework;
             });
     
-            console.log('uploadHomework - # of homework Models: ', homeworkModelArr.length);
             await connect();
             console.log('uploadHomework - db connected √');
             const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);

@@ -20,7 +20,6 @@ const Login = ({ from }) => {
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   
   useEffect(() => {
-    console.log('useEffect dashboard/login', params);
     setError(params.get("error"));
     setSuccess(params.get("success"));
   }, [params]);
@@ -34,7 +33,6 @@ const Login = ({ from }) => {
       console.log('dashboard/login unauthenticated!!');
     }
     else if (session.status === "authenticated") {
-      console.log('dashboard/login AUTHENTICATED');
 
       // we need to check for tutorial cache
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
