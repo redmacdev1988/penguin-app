@@ -14,17 +14,12 @@ export const GET = async (request) => {
     const name = url.searchParams.get("name");
     const searchParams = url.searchParams.get("searchParams");
     const reqLimit = url.searchParams.get("limit");
-    
-    console.log(`GET - name - ${name}, searchParams - ${searchParams}`)
     try {
         await connect();
 
         const sort = '-_id';
         const limit = reqLimit || 5;
         const next = searchParams || null;
-
-
-        console.log('FETCH limit is: ', limit);
         
         // if its me or admin, search result should be all entries that are NOT rtsao or admin
         // if its the normal student name, then give me entries with the student name
@@ -69,7 +64,6 @@ export const DELETE = async (request) => {
         if (deletedDoc && deletedDoc.publicId) {
             console.log(`data deleted in mongo for: ${deletedDoc.publicId}`);
             const res = await cloudinary.v2.uploader.destroy(publicId);
-            console.log('res---->', res);
             if (res.result === 'ok') {
                 console.log(`image deleted in cloudinary for: ${deletedDoc.publicId}`)
                 return new NextResponse(JSON.stringify({ msg: `Your Homework (id ${deletedDoc.publicId}) has been deleted`}), { status: 200 });

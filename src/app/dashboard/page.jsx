@@ -67,8 +67,6 @@ const Dashboard = () => {
     }
   
     if (session.status === "unauthenticated") {
-      console.log('csFromUrl: ', csFromUrl);
-
       localStorage.setItem(csFromUrl, "dashboard");
       router?.push("/dashboard/login");
     }

@@ -31,14 +31,13 @@ const Login = ({ from }) => {
       console.log('here!');
     }
     else if (session.status === "unauthenticated") {
-      console.log('dashboard/login unauthenticated!!!!!!!!!!!!!!!!!!!!!!!');
+      console.log('dashboard/login unauthenticated!!');
     }
     else if (session.status === "authenticated") {
       console.log('dashboard/login AUTHENTICATED');
 
       // we need to check for tutorial cache
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
-        console.log('local storage variables initiated for Tutorials √')
         initLocalStorageForTut();
       } 
 

@@ -18,8 +18,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
     const [disabled, setDisabled] = useState(false);
 
     async function handleInputFiles(e) {
-        console.log('handleInputFiles start √');
-
         const files = e.target.files;
         if (files.length > 3) {
             return alert('Upload up to 3 image files.');

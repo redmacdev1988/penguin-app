@@ -101,7 +101,6 @@ const HomeworkPage = () => {
         const responseData = await fetchHomework({ name: session?.data?.user.name });
         if (responseData) {
           const {allHmForUser, next_cursor} = responseData;
-          console.log(next_cursor, allHmForUser);
           setData([...allHmForUser]);
           setNextCursor(next_cursor);
         }

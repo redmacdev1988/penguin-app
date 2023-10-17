@@ -34,7 +34,6 @@ async function saveHomeworkToLocal(formData) {
 
 // todo make sure folder matches names
 async function uploadHomeworkToCloudinary(newFiles, user) {
-    console.log('uploadHomeworkToCloudinary - # of files to upload to cloudinary:', newFiles.length);
     const multipleHmPhotosPromise = newFiles.map(file => (
         cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
     ));

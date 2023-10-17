@@ -59,7 +59,6 @@ const createArray = (length) => {
 const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalItems) => {
   if (!data) { return (<h1>No Data</h1>); }
   const pageArr = createArray(totalPages)
-  console.log('pageArr', pageArr);
   return (
     <main>
       <h3>Total # of Tutorials {totalItems}, Total # of Pages {totalPages}</h3>
@@ -139,10 +138,7 @@ const TutorialList = () => {
 
         if (_totalItems === 0 && _totalPages === 0) {
           _totalItems = res.headers.get('x-wp-total');
-          console.log('x-wp-total', _totalItems);
-
           _totalPages = res.headers.get('X-WP-TotalPages');
-          console.log('X-WP-TotalPages', _totalPages);
         }
         return res.json();
       }).then(data => {
