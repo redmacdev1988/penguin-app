@@ -18,6 +18,10 @@ export default function Home() {
       <div className={styles.item}>
         <Image src={FrontPageStock} alt="" className={styles.img} />
       </div>
+      <ul>
+        <li>images of all students here</li>
+        <li>with their statuses</li>
+      </ul>
     </div>
   );
 }

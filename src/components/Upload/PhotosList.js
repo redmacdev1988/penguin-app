@@ -55,12 +55,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
 
   return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
   <>
-    <div style={{
-        display: 'flex', 
-        gap: 6, 
-        flexWrap: 'wrap',
-        margin: '10px 0', 
-    }}>
+    <div style={{ display: 'flex',  gap: 6,  flexWrap: 'wrap', margin: '10px 0',  }}>
       {
         homeworkArr.map(photo => (
           <HomeworkCard
@@ -77,6 +72,9 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
             onClickDelete={async () => {
                 const deleteRes = await handleDeletePhoto(photo?.publicId);
                 if (deleteRes && deleteRes.status === 200) {
+                    const { msg } = await deleteRes.json();
+                    console.log('Deleted: ', msg);
+                    alert(msg);
                 }
                 refreshHomeworkData();
             }} 

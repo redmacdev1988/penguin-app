@@ -14,25 +14,18 @@ const Dashboard = () => {
   const { csFromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  
+  // todo 
+  // get numbers of homework
+  // get number of improvement links
+  // others etc
+  
   const { data, mutate, error, isLoading } = useSWR(
     `/api/posts?username=${session?.data?.user.name}`,
     fetcher
   );  
   
   const loadingHTML = () => <p>Loading...</p>;
-
-  const addNewHmForm = () => {
-    return (
-      <form className={styles.new} onSubmit={handleSubmit}>
-          <h1>Add New Homework</h1>
-          <input type="text" placeholder="Title" className={styles.input} />
-          <input type="text" placeholder="Desc" className={styles.input} />
-          <input type="text" placeholder="Image" className={styles.input} />
-          <textarea placeholder="Content" className={styles.textArea} cols="30" rows="10"></textarea>
-          <button className={styles.button}>Send</button>
-        </form>
-    )
-  }
 
   const renderPastHomeworkHTML = () => {
     return (
@@ -54,8 +47,6 @@ const Dashboard = () => {
   const authenticatedHTML = () => {
     return (
       <div className={styles.container}>
-        {addNewHmForm()}
-        <h1>Your Past Homework</h1>
         <div className={styles.posts}>
           {isLoading ? "loading" : renderPastHomeworkHTML()}
         </div>

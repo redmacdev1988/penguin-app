@@ -21,13 +21,17 @@ const UploadForm = ({ refreshHomeworkData }) => {
         console.log('handleInputFiles start √');
 
         const files = e.target.files;
+        if (files.length > 3) {
+            return alert('Upload up to 3 image files.');
+        }
+
         // name : "simple-get-route.png"
         // size : 132148
         // type : "image/png"
         // console.log(files[0]);
         
         const options = {
-            maxSizeMB: 0.5,
+            maxSizeMB: 0.2,
             maxWidthOrHeight: 1280,
             useWebWorker: true,
         }
@@ -72,45 +76,48 @@ const UploadForm = ({ refreshHomeworkData }) => {
     }
 
     const handleUpload = async (e) => {
-        console.log('--===> handleUpload ');
-        e.preventDefault();
- 
-        console.log(`title - ${title} description - ${desc}`);
+        if (!disabled) {
+            setDisabled(true);
 
-        if(!files.length) return alert('No image files are selected.')
-        if(files.length > 3) return alert('Upload up to 3 image files.')
+            e.preventDefault();
+     
+            console.log(`Uploading homework: title - ${title} description - ${desc}`);
     
-        console.log('# of files OK √');
-
-        setDisabled(true);
-
-        const formData = new FormData();
-        // image files
-        files.forEach(file => {
-            formData.append('files', file)
-        })
-        formData.append('title', title);
-        formData.append('desc', desc);
-
-        console.log('files and everything appended to form √');
-
-        if (!session || !session?.data?.user) {
-            throw Error("Error, no user associated with Session");
-        }
-
-
-        const res = await uploadHomework(formData, session?.data?.user);
-        if(res?.errMsg) {
-            alert(`Error: ${res?.errMsg}`);
-            console.log(`Error: ${res?.errMsg}`);
+            if(!files.length) {
+                setDisabled(false);
+                return alert('No image files are selected.')
+            }
+            if(files.length > 3) {
+                setDisabled(false);
+            }
+        
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append('files', file)
+            })
+            formData.append('title', title);
+            formData.append('desc', desc);
+    
+            console.log('files and everything appended to form √');
+    
+            if (!session || !session?.data?.user) {
+                throw Error("Error, no user associated with Session");
+            }
+    
+            const res = await uploadHomework(formData, session?.data?.user);
+            if(res?.errMsg) {
+                alert(`Error: ${res?.errMsg}`);
+            }
+            
+            setFiles([]);
+            formRef.current.reset();
             setDisabled(false);
+            refreshHomeworkData();
+
         } else {
-            setDisabled(false);
+            console.log('Please wait, submit btn disabled, already processing upload request');
         }
-    
-        setFiles([]);
-        formRef.current.reset();
-        refreshHomeworkData();
+       
     }
 
     return (
@@ -142,7 +149,10 @@ const UploadForm = ({ refreshHomeworkData }) => {
             </div>
 
 
-            <button classNames={styles.defaultBtn} >
+            <button 
+                className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
+                disabled={disabled}
+            >
                 Upload Homework
             </button>
   

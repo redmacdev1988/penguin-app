@@ -30,6 +30,8 @@ const HomeworkCard = ({
 
   const { mode } = useContext(ThemeContext);
 
+  // isPending - a boolean indicating whether the transition is currently in progress or not.
+  // startTransition - a function that can be used to start the transition.
   const [isPending, startTransition] = useTransition();
 
   const handleUpdateSlug = async (e) => {

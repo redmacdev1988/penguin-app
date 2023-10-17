@@ -1,24 +1,24 @@
 
 10/14
 
-1 apply CSS
+CSS done:
 
 remove logo √
 remove About √
 remove Contact √
 remove Home texts √
-
 Apply button css √
-
 improvement URL is a open external button √
-
 be able to open image link in homework row in a separate tab with full image √
-
 save image as 500k √
+'upload homework' needs to be disabled when sending pics √
 
-Tutorials
+CSS TODO:
 
+Tutorials content 
 navigation buttons
-css for viewing
 
-'upload homework' needs to be disabled when sending pics
+
+Bug - 
+
+After upload image, homework list does not refresh √

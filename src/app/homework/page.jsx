@@ -10,22 +10,19 @@ import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 
 const loadingHTML = () => {
-  return <p>Loading...</p>;
+  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '6.8em'}}>
+    <h1>Loading...</h1>
+  </div>;
 }
 
 const HomeworkPage = () => {
-  console.log('--- HomeworkPage ---');
-
   const session = useSession();
   const router = useRouter();
   const [node, setNode] = useState();
-  
   const [data, setData] = useState([]);
   const [nextCursor, setNextCursor] = useState();
-
   const { csFromUrl } = useContext(GlobalContext);
  
-
   const isAdmin = (name) => (name === 'rtsao' || name === 'admin')
 
   const authenticatedHTML = () => {
@@ -70,8 +67,6 @@ const HomeworkPage = () => {
     );
   }
 
-
-
   useEffect(() => {
     console.log('session updated');
     (async () => {
@@ -85,16 +80,13 @@ const HomeworkPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log('data updated');
-    if (data) {
-      console.log('update Node');
-      setNode(authenticatedHTML());
-    }
-    
+    console.log('homework - data updated');
+    setNode(authenticatedHTML());
   }, [data]);
 
   useEffect(() => {
-    console.log('session.status updated');
+    console.log('session.status updated', session.status);
+    
     if (session.status === "loading") {
       setNode(loadingHTML());
     }
@@ -105,7 +97,15 @@ const HomeworkPage = () => {
     }
 
     if (session.status === "authenticated") {
-      setNode(authenticatedHTML());
+      (async () => {
+        const responseData = await fetchHomework({ name: session?.data?.user.name });
+        if (responseData) {
+          const {allHmForUser, next_cursor} = responseData;
+          console.log(next_cursor, allHmForUser);
+          setData([...allHmForUser]);
+          setNextCursor(next_cursor);
+        }
+      })();
     } 
   }, [session.status]);
 
