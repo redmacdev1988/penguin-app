@@ -6,7 +6,9 @@ import Link from "next/link";
 import styles from "./upload.module.css";
 import lightExternalIcon from "../../../public/icons/external-link.svg"
 import darkExternalIcon from "../../../public/icons/external-link-dark.svg"
-import { ChakraProvider,  Modal,
+import { ChakraProvider,
+  CircularProgress,
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -14,10 +16,8 @@ import { ChakraProvider,  Modal,
   ModalBody,
   ModalCloseButton, 
   Button,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
-
-
 
 function parseTimeStampToDateTime(str_date) {
   return moment(str_date, "YYYY-MM-DDTHH:mm").utc().format('l LT');
@@ -120,7 +120,7 @@ const HomeworkCard = ({
           {createdAt && (<span style={{fontSize: 18}}>{name}</span> - <span style={{color: '#53c28b'}}>{!title ? "no title" : title}</span>, <i>{!desc ? "no desc" : desc}</i>)}
           </div>}
           
-          <div style={{padding: '20px',  display: 'flex', flexDirection: 'column', alignItems: 'stretch'}}>
+          <div style={{padding: '20px',  display: 'flex', flexDirection: 'column', alignItems: 'end'}}>
             {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
               <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
                 <input style={{width: '70%'}} type="text" placeholder="slug URL" />
@@ -132,7 +132,8 @@ const HomeworkCard = ({
             {createdAt ? (<Button  
               className={styles.defaultBtn}  
               disabled={isPending}
-              onClick={onOpen}>{ isPending ? 'Loading...' : 'Delete Homework' }
+              style={{minHeight: '86px', width: "40%" }}
+              onClick={onOpen}>{ isPending ? 'Loading...' : 'Delete Homework' } {isPending && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
             </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
               </button>)}
 

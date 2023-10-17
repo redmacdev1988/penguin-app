@@ -21,7 +21,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
     async function handleInputFiles(e) {
         const files = e.target.files;
-        console.log('files', files);
 
         if (files.length > 3) {
             formRef.current.reset();
