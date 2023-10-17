@@ -47,7 +47,6 @@ export const PUT = async(request) => {
     try {
         await connect();
         const res = await PenguinHomework.findOneAndUpdate({ publicId }, { slug,improvementsURL: link });
-        console.log('PUT res: ', res);
         return new NextResponse(JSON.stringify(res), { status: 200 });
     } catch (err) {
         console.log('error', error);
@@ -66,12 +65,12 @@ export const DELETE = async (request) => {
             const res = await cloudinary.v2.uploader.destroy(publicId);
             if (res.result === 'ok') {
                 console.log(`image deleted in cloudinary for: ${deletedDoc.publicId}`)
-                return new NextResponse(JSON.stringify({ msg: `Your Homework (id ${deletedDoc.publicId}) has been deleted`}), { status: 200 });
+                return new NextResponse(JSON.stringify({ msg: `Your Homework ${deletedDoc.title || ""} has been deleted`}), { status: 200 });
             }
-            else return new NextResponse(`Error in deleting Homework (id ${deletedDoc.publicId})`, { status: 500 });
+            else return new NextResponse(JSON.stringify({ msg: `Eror in deleting your Homework ${deletedDoc.title || ""}`}), { status: 500 });
         } else {
             console.log(`Can't delete in mongo: ${deletedDoc.publicId}`);
-            return new NextResponse(`Error in deleting Homework (id ${deletedDoc.publicId})`, { status: 500 });
+            return new NextResponse(JSON.stringify({ msg: `Eror in deleting your Homework ${deletedDoc.title || ""}`}), { status: 500 });
         }
             
     } catch (err) {

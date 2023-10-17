@@ -1,12 +1,12 @@
 'use client'
 import { useRef, useState } from 'react'
 import HomeworkCard from './HomeworkCard';
-import ButtonSubmit from './ButtonSubmit';
 import { uploadHomework } from '@/actions/uploadActions';
-import { revalidatePath } from 'next/cache'
 import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
+import { ToastContainer } from 'react-toastify';
+import { showErrorToast  } from "@/utils/toastMsgs";
 
 const UploadForm = ({ refreshHomeworkData }) => {
 
@@ -20,7 +20,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
     async function handleInputFiles(e) {
         const files = e.target.files;
         if (files.length > 3) {
-            return alert('Upload up to 3 image files.');
+            return showErrorToast('Upload up to 3 image files only.')
         }
 
         // name : "simple-get-route.png"
@@ -83,12 +83,19 @@ const UploadForm = ({ refreshHomeworkData }) => {
     
             if(!files.length) {
                 setDisabled(false);
-                return alert('No image files are selected.')
+                return showErrorToast('Please select an image file');
             }
+
             if(files.length > 3) {
                 setDisabled(false);
+                return showErrorToast('Please select 3 images or less.');
             }
-        
+
+            if (!title || !desc) {
+                setDisabled(false);
+                return showErrorToast('Please enter both title and description');
+            }
+
             const formData = new FormData();
             files.forEach(file => {
                 formData.append('files', file)
@@ -104,7 +111,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
     
             const res = await uploadHomework(formData, session?.data?.user);
             if(res?.errMsg) {
-                alert(`Error: ${res?.errMsg}`);
+                console.log(`Error: ${res?.errMsg}`);
+                showErrorToast(`Error: ${res?.errMsg}`);
             }
             
             setFiles([]);
@@ -153,7 +161,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             >
                 Upload Homework
             </button>
-  
+            <ToastContainer />
       </form>
     )
 }

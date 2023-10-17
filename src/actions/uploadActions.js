@@ -76,7 +76,6 @@ export async function uploadHomework(formData, user) {
             await connect();
             console.log('uploadHomework - db connected √');
             const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
-            console.log('uploadHomework - dbOpResponse', dbOpResponse);
             if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
                 console.log('uploadHomework - uploaded to Mongodb √');
                 revalidatePath("/homework/page");

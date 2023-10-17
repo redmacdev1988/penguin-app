@@ -3,6 +3,10 @@ import React, { useState, useEffect } from "react";
 import HomeworkCard from './HomeworkCard'
 import useInView from '@/hooks/useInView'
 import { fetchHomework } from '@/actions/homeworkActions';
+import { ToastContainer } from 'react-toastify';
+import { showInfoToast  } from "@/utils/toastMsgs";
+
+
 
 
 const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkData }) => {
@@ -19,7 +23,6 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
       }
       return;
     }
-
     setLoading(true);
 
     const responseData = await fetchHomework({name: author, nextCursor});
@@ -30,7 +33,6 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
         setNext(false);
       }
     }
-
     setLoading(false);
   }
 
@@ -74,7 +76,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
                 if (deleteRes && deleteRes.status === 200) {
                     const { msg } = await deleteRes.json();
                     console.log('Deleted: ', msg);
-                    alert(msg);
+                    showInfoToast(msg);
                 }
                 refreshHomeworkData();
             }} 
@@ -83,6 +85,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
             />
         ))
       }
+      <ToastContainer />
     </div>
   
   <button 
