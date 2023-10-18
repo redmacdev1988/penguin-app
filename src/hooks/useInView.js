@@ -8,7 +8,6 @@ const useInView = () => {
     const el = ref.current;
     
     const observer = new IntersectionObserver(entries => {
-      console.log('ref-ed control appeared: ', entries[0].isIntersecting);
       setInView(entries[0].isIntersecting)
     })
 

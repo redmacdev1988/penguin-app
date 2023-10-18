@@ -41,12 +41,9 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-    console.log('Ready to upload Homework √');
 
     const title = formData.get('title')
     const desc = formData.get('desc');
-
-    console.log(title, desc);
     
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
