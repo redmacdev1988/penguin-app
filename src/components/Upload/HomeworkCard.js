@@ -6,7 +6,9 @@ import Link from "next/link";
 import styles from "./upload.module.css";
 import lightExternalIcon from "../../../public/icons/external-link.svg"
 import darkExternalIcon from "../../../public/icons/external-link-dark.svg"
+import approvalIcon from "../../../public/icons/approval.svg"
 import { ChakraProvider,
+  Input,
   CircularProgress,
   Modal,
   ModalOverlay,
@@ -49,9 +51,10 @@ const HomeworkCard = ({
   const [isPending, startTransition] = useTransition();
 
   const handleUpdateSlug = async (e) => {
+    console.log('--- handleUpdateSlug --');
     e.preventDefault();
     const inputSlug = e.target[0].value;
-
+    console.log('inputSlug', inputSlug);
     try {
       const response = await fetch(strUrlToGetCorrectionLink(inputSlug), {
         method: "GET"
@@ -90,26 +93,27 @@ const HomeworkCard = ({
         display: 'flex', 
         flex: '1 100%',  
         justifyContent: 'space-evenly', 
-        flexDirection: 'row' 
+        flexDirection: 'row',
+        alignItems: 'center'
       }}>
         <div style={{width: '20%'}}>
-        {createdAt ? (<div style={{padding: 5}}>
-          <Link href={secureImageUrl} target='_blank'>
-              <Image src={secureImageUrl} 
+          {createdAt ? (<div style={{padding: 5}}>
+            <Link href={secureImageUrl} target='_blank'>
+                <Image src={secureImageUrl} 
+                  alt='image' 
+                  width={250}
+                  height={200}
+                />
+              </Link>
+            </div>) : (<Image src={secureImageUrl} 
                 alt='image' 
                 width={250}
                 height={200}
-              />
-            </Link>
-          </div>) : (<Image src={secureImageUrl} 
-              alt='image' 
-              width={250}
-              height={200}
-          />)
-        }
+            />)
+          }
         </div>
 
-        <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{display: 'flex', flexDirection: 'column', width: "70%"}}>
           
           <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
             {improvementsURL && (<i>see improvements</i>)}
@@ -123,25 +127,25 @@ const HomeworkCard = ({
           </div>
           
           {<div style={{padding: 10}}>
-          {createdAt && (<span style={{fontSize: 18}}>{name}</span> - <span style={{color: '#53c28b'}}>{!title ? "no title" : title}</span>, <i>{!desc ? "no desc" : desc}</i>)}
+          {createdAt && (<><span>{!title ? "no title" : title}</span> - <i>{!desc ? "no desc" : desc}</i> by <span style={{fontSize: 18}}>{name}</span></>)}
           </div>}
           
-          <div style={{padding: '20px',  display: 'flex', flexDirection: 'column', alignItems: 'end'}}>
+          <div style={{padding: '20px',  display: 'flex', flexDirection: 'column' }}>
             {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
               <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
-                <input style={{width: '70%'}} type="text" placeholder="slug URL" />
-                <button className={styles.defaultBtn}  style={{float: 'right', width: '20%'}}>Update Correction</button>
+                <Input placeholder='slug URL' size='lg' />
+                <Button 
+                  type='submit'
+                  leftIcon={<Image alt={'update'} priority height={32} width={32} src={approvalIcon} />} 
+                  colorScheme='yellow' variant='solid' style={{marginTop: '15px'}}
+                >
+                  Update Correction
+                </Button>
               </form>
               </div>
             )}
 
-            {createdAt ? (<Button  
-              className={styles.defaultBtn}  
-              disabled={isPending}
-              style={{minHeight: '86px', width: "40%" }}
-              onClick={onOpen}>{ isPending ? 'Loading...' : 'Delete Homework' } {isPending && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
-            </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
-              </button>)}
+           
 
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
@@ -154,8 +158,11 @@ const HomeworkCard = ({
 
                 <ModalFooter>
                   <Button colorScheme='blue' mr={3} onClick={() => {
-                    startTransition(onClickDelete);
-                    onClose();
+                    startTransition(() => onClickDelete((bDone) => {
+                        if (bDone) {
+                          onClose();
+                        }
+                    }));
                   }}>Yes</Button>
                   <Button variant='ghost' onClick={onClose}>Cancel</Button>
                 </ModalFooter>
@@ -165,6 +172,16 @@ const HomeworkCard = ({
 
           </div>
         </div>
+
+        {createdAt ? (<Button  
+              colorScheme='red'
+              disabled={isPending}
+              onClick={onOpen}>
+                {isPending ? 'Loading...' : 'Delete Homework' } 
+                {isPending && <CircularProgress size='25px' style={{margin: '5px'}} isIndeterminate color='red.300' />}
+            </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
+              </button>)}
+
       </div>
 
      

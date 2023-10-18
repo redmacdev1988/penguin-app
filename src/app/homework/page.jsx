@@ -10,7 +10,7 @@ import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 
 const loadingHTML = () => {
-  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '6.8em'}}>
+  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
     <h1>Loading...</h1>
   </div>;
 }
@@ -61,6 +61,7 @@ const HomeworkPage = () => {
                 setNextCursor(next_cursor);
               }
             }
+            return true;
           }} 
         />}
       </div>

@@ -71,13 +71,16 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
             slug={photo?.slug}
             improvementsURL={photo?.improvementsURL}
             onClickRefreshHomework={() => refreshHomeworkData()}
-            onClickDelete={async () => {
+            onClickDelete={async (bDoneCB) => {
                 const deleteRes = await handleDeletePhoto(photo?.publicId);
                 if (deleteRes && deleteRes.status === 200) {
                     const { msg } = await deleteRes.json();
                     console.log('Deleted: ', msg);
                 }
-                refreshHomeworkData();
+                const res = await refreshHomeworkData();
+                if (res === true) {
+                  bDoneCB(true);
+                }
             }} 
             title={photo?.title}
             desc={photo?.desc}

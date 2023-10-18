@@ -15,8 +15,9 @@ save image as 500k √
 
 CSS TODO:
 
-Tutorials content 
-navigation buttons
+- admin version for updating slugs
+- Tutorials content 
+- navigation buttons
 
 
 Bug - 
