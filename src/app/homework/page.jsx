@@ -33,7 +33,7 @@ const HomeworkPage = () => {
       <div className={styles.container}>
 
         {!bUserAdmin && <h1>Your Homework</h1>}
-        {!bUserAdmin && <UploadForm refreshHomeworkData={ async() => {
+        {!bUserAdmin && <UploadForm refreshHomeworkData={async() => {
           const responseData = await fetchHomework({name: session?.data?.user.name, limit: data.length + 1});
           if (responseData) {
             const {allHmForUser, next_cursor} = responseData;

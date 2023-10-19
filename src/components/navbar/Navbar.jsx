@@ -2,12 +2,13 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { MyThemeContext } from "../../context/MyThemeContext";
 import { GlobalContext } from "../../context/GlobalContext";
 import styles from "./navbar.module.css";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { signOut, useSession } from "next-auth/react";
+import { ChakraProvider, Tab, Tabs, TabList, TabPanel, TabPanels, useColorModeValue } from '@chakra-ui/react'
 
 const links = [
     {
@@ -43,12 +44,16 @@ const links = [
   ];
 
 export const Navbar = () => {
+
+
   const { mode } = useContext(MyThemeContext);
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
 
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
   return (
+    <ChakraProvider>
+      
     <div className={styles.container}>
         {/* <Link href="/" className={styles.logo}>
           <img
@@ -59,14 +64,19 @@ export const Navbar = () => {
             className={styles.img}
           />
         </Link> */}
-        <div className={styles.links}> 
-            <DarkModeToggle />
-            {links.map((link) => (
+
+        {/* links */}
+        <Tabs isFitted variant='enclosed'>
+          <DarkModeToggle />
+          <TabList>
+          {links.map((link) => (
             <Link key={link.id} href={link.url} className={styles.link}>
-                {link.title}
+                <Tab _selected={{ color: 'white', bg: '#53c28b' }}>{link.title}</Tab>
             </Link>
             ))}
-        </div>
+            </TabList>
+        </Tabs>
+
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
           <button className={styles.logout} onClick={() => { 
@@ -79,7 +89,7 @@ export const Navbar = () => {
           </button>
         )}
     </div>
-  )
+  </ChakraProvider>)
 }
 
 export default Navbar;

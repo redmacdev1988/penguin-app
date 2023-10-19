@@ -6,7 +6,7 @@ import { fetchHomework } from '@/actions/homeworkActions';
 import { ToastContainer } from 'react-toastify';
 // import { showInfoToast  } from "@/utils/toastMsgs";
 
-import { useToast } from '@chakra-ui/react'
+import { ChakraProvider, useToast, Button } from '@chakra-ui/react'
 
 const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkData }) => {
   const toast = useToast()
@@ -57,6 +57,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
 
   return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
   <>
+  <ChakraProvider>
     <div style={{ display: 'flex',  gap: 6,  flexWrap: 'wrap', margin: '10px 0',  }}>
       {
         homeworkArr.map(photo => (
@@ -87,19 +88,13 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
             />
         ))
       }
-      <ToastContainer />
     </div>
-  
-  <button 
-    className='btn_loadmore' 
-    disabled={loading} 
-    ref={ref}
-    style={{display: next ? 'block' : 'none'}}
-    onClick={handleLoadMore}
-  >
-    { loading ? 'Loading...' : 'Load More' }
-  </button>
-    <h3>{ next ? 'Loading' : 'No more to load'}</h3>
+
+    <Button ref={ref} isLoading={loading} colorScheme='blue' onClick={handleLoadMore}>
+      { next ? 'Loading...' : 'No more homework' }
+    </Button>
+
+    </ChakraProvider>
   </> : (
     <h3>No homeworks yet</h3>
   ) 
