@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
 import { useToast } from '@chakra-ui/react'
-import { ChakraProvider, CircularProgress } from '@chakra-ui/react'
+import { ChakraProvider, CircularProgress, Input, Button } from '@chakra-ui/react'
 
 
 const UploadForm = ({ refreshHomeworkData }) => {
@@ -149,15 +149,14 @@ const UploadForm = ({ refreshHomeworkData }) => {
         <ChakraProvider>
         <form onSubmit={handleUpload} ref={formRef}>
 
-            
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
                     <input className={styles.defaultBtn} type="file" accept='image/*' multiple onChange={handleInputFiles} />
                 </div>
                 
                 <div style={{display: 'flex', alignItems: 'left', alignContent:'space-evenly', flexDirection: 'column'}}>
-                    <input className={styles.textBox} type="text" placeholder="homework title" onChange={handleInputTitle} />
-                    <input className={styles.textBox} type="text" placeholder="homework description" onChange={handleInputDesc} />
+                    <Input style={{marginTop: '20px'}} placeholder="homework title" size='lg' onChange={handleInputTitle} />
+                    <Input style={{marginTop: '20px'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
                 </div>
                 <button 
                     className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 

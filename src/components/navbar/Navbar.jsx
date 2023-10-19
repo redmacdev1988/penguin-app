@@ -66,16 +66,14 @@ export const Navbar = () => {
         </Link> */}
 
         {/* links */}
-        <Tabs isFitted variant='enclosed'>
-          <DarkModeToggle />
-          <TabList>
-          {links.map((link) => (
+        <div className={styles.links}> 
+            <DarkModeToggle />
+            {links.map((link) => (
             <Link key={link.id} href={link.url} className={styles.link}>
-                <Tab _selected={{ color: 'white', bg: '#53c28b' }}>{link.title}</Tab>
+                {link.title}
             </Link>
             ))}
-            </TabList>
-        </Tabs>
+        </div>
 
         <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === "authenticated" && (
