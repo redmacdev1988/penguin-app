@@ -25,7 +25,11 @@ const Dashboard = () => {
     fetcher
   );  
   
-  const loadingHTML = () => <p>Loading...</p>;
+  const loadingHTML = () => {
+    return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
+      <h1>asdf Loading...</h1>
+    </div>;
+  }
 
   const renderPastHomeworkHTML = () => {
     return (
@@ -47,9 +51,7 @@ const Dashboard = () => {
   const authenticatedHTML = () => {
     return (
       <div className={styles.container}>
-        <div className={styles.posts}>
-          {isLoading ? "loading" : renderPastHomeworkHTML()}
-        </div>
+       <h1>This is your dashboard</h1>
       </div>
     );
   }

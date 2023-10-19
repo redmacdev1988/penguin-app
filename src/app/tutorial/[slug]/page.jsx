@@ -1,13 +1,12 @@
 import React from "react";
 import styles from "./page.module.css";
-import Button from "@/components/NavLinkButton/NavLinkButton";
-import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ChakraProvider, Heading } from '@chakra-ui/react'
+
 
 async function getDataBySlug(slug) {
   const dataURL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/tutorials/${slug}` :
   `http://${process.env.LOCALHOST_URL}/api/tutorials/${slug}`;
-  console.log('dataURL: ', dataURL);
   const res = await fetch(dataURL, {cache: "no-store"});
   return (!res.ok) ? notFound() : res.json();
 }
@@ -15,13 +14,19 @@ async function getDataBySlug(slug) {
 const Tutorial = async ({ params }) => {
   const { slug } = params;
   const data = await getDataBySlug(slug);
-  const { content } = data;
+  const { content, title } = data;
   if (data) {
-    return (
+    return (<ChakraProvider>
       <div className={styles.container}>
-        {<h1>{params.slug}</h1>}
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-      </div>
+        <Heading style={{textAlign: 'center'}} as='h2' size='2xl' noOfLines={1}>{title}</Heading>
+        <div style={{ 
+            fontSize: 'x-large',
+            borderRadius: '20px', 
+            marginTop: '25px', 
+            padding: '30px', 
+            lineHeight: 2 
+          }} dangerouslySetInnerHTML={{ __html: content }} />
+      </div></ChakraProvider>
     );
   } else {
     return (

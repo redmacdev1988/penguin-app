@@ -11,7 +11,7 @@ import { fetchHomework } from '@/actions/homeworkActions';
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
-    <h1>Loading...</h1>
+    <h1>gagagagag Loading...</h1>
   </div>;
 }
 

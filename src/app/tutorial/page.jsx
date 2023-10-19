@@ -4,13 +4,32 @@ import styles from "./page.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { GlobalContext } from "../../context/GlobalContext";
+import { FiExternalLink } from 'react-icons/fi'
+import { ChakraProvider,
+  Divider,
+  AbsoluteCenter,
+  Button,
+  Box,
+  Text,
+  SimpleGrid,
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  Icon,
+  Link
+} from '@chakra-ui/react'
 
-const RESULTS_PER_PAGE = 8;
+const RESULTS_PER_PAGE = 10;
 const HOURS = 8;
 
-const loadingObj = () => {
-  return (<p>Loading...</p>);
+
+const loadingHTML = () => {
+  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
+    <h1>Loading...</h1>
+  </div>;
 }
+
 
 const createHref = (slug) => {
   return "/tutorial/" + slug;
@@ -58,32 +77,55 @@ const createArray = (length) => {
 
 const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalItems) => {
   if (!data) { return (<h1>No Data</h1>); }
-  const pageArr = createArray(totalPages)
+  const pageArr = createArray(totalPages);
   return (
+    <ChakraProvider>
     <main>
-      <h3>Total # of Tutorials {totalItems}, Total # of Pages {totalPages}</h3>
-      <ul>
-        {data && data.map((item) => (
-          <li key={item.id}>
-            <h2>{item.title?.rendered}</h2>
-            <h3>{item.slug}, {item.id}</h3>
-            <a href={createHref(item.slug)} key={item.id}>read more</a>
-          </li>
-        ))}
-      </ul>
 
-    <h3>You are on Page {pageIndex}</h3>
-    
+    <Box position='relative' padding='10'>
+      <Divider />
+      <AbsoluteCenter color='#ECC94B' bg='#111' px='6'><Text fontSize='2xl'>Total of {totalItems} Tutorials </Text></AbsoluteCenter>
+      </Box>
+
+      <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
+      {data && data.map((item) => (
+          <Card key={item.id}>
+            <CardHeader>
+              <Heading size='md'>{item.title?.rendered}</Heading>
+            </CardHeader>
+            <CardBody>
+              <div dangerouslySetInnerHTML={{ __html: item.excerpt.rendered.split(`&hellip;`)[0] }} />
+            </CardBody>
+            
+            <Link style={{margin: '10px'}} href={createHref(item.slug)} key={item.id} isExternal>
+              read more <Icon as={FiExternalLink} />
+            </Link>
+
+          </Card>
+        ))}
+      </SimpleGrid>
+      
+      <Box position='relative' padding='10'>
+      <Divider />
+      <AbsoluteCenter color='#ECC94B' bg='#111' px='6'>You are on Page {pageIndex}</AbsoluteCenter>
+      </Box>
+
+
     <ul style={{display:'flex', flexDirection: 'row', listStyleType: 'none', justifyContent: 'space-between'}}>
-      {pageIndex <= 1 ? <></> : <button onClick={() => setPageIndex(pageIndex - 1)}>Prev</button>}
+      {pageIndex <= 1 ? <></> : <Button onClick={() => setPageIndex(pageIndex - 1)} colorScheme='yellow' variant='ghost'>Prev</Button> }
       <ul style={{width: '100%', display:'flex', flexDirection: 'row', listStyleType: 'none', justifyContent: 'space-evenly'}}>
         {pageArr.map((item, index) => {
-          return <li key={item+index} style={{marginLeft: '10px', marginRight: '10px'}}><button onClick={() => setPageIndex(item)}>Page {item}</button></li>
+          return <li key={item+index} style={{marginLeft: '10px', marginRight: '10px'}}>
+            <Button onClick={() => setPageIndex(item)} colorScheme='yellow' variant='solid'>
+              Page {item}
+            </Button>
+          </li>
         })}
       </ul>
-      {pageIndex >= totalPages ? <></> : <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button> }
+      {pageIndex >= totalPages ? <></> : <Button onClick={() => setPageIndex(pageIndex + 1)} colorScheme='yellow' variant='ghost'>Next</Button>}
     </ul>
   </main>
+  </ChakraProvider>
   )
 }
 
@@ -128,7 +170,7 @@ const TutorialList = () => {
   // we need to update data on our page.
   useEffect(() => {
 
-    setNode(<h1>Loading</h1>);
+    setNode(loadingHTML());
 
     let _totalPages = 0;
     let _totalItems = 0;
@@ -179,7 +221,7 @@ const TutorialList = () => {
 
   useEffect(() => {
     if (session.status === "loading") {
-      setNode(loadingObj());
+      setNode(loadingHTML());
     }
   
     if (session.status === "unauthenticated") { 
