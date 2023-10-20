@@ -11,7 +11,7 @@ import { fetchHomework } from '@/actions/homeworkActions';
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
-    <h1>gagagagag Loading...</h1>
+    <h1>Loading...</h1>
   </div>;
 }
 
@@ -69,7 +69,6 @@ const HomeworkPage = () => {
   }
 
   useEffect(() => {
-    console.log('session updated');
     (async () => {
       const responseData = await fetchHomework({ name: session?.data?.user.name });
       if (responseData) {
@@ -81,13 +80,10 @@ const HomeworkPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log('homework - data updated');
     setNode(authenticatedHTML());
   }, [data]);
 
-  useEffect(() => {
-    console.log('session.status updated', session.status);
-    
+  useEffect(() => { 
     if (session.status === "loading") {
       setNode(loadingHTML());
     }

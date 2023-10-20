@@ -4,119 +4,143 @@ import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { GlobalContext } from "@/context/GlobalContext";
+import { DateTime } from "luxon";
+
+import {
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
+  Heading,
+  ChakraProvider
+} from '@chakra-ui/react'
+
 
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
-  const [node, setNode] = useState();
+  const [loading, setLoading] = useState(false);
+  const [numOfHms, setNumOfHms] = useState(0);
+  const [numOfCorrected, setNumOfCorrected] = useState(0);
+  const [numOfDaysPerHm, setNumOfDaysPerHm] = useState(0);
+  const [startDateStr, setStartDateStr] = useState("");
+  const [endDateStr, setEndDateStr] = useState("");
   const { csFromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   
-  // todo 
-  // get numbers of homework
-  // get number of improvement links
-  // others etc
-  
   const { data, mutate, error, isLoading } = useSWR(
-    `/api/posts?username=${session?.data?.user.name}`,
+    `/api/homework?name=${session?.data?.user.name}&&limit=0`,
     fetcher
   );  
-  
+
   const loadingHTML = () => {
     return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
-      <h1>asdf Loading...</h1>
+      <h1>Loading...</h1>
     </div>;
   }
 
-  const renderPastHomeworkHTML = () => {
-    return (
-      <ul>
-      {data && data?.map((post) => (
-        <li className={styles.post} key={post._id}>
-          <span>key: {post._id}</span>
-          <div className={styles.imgContainer}>
-            <Image src={post.img} alt="" width={200} height={100} />
-          </div>
-          <h2 className={styles.postTitle}>{post.title}</h2>
-          <span className={styles.delete} onClick={() => handleDelete(post._id)}>Delete</span>
-        </li>
-      ))}
-      </ul>
-    )
-  }
-
-  const authenticatedHTML = () => {
-    return (
-      <div className={styles.container}>
-       <h1>This is your dashboard</h1>
-      </div>
-    );
-  }
 
   // when the data is updated, we need to re-render the react node
   useEffect(() => {
-    if (session.status === "authenticated" && session?.data?.user.name) {
-      setNode(authenticatedHTML());
+    console.log('data', data);
+    if (data) {
+      const { allHmForUser } = data;
+      console.log('# of hms', allHmForUser.length);
+      setNumOfHms(allHmForUser.length);
+    }
+
+    if (data) {
+      const { allHmForUser } = data;
+      const hmWithImprovements = allHmForUser.filter(hm => {
+        const { improvementsURL } = hm;
+        return improvementsURL;
+      });
+
+      console.log('total homeworks with improvements: ', hmWithImprovements);
+      setNumOfCorrected(hmWithImprovements.length);
+    }
+
+    if (data) {
+      const { allHmForUser } = data;
+      
+      if (allHmForUser && Array.isArray(allHmForUser) && allHmForUser.length > 1) {
+        const sortedByCreatedAt = allHmForUser.sort((a,b) => {
+          const left = DateTime.fromISO(a.createdAt);
+          const right = DateTime.fromISO(b.createdAt);
+          return left.ts - right.ts;
+        });
+  
+        const firstDay = DateTime.fromISO(sortedByCreatedAt[0].createdAt);
+        const latestDay = DateTime.fromISO(sortedByCreatedAt[sortedByCreatedAt.length - 1].createdAt);
+        
+        setStartDateStr(firstDay.toFormat('MM/dd/yyyy hh:mm', { locale: "cn" }));
+        setEndDateStr(latestDay.toFormat('MM/dd/yyyy hh:mm', { locale: "cn" }));
+  
+        const diffInDays = latestDay.diff(firstDay, 'days');
+        const days = diffInDays.toObject().days;
+  
+        console.log(`It takes ${days/allHmForUser.length} days to do 1 homework`);
+        setNumOfDaysPerHm((days/allHmForUser.length).toFixed(2));
+  
+        const daysPerHm = days/allHmForUser.length;
+        if (daysPerHm < 1) {
+          // we need to calculate the hours
+          console.log(`It takes  ${daysPerHm * 24} hours to do 1 homework`);
+        }
+      }
     }
   }, [data])
 
   useEffect(() => {
     if (session.status === "loading") {
-      setNode(loadingHTML());
+      setLoading(true);
     }
-  
-    if (session.status === "unauthenticated") {
+    else if (session.status === "unauthenticated") {
       localStorage.setItem(csFromUrl, "dashboard");
       router?.push("/dashboard/login");
     }
-
-    if (session.status === "authenticated") {
-        setNode(authenticatedHTML());
+    else if (session.status === "authenticated") {
+      setLoading(false);
     }
   }, [session.status]);
 
-  const handleSubmit = async (e) => {
+  return (loading ? loadingHTML() :
+    (<ChakraProvider>
+      <div className={styles.container}>
 
-    e.preventDefault();
-    const title = e.target[0].value;
-    const desc = e.target[1].value;
-    const img = e.target[2].value;
-    const content = e.target[3].value;
+      <Heading>{session?.data?.user.name}'s Dashboard</Heading>
+      <StatGroup>
+        <Stat>
+          <StatLabel># of homeworks</StatLabel>
+          <StatNumber>{numOfHms}</StatNumber>
+          <StatHelpText>{startDateStr} - {endDateStr}</StatHelpText>
+        </Stat>
 
-    try {
-      await fetch("/api/posts", {
-        method: "POST",
-        body: JSON.stringify({
-          title,
-          desc,
-          img,
-          content,
-          username: session.data.user.name,
-        }),
-      });
-      mutate();
-      e.target.reset()
-    } catch (err) {
-      console.log(err);
-    }
-  };
+        <Stat>
+          <StatLabel># of corrected</StatLabel>
+          <StatNumber>{numOfCorrected}</StatNumber>
+          <StatHelpText>
+            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms.toFixed(2)) * 100} % of your homework has been corrected</h1>} 
+          </StatHelpText>
+        </Stat>
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`/api/posts/${id}`, {
-        method: "DELETE",
-      });
-      mutate();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+        <Stat>
+          <StatLabel>One homework takes: </StatLabel>
+          <StatNumber>
+            {(numOfDaysPerHm >= 1) && <span>{numOfDaysPerHm} day(s)</span>}
+            <span>{(numOfDaysPerHm < 1) && (numOfDaysPerHm * 24).toFixed(2)} hours</span>
+          </StatNumber>
+        </Stat>
+      </StatGroup>
 
- 
-  return (node);
+  
+      </div>
+    </ChakraProvider>)
+  );
 };
 
 export default Dashboard;

@@ -4,7 +4,7 @@ const firstPageURL = (name) => `/api/homework?name=${name}`;
 const nthPageURL = (name, nextCursor) => `/api/homework?name=${name}&searchParams=${nextCursor}`;
 const pageWithLimitURL = (name, limit) => `/api/homework?name=${name}&limit=${limit}`;
 
-
+// Passing 0 means no limit.
 export const fetchHomework = async ({name, nextCursor, limit}) => {
 
   if (!name && !nextCursor && !limit) return;
