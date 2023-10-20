@@ -23,6 +23,7 @@
     "framer-motion": "^10.16.4",
     "html-to-react": "^1.6.0",
     "luxon": "^3.4.3",
+    "moment": "^2.29.4",
     "mongodb": "^6.1.0",
     "mongoose": "^6.12.0",
     "next": "13.4.19",
