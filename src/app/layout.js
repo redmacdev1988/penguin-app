@@ -1,14 +1,10 @@
-/** @jsxImportSource react */ 
-
 import './globals.css'
-import { Inter, Roboto, Poppins } from 'next/font/google'
 import Navbar from '@/components/navbar/Navbar'
 import Footer from '@/components/footer/Footer'
 import { MyThemeProvider } from "@/context/MyThemeContext"
 import { GlobalProvider } from "@/context/GlobalContext"
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'RickyABC English tutorials',
@@ -19,7 +15,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <GlobalProvider>
             <MyThemeProvider>
               <AuthProvider>
