@@ -112,7 +112,7 @@ const Dashboard = () => {
     (
       <div className={styles.container}>
 
-      <Heading>{session?.data?.user.name}'s Dashboard</Heading>
+      <Heading>Your Dashboard</Heading>
       <StatGroup>
         <Stat>
           <StatLabel># of homeworks</StatLabel>

@@ -28,7 +28,7 @@ export const fetchHomework = async ({name, nextCursor, limit}) => {
         return null;
       }
     } catch (e) {
-      console.log('error: ', e);
+      console.log("error: ", e);
     }
   }
 
