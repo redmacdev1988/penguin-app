@@ -4,6 +4,7 @@ import Footer from '@/components/footer/Footer'
 import { MyThemeProvider } from "@/context/MyThemeContext"
 import { GlobalProvider } from "@/context/GlobalContext"
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 export const metadata = {
@@ -16,17 +17,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <GlobalProvider>
-            <MyThemeProvider>
-              <AuthProvider>
-                <div className="container">
-                  <Navbar />
-                  {children}
-                  <Footer />
-                </div>
-              </AuthProvider>
-            </MyThemeProvider>
-        </GlobalProvider>
+        <ChakraProvider>
+          <GlobalProvider>
+              <MyThemeProvider>
+                <AuthProvider>
+                  <div className="container">
+                    <Navbar />
+                    {children}
+                    <Footer />
+                  </div>
+                </AuthProvider>
+              </MyThemeProvider>
+          </GlobalProvider>
+        </ChakraProvider>
       </body>
     </html>
   )

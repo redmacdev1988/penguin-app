@@ -8,7 +8,6 @@ import { GlobalContext } from "../../context/GlobalContext";
 import styles from "./navbar.module.css";
 import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 import { signOut, useSession } from "next-auth/react";
-import { ChakraProvider, Tab, Tabs, TabList, TabPanel, TabPanels, useColorModeValue } from '@chakra-ui/react'
 
 const links = [
     {
@@ -52,7 +51,6 @@ export const Navbar = () => {
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
   return (
-    <ChakraProvider>
       
     <div className={styles.container}>
         {/* <Link href="/" className={styles.logo}>
@@ -87,7 +85,7 @@ export const Navbar = () => {
           </button>
         )}
     </div>
-  </ChakraProvider>)
+  )
 }
 
 export default Navbar;

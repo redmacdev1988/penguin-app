@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
 import { useToast } from '@chakra-ui/react'
-import { ChakraProvider, CircularProgress, Input, Button } from '@chakra-ui/react'
+import { CircularProgress, Input, Button } from '@chakra-ui/react'
 
 
 const UploadForm = ({ refreshHomeworkData }) => {
@@ -141,12 +141,9 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
         } else {
             console.log('Please wait, submit btn disabled, already processing upload request');
-        }
-       
+        }  
     }
-
     return (
-        <ChakraProvider>
         <form onSubmit={handleUpload} ref={formRef}>
 
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
@@ -182,7 +179,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 <h5>3 images or less</h5>
             </div>
       </form>
-      </ChakraProvider>
     )
 }
 

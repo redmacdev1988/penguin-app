@@ -1,7 +1,9 @@
+"use client"
+
 import React from "react";
 import styles from "./page.module.css";
 import { notFound } from "next/navigation";
-import { ChakraProvider, Heading } from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
 
 
 async function getDataBySlug(slug) {
@@ -16,7 +18,7 @@ const Tutorial = async ({ params }) => {
   const data = await getDataBySlug(slug);
   const { content, title } = data;
   if (data) {
-    return (<ChakraProvider>
+    return (
       <div className={styles.container}>
         <Heading style={{textAlign: 'center'}} as='h2' size='2xl' noOfLines={1}>{title}</Heading>
         <div style={{ 
@@ -26,7 +28,7 @@ const Tutorial = async ({ params }) => {
             padding: '30px', 
             lineHeight: 2 
           }} dangerouslySetInnerHTML={{ __html: content }} />
-      </div></ChakraProvider>
+      </div>
     );
   } else {
     return (

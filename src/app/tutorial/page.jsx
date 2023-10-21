@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { GlobalContext } from "../../context/GlobalContext";
 import { FiExternalLink } from 'react-icons/fi'
-import { ChakraProvider,
+import {
   Divider,
   AbsoluteCenter,
   Button,
@@ -79,7 +79,6 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
   if (!data) { return (<h1>No Data</h1>); }
   const pageArr = createArray(totalPages);
   return (
-    <ChakraProvider>
     <main>
 
     <Box position='relative' padding='10'>
@@ -125,7 +124,6 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
       {pageIndex >= totalPages ? <></> : <Button onClick={() => setPageIndex(pageIndex + 1)} colorScheme='yellow' variant='ghost'>Next</Button>}
     </ul>
   </main>
-  </ChakraProvider>
   )
 }
 

@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
@@ -15,7 +16,6 @@ import {
   StatArrow,
   StatGroup,
   Heading,
-  ChakraProvider
 } from '@chakra-ui/react'
 
 
@@ -109,7 +109,7 @@ const Dashboard = () => {
   }, [session.status]);
 
   return (loading ? loadingHTML() :
-    (<ChakraProvider>
+    (
       <div className={styles.container}>
 
       <Heading>{session?.data?.user.name}'s Dashboard</Heading>
@@ -139,7 +139,7 @@ const Dashboard = () => {
 
   
       </div>
-    </ChakraProvider>)
+    )
   );
 };
 

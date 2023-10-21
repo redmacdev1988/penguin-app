@@ -1,3 +1,5 @@
+"use client"
+
 import Image from 'next/image'
 import React, { useTransition, useContext } from 'react'
 import { MyThemeContext } from "../../context/MyThemeContext";
@@ -7,7 +9,7 @@ import styles from "./upload.module.css";
 import lightExternalIcon from "../../../public/icons/external-link.svg"
 import darkExternalIcon from "../../../public/icons/external-link-dark.svg"
 import approvalIcon from "../../../public/icons/approval.svg"
-import { ChakraProvider,
+import {
   Input,
   CircularProgress,
   Modal,
@@ -83,7 +85,6 @@ const HomeworkCard = ({
   };
 
   return (
-    <ChakraProvider>
     <>
       <div style={{
         borderTop: '2px solid green', 
@@ -181,12 +182,8 @@ const HomeworkCard = ({
                 {isPending && <CircularProgress size='25px' style={{margin: '5px'}} isIndeterminate color='red.300' />}
             </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
               </button>)}
-
       </div>
-
-     
     </>
-    </ChakraProvider>
   )
 
 
