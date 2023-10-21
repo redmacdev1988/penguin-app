@@ -1,3 +1,5 @@
+/** @jsxImportSource react */ 
+
 import './globals.css'
 import { Inter, Roboto, Poppins } from 'next/font/google'
 import Navbar from '@/components/navbar/Navbar'
