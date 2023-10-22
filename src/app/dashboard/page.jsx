@@ -46,7 +46,6 @@ const Dashboard = () => {
 
   // when the data is updated, we need to re-render the react node
   useEffect(() => {
-    console.log('data', data);
     if (data) {
       const { allHmForUser } = data;
       console.log('# of hms', allHmForUser.length);

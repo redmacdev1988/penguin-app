@@ -54,8 +54,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                     return file;
                 }
             })
-      
-            console.log(`Setting ${newFiles.length} # of image files`);
+            
             setFiles(newFiles);
 
         } catch (error) {

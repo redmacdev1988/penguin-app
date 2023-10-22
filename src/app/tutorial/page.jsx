@@ -228,7 +228,6 @@ const TutorialList = () => {
     }
 
     if (session.status === "authenticated") {
-      console.log('tutorials page', 'authenticated')
     }
   }, [session.status]);
 
