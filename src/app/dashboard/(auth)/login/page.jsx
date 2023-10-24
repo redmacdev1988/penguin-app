@@ -8,8 +8,14 @@ import { initLocalStorageForTut } from '@/app/tutorial/page';
 import { GlobalContext } from '@/context/GlobalContext';
 import { LuUserCheck2, LuUser2 } from "react-icons/lu";
 import {
-  Icon, Heading, HStack
+  Icon, Heading, LinkBox, LinkOverlay, Text,
+  InputGroup,
+  Input,
+  InputRightElement,
+  InputLeftElement,
+  Button
 } from '@chakra-ui/react'
+import { LuUserCircle2, LuText, LuUserPlus2 } from "react-icons/lu";
 
 const cacheTutPropMissing = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
   return !localStorage.getItem(csCacheTimeStamp) || !localStorage.getItem(csCacheTutorials) || !localStorage.getItem(csShouldCacheTutorials);
@@ -22,7 +28,8 @@ const Login = ({ from }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
-  
+  const [show, setShow] = useState(false);
+
   useEffect(() => {
     setError(params.get("error"));
     setSuccess(params.get("success"));
@@ -55,21 +62,28 @@ const Login = ({ from }) => {
 
   return (
     <div className={styles.container}>
-
      <Heading>{success ? success : "Welcome Back"} <Icon boxSize={12} style={{position: 'absolute', paddingLeft: '10px'}} as={success ? LuUserCheck2 : LuUser2} color='orange.300' /></Heading>
 
-    
-      <h2 className={styles.subtitle}>Please sign in to see the dashboard.</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <input
+
+        {/* <input
           id ="email"
           type="text"
           placeholder="Email"
           required
           autoComplete="on"
           className={styles.input}
-        />
-        <input
+        /> */}
+
+        <InputGroup size='lg'>
+          <InputLeftElement pointerEvents='none'>
+            <Icon as={LuUserCircle2} color='orange.300' />
+          </InputLeftElement>
+          <Input size='lg' placeholder='Your ID' variant='outline' />
+        </InputGroup>
+
+
+        {/* <input
           id="password"
           type="password"
           placeholder="Password"
@@ -77,14 +91,39 @@ const Login = ({ from }) => {
           autoComplete="on"
           className={styles.input}
         />
+        
+        */}
+
+
+<InputGroup size='lg'>
+          <Input
+            pr='4.5rem'
+            type={show ? 'text' : 'password'}
+            placeholder='Enter a Password'
+          />
+          <InputRightElement width='4.5rem'>
+              <Button h='1.75rem' size='sm' onClick={() => setShow(!show)}>
+                {show ? 'Hide' : 'Show'}
+              </Button>
+          </InputRightElement>
+        </InputGroup>
+
+
+
         <button className={styles.button}>Login</button>
         {error && error}
       </form>
 
-      <span className={styles.or}>- OR -</span>
-      <Link className={styles.link} href="/dashboard/register">
-        Create new account
-      </Link>
+      <span className={styles.or}>No Account?</span>
+
+      <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
+        <Text mb='3'>Come Join Us!</Text>
+          <Heading size='md' my='2'>
+            <LinkOverlay href="/dashboard/register">Create New Account</LinkOverlay>
+          </Heading>
+      </LinkBox>
+
+
       
     </div>
   );

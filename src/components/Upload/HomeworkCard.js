@@ -21,7 +21,9 @@ import {
   ModalCloseButton, 
   Button,
   useDisclosure,
+  Icon
 } from '@chakra-ui/react'
+import { LuX, LuXCircle } from "react-icons/lu";
 
 function parseTimeStampToDateTime(str_date) {
   return moment(str_date, "YYYY-MM-DDTHH:mm").utc().format('l LT');
@@ -175,10 +177,11 @@ const HomeworkCard = ({
         </div>
 
         {createdAt ? (<Button  
+              leftIcon={<Icon boxSize={6} as={LuXCircle} color='white.100' />} 
               colorScheme='red'
               disabled={isPending}
               onClick={onOpen}>
-                {isPending ? 'Loading...' : 'Delete Homework' } 
+                {isPending ? 'Loading...' : 'Delete' } 
                 {isPending && <CircularProgress size='25px' style={{margin: '5px'}} isIndeterminate color='red.300' />}
             </Button>) : (<button className={styles.defaultBtn} onClick={onClickDelete}> Delete
               </button>)}
@@ -190,3 +193,10 @@ const HomeworkCard = ({
 }
 
 export default HomeworkCard
+
+/*
+
+LuX
+
+
+*/

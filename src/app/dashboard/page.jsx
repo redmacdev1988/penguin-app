@@ -77,6 +77,9 @@ const Dashboard = () => {
 
   // when the data is updated, we need to re-render the react node
   useEffect(() => {
+    
+    console.log('Data has been updated!!!', data);
+
     if (data) {
       const { allHmForUser } = data;
       console.log('# of hms', allHmForUser.length);
@@ -124,13 +127,16 @@ const Dashboard = () => {
           console.log(`It takes  ${daysPerHm * 24} hours to do 1 homework`);
         }
       }
-      setNode(renderDashboard());
+      console.log('set node of rendered dashboard');
     }
     
   }, [data])
 
   useEffect(() => {
-    console.log(' ===> session.status has changed to: ', session.status);
+    setNode(renderDashboard());
+  }, [numOfDaysPerHm, numOfCorrected])
+
+  useEffect(() => {
 
     if (session.status === "loading") {
       setNode(loadingHTML());
@@ -139,10 +145,13 @@ const Dashboard = () => {
       localStorage.setItem(csFromUrl, "dashboard");
       router?.push("/dashboard/login");
     }
+    else if (session.status === 'authenticated') {
+      console.log('dashboard authenticated');
+    }
     
   }, [session.status]);
 
-  return node;
+  return !isLoading && session.status === 'authenticated' && node;
 };
 
 export default Dashboard;

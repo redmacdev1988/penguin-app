@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./page.module.css";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   InputGroup,
@@ -9,7 +8,11 @@ import {
   InputRightElement,
   InputLeftElement,
   Button,
-  Icon
+  Icon,
+  Heading,
+  LinkBox,
+  LinkOverlay,
+  Text
 } from '@chakra-ui/react'
 import { LuUserCircle2, LuText } from "react-icons/lu";
 
@@ -23,9 +26,6 @@ const Register = () => {
     const name = e.target[0].value;
     const email = e.target[1].value;
     const password = e.target[2].value;
-
-    console.log(name, email);
-    console.log('pwd: ', password);
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -50,8 +50,7 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Create an Account</h1>
-      <h2 className={styles.subtitle}>Please sign up to see the dashboard.</h2>
+      <Heading>Create an Account</Heading>
 
       <form onSubmit={handleSubmit} className={styles.form}>
 
@@ -83,12 +82,21 @@ const Register = () => {
         </InputGroup>
 
         <button className={styles.button}>Register</button>
+
         {error && "Something went wrong!"}
       </form>
       <span className={styles.or}>- OR -</span>
-      <Link className={styles.link} href="/dashboard/login">
-        Login with an existing account
-      </Link>
+
+      <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
+        <Text mb='3'>If you have registered</Text>
+          <Heading size='md' my='2'>
+            <LinkOverlay href="/dashboard/login">Login with an existing account</LinkOverlay>
+          </Heading>
+      </LinkBox>
+
+
+
+
     </div>
   );
 };
