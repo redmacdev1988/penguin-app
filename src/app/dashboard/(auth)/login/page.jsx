@@ -21,7 +21,9 @@ const Login = ({ from }) => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
-  const [show, setShow] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [node, setNode] = useState("");
 
   useEffect(() => {
     setError(params.get("error"));
@@ -29,13 +31,16 @@ const Login = ({ from }) => {
   }, [params]);
 
   useEffect(() => {
+    console.log('session.status: ', session.status);
 
     if (session.status === "loading") {
+      setNode(loadingHTML());
     }
     else if (session.status === "unauthenticated") {
+      setNode(renderLoginPage());
     }
     else if (session.status === "authenticated") {
-
+      setLoading(false);
       // we need to check for tutorial cache
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
         initLocalStorageForTut();
@@ -53,52 +58,62 @@ const Login = ({ from }) => {
     signIn("credentials", { email, password });
   };
 
-  return (
-    <div className={styles.container}>
-    <div>
-      <Heading>{success ? success : "Welcome Back"}</Heading>
-    </div>
-    <div className={styles.bannerOuter}>
-      <Image src={PenguinBanner} alt="" className={styles.banner} />
-    </div>
-    <div>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <InputGroup size='lg'>
-          <InputLeftElement pointerEvents='none'>
-            <Icon as={LuUserCircle2} color='orange.300' />
-          </InputLeftElement>
-          <Input size='lg' placeholder='Your ID' variant='outline' />
-        </InputGroup>
+  const loadingHTML = () => {
+    return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
+      <h1>Logging in...</h1>
+    </div>;
+  }
 
-        <InputGroup size='lg'>
-          <Input
-            pr='4.5rem'
-            type={show ? 'text' : 'password'}
-            placeholder='Enter a Password'
-          />
-          <InputRightElement width='4.5rem'>
-              <Button h='1.75rem' size='sm' onClick={() => setShow(!show)}>
-                {show ? 'Hide' : 'Show'}
-              </Button>
-          </InputRightElement>
-        </InputGroup>
-
-        <button className={styles.button}>Login</button>
-        {error && error}
-      </form>
-    </div>
-      
-      <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
-
-      {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
-        <Text mb='3'>Come Join Us!</Text>
-          <Heading size='md' my='2'>
-            <LinkOverlay href="/dashboard/register">Create New Account</LinkOverlay>
-          </Heading>
-      </LinkBox> */}
-      
-    </div>
-  );
+  const renderLoginPage = () => {
+    return !loading && (
+      <div className={styles.container}>
+      <div>
+        <Heading>{success ? success : "Welcome Back"}</Heading>
+      </div>
+      <div className={styles.bannerOuter}>
+        <Image src={PenguinBanner} alt="" className={styles.banner} />
+      </div>
+      <div>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <InputGroup size='lg'>
+            <InputLeftElement pointerEvents='none'>
+              <Icon as={LuUserCircle2} color='orange.300' />
+            </InputLeftElement>
+            <Input size='lg' placeholder='Your ID' variant='outline' />
+          </InputGroup>
+  
+          <InputGroup size='lg'>
+            <Input
+              pr='4.5rem'
+              type={showPwd ? 'text' : 'password'}
+              placeholder='Enter a Password'
+            />
+            <InputRightElement width='4.5rem'>
+                <Button h='1.75rem' size='sm' onClick={() => setShowPwd(!showPwd)}>
+                  {showPwd ? 'Hide' : 'Show'}
+                </Button>
+            </InputRightElement>
+          </InputGroup>
+  
+          <button className={styles.button}>Login</button>
+          {error && error}
+        </form>
+      </div>
+        
+        <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
+  
+        {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
+          <Text mb='3'>Come Join Us!</Text>
+            <Heading size='md' my='2'>
+              <LinkOverlay href="/dashboard/register">Create New Account</LinkOverlay>
+            </Heading>
+        </LinkBox> */}
+        
+      </div>
+    );
+  }
+  
+  return node;
 };
 
 export default Login;

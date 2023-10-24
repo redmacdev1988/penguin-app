@@ -147,8 +147,6 @@ const HomeworkCard = ({
               </div>
             )}
 
-           
-
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
