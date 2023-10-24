@@ -1,21 +1,14 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
-import { getProviders, signIn, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { initLocalStorageForTut } from '@/app/tutorial/page';
 import { GlobalContext } from '@/context/GlobalContext';
-import { LuUserCheck2, LuUser2 } from "react-icons/lu";
-import {
-  Icon, Heading, LinkBox, LinkOverlay, Text,
-  InputGroup,
-  Input,
-  InputRightElement,
-  InputLeftElement,
-  Button
-} from '@chakra-ui/react'
-import { LuUserCircle2, LuText, LuUserPlus2 } from "react-icons/lu";
+import { Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
+import { LuUserCircle2 } from "react-icons/lu";
+import PenguinBanner from "@/../public/horizontal-logo-title.png";
+import Image from "next/image";
 
 const cacheTutPropMissing = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
   return !localStorage.getItem(csCacheTimeStamp) || !localStorage.getItem(csCacheTutorials) || !localStorage.getItem(csShouldCacheTutorials);
@@ -62,19 +55,14 @@ const Login = ({ from }) => {
 
   return (
     <div className={styles.container}>
-     <Heading>{success ? success : "Welcome Back"} <Icon boxSize={12} style={{position: 'absolute', paddingLeft: '10px'}} as={success ? LuUserCheck2 : LuUser2} color='orange.300' /></Heading>
-
+    <div>
+      <Heading>{success ? success : "Welcome Back"}</Heading>
+    </div>
+    <div className={styles.bannerOuter}>
+      <Image src={PenguinBanner} alt="" className={styles.banner} />
+    </div>
+    <div>
       <form onSubmit={handleSubmit} className={styles.form}>
-
-        {/* <input
-          id ="email"
-          type="text"
-          placeholder="Email"
-          required
-          autoComplete="on"
-          className={styles.input}
-        /> */}
-
         <InputGroup size='lg'>
           <InputLeftElement pointerEvents='none'>
             <Icon as={LuUserCircle2} color='orange.300' />
@@ -82,20 +70,7 @@ const Login = ({ from }) => {
           <Input size='lg' placeholder='Your ID' variant='outline' />
         </InputGroup>
 
-
-        {/* <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          required
-          autoComplete="on"
-          className={styles.input}
-        />
-        
-        */}
-
-
-<InputGroup size='lg'>
+        <InputGroup size='lg'>
           <Input
             pr='4.5rem'
             type={show ? 'text' : 'password'}
@@ -108,22 +83,19 @@ const Login = ({ from }) => {
           </InputRightElement>
         </InputGroup>
 
-
-
         <button className={styles.button}>Login</button>
         {error && error}
       </form>
+    </div>
+      
+      <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
 
-      <span className={styles.or}>No Account?</span>
-
-      <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
+      {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
         <Text mb='3'>Come Join Us!</Text>
           <Heading size='md' my='2'>
             <LinkOverlay href="/dashboard/register">Create New Account</LinkOverlay>
           </Heading>
-      </LinkBox>
-
-
+      </LinkBox> */}
       
     </div>
   );

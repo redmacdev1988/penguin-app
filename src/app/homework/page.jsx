@@ -8,6 +8,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 import UploadForm from '@/components/Upload/UploadForm';
 import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
+import { isAdmin } from '@/utils';
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
@@ -23,8 +24,6 @@ const HomeworkPage = () => {
   const [nextCursor, setNextCursor] = useState();
   const { csFromUrl } = useContext(GlobalContext);
  
-  const isAdmin = (name) => (name === 'rtsao' || name === 'admin')
-
   const authenticatedHTML = () => {
 
     const bUserAdmin = isAdmin(session?.data?.user.name);

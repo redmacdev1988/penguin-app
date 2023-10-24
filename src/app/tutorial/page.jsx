@@ -95,11 +95,9 @@ const renderPaginatedData = (data, pageIndex, setPageIndex, totalPages, totalIte
             <CardBody>
               <div dangerouslySetInnerHTML={{ __html: item.excerpt.rendered.split(`&hellip;`)[0] }} />
             </CardBody>
-            
-            <Link style={{margin: '10px'}} href={createHref(item.slug)} key={item.id} isExternal>
+            <Link style={{border: '1px solid white', color: '#FCB903', textAlign: 'center', backgroundColor: 'black', width: '100%'}} href={createHref(item.slug)} key={item.id} isExternal>
               read more <Icon as={FiExternalLink} />
             </Link>
-
           </Card>
         ))}
       </SimpleGrid>

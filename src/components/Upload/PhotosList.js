@@ -86,7 +86,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
       }
     </div>
 
-    <Button ref={ref} isLoading={loading} colorScheme='blue' onClick={handleLoadMore}>
+    <Button ref={ref} isLoading={loading} colorScheme='orange' onClick={handleLoadMore}>
       { next ? 'Loading...' : 'No more homework' }
     </Button>
 

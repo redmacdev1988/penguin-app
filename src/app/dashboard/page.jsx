@@ -59,7 +59,7 @@ const Dashboard = () => {
           <StatLabel># of corrected</StatLabel>
           <StatNumber>{numOfCorrected}</StatNumber>
           <StatHelpText>
-            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms.toFixed(2)) * 100} % of your homework has been corrected</h1>} 
+            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms).toFixed(2) * 100} % of your homework has been corrected</h1>} 
           </StatHelpText>
         </Stat>
 

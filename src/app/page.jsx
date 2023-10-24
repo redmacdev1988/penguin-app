@@ -1,7 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import FrontPageStock from "public/frontPageA-to-Z.jpg";
-import Button from "@/components/NavLinkButton/NavLinkButton";
+import PenguinBanner from "public/horizontal-logo-title.png";
 
 export default function Home() {
   return (
@@ -16,12 +15,9 @@ export default function Home() {
         <Button url="/tutorial" text="Start Here"/>
       </div> */}
       <div className={styles.item}>
-        <Image src={FrontPageStock} alt="" className={styles.img} />
+        <Image src={PenguinBanner} alt="" className={styles.img} />
       </div>
-      <ul>
-        <li>images of all students here</li>
-        <li>with their statuses</li>
-      </ul>
+      
     </div>
   );
 }

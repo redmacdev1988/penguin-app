@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 100px;
   }
   
   .title{
@@ -37,7 +37,7 @@
     width: 300px;
     padding: 20px;
     cursor: pointer;
-    background-color: #53c28b;
+    background-color: #FCB903;
     border: none;
     border-radius: 5px;
     color: #eee;
@@ -61,10 +61,11 @@
     color: rgb(61, 61, 61);
   }
   
-  .google {
-    background-color: rgba(228, 97, 50, 0.72);
-  }
-  
-  .google:hover {
-    background-color: rgba(228, 97, 50, 0.803);
-  }
+ .bannerOuter {
+  margin: 50px;
+  width: 50%;
+ }
+
+ .msg {
+  margin: 50px;
+ }

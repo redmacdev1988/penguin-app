@@ -13,6 +13,9 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import { LuLogOut } from "react-icons/lu";
+import { isAdmin } from "@/utils";
+import PenguinLogo from "@/../public/yellow-bckgnd-logo.jpeg";
+import Image from "next/image";
 
 const links = [
     {
@@ -45,6 +48,11 @@ const links = [
       title: "Dashboard",
       url: "/dashboard",
     },
+    {
+      id: 7,
+      title: "Register",
+      url: "/dashboard/register"
+    }
   ];
 
 export const Navbar = () => {
@@ -54,18 +62,30 @@ export const Navbar = () => {
 
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
+  const bAdmin = isAdmin(username);
   return (
-      
     <div className={styles.container}>
+        
 
         {/* links */}
         <div className={styles.links}> 
+            <Image src={PenguinLogo} alt="" style={{width: '64px', borderRadius: '5px'}} />
             <DarkModeToggle />
-            {links.map((link) => (
-            <Link key={link.id} href={link.url} className={styles.link}>
-                {link.title}
-            </Link>
-            ))}
+            {bAdmin && links.map((link) => { 
+              return (
+                <Link key={link.id} href={link.url} className={styles.link}>
+                  {link.title}
+                </Link>
+              );
+            })}
+
+            {!bAdmin && links.map((link) => { 
+              return (link.id < 7) && (
+                <Link key={link.id} href={link.url} className={styles.link}>
+                  {link.title}
+                </Link>
+              );
+            })}
         </div>
 
         <h3>{username ? "Welcome " : ""} {username}</h3>

@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./page.module.css";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   InputGroup,
@@ -15,12 +16,16 @@ import {
   Text
 } from '@chakra-ui/react'
 import { LuUserCircle2, LuText } from "react-icons/lu";
+import { isAdmin } from "@/utils/index";
+
 
 const Register = () => {
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
+  const session = useSession();
   const router = useRouter();
-  
+  const [node, setNode] = useState();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = e.target[0].value;
@@ -45,10 +50,17 @@ const Register = () => {
       setError(err);
       console.log(err);
     }
-
   };
 
-  return (
+  const loadingHTML = () => {
+    return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
+      <h1>Loading...</h1>
+    </div>;
+  }
+
+
+    
+  const renderRegisterPage = () => isAdmin(session?.data?.user.name) ? (
     <div className={styles.container}>
       <Heading>Create an Account</Heading>
 
@@ -85,20 +97,36 @@ const Register = () => {
 
         {error && "Something went wrong!"}
       </form>
-      <span className={styles.or}>- OR -</span>
+      {/* <span className={styles.or}>- OR -</span> */}
 
-      <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
+      {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
         <Text mb='3'>If you have registered</Text>
           <Heading size='md' my='2'>
             <LinkOverlay href="/dashboard/login">Login with an existing account</LinkOverlay>
           </Heading>
-      </LinkBox>
-
-
-
-
+      </LinkBox> */}
     </div>
-  );
+  ) : (<Heading style={{textAlign: 'center'}}>Sorry, you are not allowed</Heading>)
+
+  
+
+  useEffect(() => {
+    if (session.status === "loading") {
+      setNode(loadingHTML());
+    }
+    else if (session.status === "unauthenticated") {
+      router?.push("/dashboard/login");
+    }
+    else if (session.status === 'authenticated') {
+      console.log('dashboard authenticated');
+      setNode(renderRegisterPage());
+    }
+    
+  }, [session.status]);
+
+
+  return session.status === 'authenticated' && node;
+
 };
 
 export default Register;
