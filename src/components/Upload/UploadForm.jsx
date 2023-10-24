@@ -45,7 +45,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
             const compressedFilesArr = [];
             for (let i = 0; i < files.length; i++) {
                 const compressedFile = await imageCompression(files[i], options);
-                console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`);
                 compressedFilesArr.push(compressedFile);
             }
             
