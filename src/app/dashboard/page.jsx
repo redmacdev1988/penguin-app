@@ -22,12 +22,13 @@ import {
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [numOfHms, setNumOfHms] = useState(0);
   const [numOfCorrected, setNumOfCorrected] = useState(0);
   const [numOfDaysPerHm, setNumOfDaysPerHm] = useState(0);
   const [startDateStr, setStartDateStr] = useState("");
   const [endDateStr, setEndDateStr] = useState("");
+  const [node, setNode] = useState();
+
   const { csFromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -41,6 +42,36 @@ const Dashboard = () => {
     return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
       <h1>Loading...</h1>
     </div>;
+  }
+
+  const renderDashboard = () => {
+    return (
+      <div className={styles.container}>
+      <Heading>Your Dashboard</Heading>
+      <StatGroup>
+        <Stat>
+          <StatLabel># of homeworks</StatLabel>
+          <StatNumber>{numOfHms}</StatNumber>
+          <StatHelpText>{startDateStr} - {endDateStr}</StatHelpText>
+        </Stat>
+
+        <Stat>
+          <StatLabel># of corrected</StatLabel>
+          <StatNumber>{numOfCorrected}</StatNumber>
+          <StatHelpText>
+            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms.toFixed(2)) * 100} % of your homework has been corrected</h1>} 
+          </StatHelpText>
+        </Stat>
+
+        <Stat>
+          <StatLabel>One homework takes: </StatLabel>
+          <StatNumber>
+            {(numOfDaysPerHm >= 1) && <span>{numOfDaysPerHm} day(s)</span>}
+            <span>{(numOfDaysPerHm < 1) && (numOfDaysPerHm * 24).toFixed(2)} hours</span>
+          </StatNumber>
+        </Stat>
+      </StatGroup>
+    </div>);
   }
 
 
@@ -66,16 +97,18 @@ const Dashboard = () => {
     if (data) {
       const { allHmForUser } = data;
       
-      if (allHmForUser && Array.isArray(allHmForUser) && allHmForUser.length > 1) {
+      if (allHmForUser && Array.isArray(allHmForUser) && allHmForUser.length > 0) {
         const sortedByCreatedAt = allHmForUser.sort((a,b) => {
           const left = DateTime.fromISO(a.createdAt);
           const right = DateTime.fromISO(b.createdAt);
           return left.ts - right.ts;
         });
   
-        const firstDay = DateTime.fromISO(sortedByCreatedAt[0].createdAt);
-        const latestDay = DateTime.fromISO(sortedByCreatedAt[sortedByCreatedAt.length - 1].createdAt);
         
+        const firstDay = DateTime.fromISO(sortedByCreatedAt[0].createdAt);
+        const latestDay = sortedByCreatedAt.length > 1 ? DateTime.fromISO(sortedByCreatedAt[sortedByCreatedAt.length - 1].createdAt) :
+        DateTime.now();
+    
         setStartDateStr(firstDay.toFormat('MM/dd/yyyy hh:mm', { locale: "cn" }));
         setEndDateStr(latestDay.toFormat('MM/dd/yyyy hh:mm', { locale: "cn" }));
   
@@ -91,55 +124,25 @@ const Dashboard = () => {
           console.log(`It takes  ${daysPerHm * 24} hours to do 1 homework`);
         }
       }
+      setNode(renderDashboard());
     }
+    
   }, [data])
 
   useEffect(() => {
+    console.log(' ===> session.status has changed to: ', session.status);
+
     if (session.status === "loading") {
-      setLoading(true);
+      setNode(loadingHTML());
     }
     else if (session.status === "unauthenticated") {
       localStorage.setItem(csFromUrl, "dashboard");
       router?.push("/dashboard/login");
     }
-    else if (session.status === "authenticated") {
-      setLoading(false);
-    }
+    
   }, [session.status]);
 
-  return (loading ? loadingHTML() :
-    (
-      <div className={styles.container}>
-
-      <Heading>Your Dashboard</Heading>
-      <StatGroup>
-        <Stat>
-          <StatLabel># of homeworks</StatLabel>
-          <StatNumber>{numOfHms}</StatNumber>
-          <StatHelpText>{startDateStr} - {endDateStr}</StatHelpText>
-        </Stat>
-
-        <Stat>
-          <StatLabel># of corrected</StatLabel>
-          <StatNumber>{numOfCorrected}</StatNumber>
-          <StatHelpText>
-            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms.toFixed(2)) * 100} % of your homework has been corrected</h1>} 
-          </StatHelpText>
-        </Stat>
-
-        <Stat>
-          <StatLabel>One homework takes: </StatLabel>
-          <StatNumber>
-            {(numOfDaysPerHm >= 1) && <span>{numOfDaysPerHm} day(s)</span>}
-            <span>{(numOfDaysPerHm < 1) && (numOfDaysPerHm * 24).toFixed(2)} hours</span>
-          </StatNumber>
-        </Stat>
-      </StatGroup>
-
-  
-      </div>
-    )
-  );
+  return node;
 };
 
 export default Dashboard;
