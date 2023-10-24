@@ -55,7 +55,6 @@ const HomeworkCard = ({
   const [isPending, startTransition] = useTransition();
 
   const handleUpdateSlug = async (e) => {
-    console.log('--- handleUpdateSlug --');
     e.preventDefault();
     const inputSlug = e.target[0].value;
     console.log('inputSlug', inputSlug);
