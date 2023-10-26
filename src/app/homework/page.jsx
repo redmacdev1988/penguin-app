@@ -9,6 +9,8 @@ import UploadForm from '@/components/Upload/UploadForm';
 import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 import { isAdmin } from '@/utils';
+import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
+
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
@@ -83,16 +85,16 @@ const HomeworkPage = () => {
   }, [data]);
 
   useEffect(() => { 
-    if (session.status === "loading") {
+    if (session.status === SESSION_LOADING) {
       setNode(loadingHTML());
     }
   
-    if (session.status === "unauthenticated") {
+    if (session.status === SESSION_UNAUTHENTICATED) {
       localStorage.setItem(csFromUrl, "homework");
       router?.push("/dashboard/login");
     }
 
-    if (session.status === "authenticated") {
+    if (session.status === SESSION_AUTHENTICATED) {
       (async () => {
         const responseData = await fetchHomework({ name: session?.data?.user.name });
         if (responseData) {

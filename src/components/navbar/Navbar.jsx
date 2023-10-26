@@ -16,7 +16,7 @@ import { LuLogOut } from "react-icons/lu";
 import { isAdmin } from "@/utils";
 import PenguinLogo from "@/../public/yellow-bckgnd-logo.jpeg";
 import Image from "next/image";
-
+import { SESSION_AUTHENTICATED } from "@/utils/index";
 const links = [
     {
       id: 1,
@@ -56,22 +56,19 @@ const links = [
   ];
 
 export const Navbar = () => {
-
   const { mode } = useContext(MyThemeContext);
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
-
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
-  const bAdmin = isAdmin(username);
+  console.log('Nav Bar - role: ', session?.data?.user?.role);
   return (
     <div className={styles.container}>
         
-
         {/* links */}
         <div className={styles.links}> 
             <Image src={PenguinLogo} alt="" style={{width: '64px', borderRadius: '5px'}} />
             <DarkModeToggle />
-            {bAdmin && links.map((link) => { 
+            {(session?.data?.user?.role==='admin') && links.map((link) => { 
               return (
                 <Link key={link.id} href={link.url} className={styles.link}>
                   {link.title}
@@ -79,8 +76,8 @@ export const Navbar = () => {
               );
             })}
 
-            {!bAdmin && links.map((link) => { 
-              return (link.id < 7) && (
+            {(session?.data?.user?.role!=='admin') && links.map((link) => { 
+              return link.id < 7 && (
                 <Link key={link.id} href={link.url} className={styles.link}>
                   {link.title}
                 </Link>
@@ -89,7 +86,7 @@ export const Navbar = () => {
         </div>
 
         <h3>{username ? "Welcome " : ""} {username}</h3>
-        {session.status === "authenticated" && (
+        {session.status === SESSION_AUTHENTICATED && (
            <Button 
             leftIcon={<Icon as={LuLogOut} color='black.300' />} 
             colorScheme='yellow' variant='solid' style={{marginTop: '15px'}}

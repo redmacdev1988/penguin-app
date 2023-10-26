@@ -43,7 +43,6 @@ const Dashboard = () => {
       <h1>Loading...</h1>
     </div>;
   }
-
   const renderDashboard = () => {
     return (
       <div className={styles.container}>
@@ -125,6 +124,7 @@ const Dashboard = () => {
         }
       }
       console.log('set node of rendered dashboard');
+      setNode(renderDashboard());
     }
     
   }, [data])

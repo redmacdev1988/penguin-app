@@ -60,7 +60,7 @@ const Register = () => {
 
 
     
-  const renderRegisterPage = () => isAdmin(session?.data?.user.name) ? (
+  const renderRegisterPage = () => (
     <div className={styles.container}>
       <Heading>Create an Account</Heading>
 
@@ -97,18 +97,13 @@ const Register = () => {
 
         {error && "Something went wrong!"}
       </form>
-      {/* <span className={styles.or}>- OR -</span> */}
 
-      {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
-        <Text mb='3'>If you have registered</Text>
-          <Heading size='md' my='2'>
-            <LinkOverlay href="/dashboard/login">Login with an existing account</LinkOverlay>
-          </Heading>
-      </LinkBox> */}
     </div>
-  ) : (<Heading style={{textAlign: 'center'}}>Sorry, you are not allowed</Heading>)
+  )
 
-  
+  useEffect(() => {
+  setNode(renderRegisterPage());
+  }, [show, error]);
 
   useEffect(() => {
     if (session.status === "loading") {
@@ -116,16 +111,18 @@ const Register = () => {
     }
     else if (session.status === "unauthenticated") {
       router?.push("/dashboard/login");
+      // setNode(renderRegisterPage());
     }
     else if (session.status === 'authenticated') {
       console.log('dashboard authenticated');
       setNode(renderRegisterPage());
+      
     }
     
   }, [session.status]);
 
 
-  return session.status === 'authenticated' && node;
+  return  (session && session?.data?.user?.role!=='admin') ? (<Heading style={{textAlign: 'center'}}>Not Allowed</Heading>) : node;
 
 };
 

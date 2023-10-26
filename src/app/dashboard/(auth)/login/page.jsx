@@ -5,10 +5,11 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { initLocalStorageForTut } from '@/app/tutorial/page';
 import { GlobalContext } from '@/context/GlobalContext';
-import { Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
+import { CloseButton, Box, Alert, AlertTitle, AlertIcon, AlertDescription, Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
 import { LuUserCircle2 } from "react-icons/lu";
 import PenguinBanner from "@/../public/horizontal-logo-title.png";
 import Image from "next/image";
+import { LOGIN_ERR_KEY, SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from "@/utils/index";
 
 const cacheTutPropMissing = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
   return !localStorage.getItem(csCacheTimeStamp) || !localStorage.getItem(csCacheTutorials) || !localStorage.getItem(csShouldCacheTutorials);
@@ -18,7 +19,7 @@ const Login = ({ from }) => {
   const session = useSession();
   const router = useRouter();
   const params = useSearchParams();
-  const [error, setError] = useState("");
+  const [error, setError] = useState();
   const [success, setSuccess] = useState("");
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   const [showPwd, setShowPwd] = useState(false);
@@ -26,30 +27,40 @@ const Login = ({ from }) => {
   const [node, setNode] = useState("");
 
   useEffect(() => {
-    setError(params.get("error"));
+    const errObj = JSON.parse(params.get("error"));
+    if (errObj) {
+      setError(errObj);
+    }
+    
+    console.log('success', params.get("success"));
     setSuccess(params.get("success"));
   }, [params]);
 
   useEffect(() => {
-    console.log('session.status: ', session.status);
+    console.log('Login  - session.status: ', session.status);
 
-    if (session.status === "loading") {
+    if (session.status === SESSION_LOADING) {
       setNode(loadingHTML());
     }
-    else if (session.status === "unauthenticated") {
+    else if (session.status === SESSION_UNAUTHENTICATED) {
+      console.log('Login  - unauthenticated', 'loading');
       setNode(renderLoginPage());
     }
-    else if (session.status === "authenticated") {
-      setLoading(false);
-      // we need to check for tutorial cache
+    else if (session.status === SESSION_AUTHENTICATED) {
+      console.log('Login', '-- authenticated! --');
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
         initLocalStorageForTut();
       } 
-
       const fromUrl = localStorage.getItem(csFromUrl);
       router?.push(`/${fromUrl}`);
     }
   }, [session.status]);
+
+  useEffect(() => {
+    if (!loading && session.status===SESSION_UNAUTHENTICATED) setNode(renderLoginPage());
+  }, [showPwd, error]);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,11 +76,30 @@ const Login = ({ from }) => {
   }
 
   const renderLoginPage = () => {
+    console.log('Login', 'renderLoginPage')
     return !loading && (
       <div className={styles.container}>
-      <div>
-        <Heading>{success ? success : "Welcome Back"}</Heading>
-      </div>
+        <div>
+          {error && <Alert status='warning'>
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Log In</AlertTitle>
+              <AlertDescription>{error && error[LOGIN_ERR_KEY]}</AlertDescription>
+            </Box>
+            <CloseButton
+              alignSelf='flex-start'
+              position='relative'
+              right={-1}
+              top={-1}
+              onClick={() => {
+                console.log('setError');
+                setError(null);
+              }}
+            />
+          </Alert>}
+
+          <Heading>{success ? success : "Welcome"}</Heading>
+        </div>
       <div className={styles.bannerOuter}>
         <Image src={PenguinBanner} alt="" className={styles.banner} />
       </div>
@@ -94,21 +124,11 @@ const Login = ({ from }) => {
                 </Button>
             </InputRightElement>
           </InputGroup>
-  
           <button className={styles.button}>Login</button>
-          {error && error}
         </form>
       </div>
         
-        <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
-  
-        {/* <LinkBox as='article' maxW='sm' p='5' borderWidth='1px' rounded='md' style={{textAlign: 'center'}}>
-          <Text mb='3'>Come Join Us!</Text>
-            <Heading size='md' my='2'>
-              <LinkOverlay href="/dashboard/register">Create New Account</LinkOverlay>
-            </Heading>
-        </LinkBox> */}
-        
+      <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
       </div>
     );
   }

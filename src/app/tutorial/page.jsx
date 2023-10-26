@@ -5,31 +5,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { GlobalContext } from "../../context/GlobalContext";
 import { FiExternalLink } from 'react-icons/fi'
-import {
-  Divider,
-  AbsoluteCenter,
-  Button,
-  Box,
-  Text,
-  SimpleGrid,
-  Card,
-  CardHeader,
-  CardBody,
-  Heading,
-  Icon,
-  Link
-} from '@chakra-ui/react'
+import { Divider, AbsoluteCenter, Button, Box, Text, SimpleGrid, Card, CardHeader, CardBody, Heading, Icon, Link } from '@chakra-ui/react'
+import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
 
 const RESULTS_PER_PAGE = 10;
 const HOURS = 8;
-
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
     <h1>Loading...</h1>
   </div>;
 }
-
 
 const createHref = (slug) => {
   return "/tutorial/" + slug;
@@ -45,7 +31,7 @@ export const deleteTutorialsInDB = async () => {
   });
   } catch (err) {
     console.log(err);
-}
+  }
 }
 
 export const cacheTutorialContents = async (data) => {
@@ -216,16 +202,16 @@ const TutorialList = () => {
 
 
   useEffect(() => {
-    if (session.status === "loading") {
+    if (session.status === SESSION_LOADING) {
       setNode(loadingHTML());
     }
   
-    if (session.status === "unauthenticated") { 
+    if (session.status === SESSION_UNAUTHENTICATED) { 
       localStorage.setItem(csFromUrl, "tutorial");
       router?.push("/dashboard/login");
     }
 
-    if (session.status === "authenticated") {
+    if (session.status === SESSION_AUTHENTICATED) {
     }
   }, [session.status]);
 

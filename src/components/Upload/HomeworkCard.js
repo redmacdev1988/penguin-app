@@ -88,7 +88,7 @@ const HomeworkCard = ({
   return (
     <>
       <div style={{
-        borderTop: '2px solid green', 
+        borderTop: `2px solid #FCB903`, 
         borderTopStyle: 'dotted',
         paddingTop: '30px',
         paddingBottom: '30px',
