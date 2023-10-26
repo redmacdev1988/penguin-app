@@ -13,10 +13,8 @@ const handler = NextAuth({
       async authorize(credentials) {
         await connect();
         try {
-          console.log('credentials', credentials);
           const user = await User.findOne({email: credentials.email});
           if (user) {
-            console.log('User found in DB', user);
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
@@ -38,18 +36,13 @@ const handler = NextAuth({
   },
   callbacks: {
     async jwt({token, user}) {
-      console.log('-- got to jwt --', user);
       if (user) {
-        console.log('user role', user.role);
         token.role = user.role;
       }
       return token;
     },
     session({ session, token}) {
-      console.log('-- session --', session);
-      console.log('token', token);
       if (token && session.user) {
-        console.log('token role: ', token.role);
         session.user.role = token.role;
       }
       return session;
