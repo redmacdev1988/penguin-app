@@ -31,23 +31,17 @@ const Login = ({ from }) => {
     if (errObj) {
       setError(errObj);
     }
-    
-    console.log('success', params.get("success"));
     setSuccess(params.get("success"));
   }, [params]);
 
   useEffect(() => {
-    console.log('Login  - session.status: ', session.status);
-
     if (session.status === SESSION_LOADING) {
       setNode(loadingHTML());
     }
     else if (session.status === SESSION_UNAUTHENTICATED) {
-      console.log('Login  - unauthenticated', 'loading');
       setNode(renderLoginPage());
     }
     else if (session.status === SESSION_AUTHENTICATED) {
-      console.log('Login', '-- authenticated! --');
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
         initLocalStorageForTut();
       } 

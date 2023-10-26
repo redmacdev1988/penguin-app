@@ -57,7 +57,6 @@ const HomeworkCard = ({
   const handleUpdateSlug = async (e) => {
     e.preventDefault();
     const inputSlug = e.target[0].value;
-    console.log('inputSlug', inputSlug);
     try {
       const response = await fetch(strUrlToGetCorrectionLink(inputSlug), {
         method: "GET"

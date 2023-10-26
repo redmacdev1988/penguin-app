@@ -13,8 +13,9 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import { LuLogOut } from "react-icons/lu";
-import { isAdmin } from "@/utils";
-import PenguinLogo from "@/../public/yellow-bckgnd-logo.jpeg";
+import RickyABCLightLogo from "@/../public/rickyabc-light-logo-370X280.png";
+import RickyABCDarkLogo from  "@/../public/rickyabc-dark-logo-370X280.png";
+
 import Image from "next/image";
 import { SESSION_AUTHENTICATED } from "@/utils/index";
 const links = [
@@ -60,13 +61,12 @@ export const Navbar = () => {
   const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
-  console.log('Nav Bar - role: ', session?.data?.user?.role);
   return (
     <div className={styles.container}>
         
         {/* links */}
         <div className={styles.links}> 
-            <Image src={PenguinLogo} alt="" style={{width: '64px', borderRadius: '5px'}} />
+            <Image src={(mode === 'dark') ? RickyABCLightLogo : RickyABCDarkLogo} alt="" style={{width: '200px', borderRadius: '5px'}} />
             <DarkModeToggle />
             {(session?.data?.user?.role==='admin') && links.map((link) => { 
               return (
