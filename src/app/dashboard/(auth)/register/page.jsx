@@ -16,8 +16,6 @@ import {
   Text
 } from '@chakra-ui/react'
 import { LuUserCircle2, LuText } from "react-icons/lu";
-import { isAdmin } from "@/utils/index";
-
 
 const Register = () => {
   const [error, setError] = useState(null);
@@ -25,6 +23,7 @@ const Register = () => {
   const session = useSession();
   const router = useRouter();
   const [node, setNode] = useState();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,8 +43,14 @@ const Register = () => {
           password,
         }),
       });
+
+      const result = await res.json();
+      const { id, msg } = result;
+
+      console.log(id, msg);
+
       // if the result status is 201, then we put the string
-      res.status === 201 && router.push("/dashboard/login?success=Account has been created");
+      res.status === 201 && router.push(`/dashboard?id=${id}&name=${name}&msg=${msg}`);
     } catch (err) {
       setError(err);
       console.log(err);
@@ -95,7 +100,7 @@ const Register = () => {
 
         <button className={styles.button}>Register</button>
 
-        {error && "Something went wrong!"}
+        {error && `Something went wrong: ${error}`}
       </form>
 
     </div>
@@ -116,7 +121,6 @@ const Register = () => {
     else if (session.status === 'authenticated') {
       console.log('dashboard authenticated');
       setNode(renderRegisterPage());
-      
     }
     
   }, [session.status]);

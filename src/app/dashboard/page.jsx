@@ -4,7 +4,7 @@ import React, { useEffect, useState, useContext } from "react";
 import styles from "./page.module.css";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { GlobalContext } from "@/context/GlobalContext";
 import { DateTime } from "luxon";
 
@@ -16,18 +16,26 @@ import {
   StatArrow,
   StatGroup,
   Heading,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+  CloseButton
 } from '@chakra-ui/react'
 
 
 const Dashboard = () => {
   const session = useSession();
   const router = useRouter();
+  const params = useSearchParams();
   const [numOfHms, setNumOfHms] = useState(0);
   const [numOfCorrected, setNumOfCorrected] = useState(0);
   const [numOfDaysPerHm, setNumOfDaysPerHm] = useState(0);
   const [startDateStr, setStartDateStr] = useState("");
   const [endDateStr, setEndDateStr] = useState("");
   const [node, setNode] = useState();
+  const [msg, setMsg] = useState('');
 
   const { csFromUrl } = useContext(GlobalContext);
 
@@ -38,6 +46,18 @@ const Dashboard = () => {
     fetcher
   );  
 
+
+  useEffect(() => {
+    const id = params.get("id");
+    const name = params.get("name");
+    if (id && name) {
+      console.log('Dashboard', `You have registered user ${name} with id ${id}`);
+      setMsg(`You have registered user ${name} with id ${id}`);
+    }
+  }, [params]);
+
+
+
   const loadingHTML = () => {
     return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
       <h1>Loading...</h1>
@@ -46,30 +66,40 @@ const Dashboard = () => {
   const renderDashboard = () => {
     return (
       <div className={styles.container}>
-      <Heading>Your Dashboard</Heading>
-      <StatGroup>
-        <Stat>
-          <StatLabel># of homeworks</StatLabel>
-          <StatNumber>{numOfHms}</StatNumber>
-          <StatHelpText>{startDateStr} - {endDateStr}</StatHelpText>
-        </Stat>
+        {msg &&  <Alert status='success'>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>User Created!</AlertTitle>
+            <AlertDescription>
+              <b>{msg}</b>
+            </AlertDescription>
+          </Box>
+        </Alert>}
 
-        <Stat>
-          <StatLabel># of corrected</StatLabel>
-          <StatNumber>{numOfCorrected}</StatNumber>
-          <StatHelpText>
-            {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms).toFixed(2) * 100} % of your homework has been corrected</h1>} 
-          </StatHelpText>
-        </Stat>
+        <Heading>Your Dashboard</Heading>
+        <StatGroup>
+          <Stat>
+            <StatLabel># of homeworks</StatLabel>
+            <StatNumber>{numOfHms}</StatNumber>
+            <StatHelpText>{startDateStr} - {endDateStr}</StatHelpText>
+          </Stat>
 
-        <Stat>
-          <StatLabel>One homework takes: </StatLabel>
-          <StatNumber>
-            {(numOfDaysPerHm >= 1) && <span>{numOfDaysPerHm} day(s)</span>}
-            <span>{(numOfDaysPerHm < 1) && (numOfDaysPerHm * 24).toFixed(2)} hours</span>
-          </StatNumber>
-        </Stat>
-      </StatGroup>
+          <Stat>
+            <StatLabel># of corrected</StatLabel>
+            <StatNumber>{numOfCorrected}</StatNumber>
+            <StatHelpText>
+              {numOfCorrected && numOfHms && <h1> {(numOfCorrected/numOfHms).toFixed(2) * 100} % of your homework has been corrected</h1>} 
+            </StatHelpText>
+          </Stat>
+
+          <Stat>
+            <StatLabel>One homework takes: </StatLabel>
+            <StatNumber>
+              {(numOfDaysPerHm >= 1) && <span>{numOfDaysPerHm} day(s)</span>}
+              <span>{(numOfDaysPerHm < 1) && (numOfDaysPerHm * 24).toFixed(2)} hours</span>
+            </StatNumber>
+          </Stat>
+        </StatGroup>
     </div>);
   }
 
@@ -78,7 +108,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (data) {
       const { allHmForUser } = data;
-      console.log('# of hms', allHmForUser.length);
       setNumOfHms(allHmForUser.length);
     }
 
@@ -131,7 +160,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setNode(renderDashboard());
-  }, [numOfDaysPerHm, numOfCorrected])
+  }, [numOfDaysPerHm, numOfCorrected, msg])
 
   useEffect(() => {
 

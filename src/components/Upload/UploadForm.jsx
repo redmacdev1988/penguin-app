@@ -127,7 +127,15 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
             if(res?.errMsg) {
                 console.log(`Error: ${res?.errMsg}`);
-                showErrorToast(`Error: ${res?.errMsg}`);
+                toast({
+                    position: 'top',
+                    title: 'Error',
+                    description: `Error: ${res?.errMsg}`,
+                    status: 'warning',
+                    duration: 9000,
+                    isClosable: true,
+                });
+
             }
             
             setFiles([]);

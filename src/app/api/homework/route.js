@@ -3,6 +3,8 @@ import cloudinary from 'cloudinary'
 import connect from "@/utils/db";
 import PenguinHomework from "@/models/PenguinHomework";
 
+const bAdminNames = (name) => ['rtsao', 'admin', 'root'].filter(item => item === name).length > 0;
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -23,7 +25,7 @@ export const GET = async (request) => {
         
         // if its me or admin, search result should be all entries that are NOT rtsao or admin
         // if its the normal student name, then give me entries with the student name
-        const nameFilter = (name === 'rtsao' || name === 'admin') ?  {$ne: name}  :  name;
+        const nameFilter = bAdminNames(name) ?  {$ne: name}  :  name;
 
         const allHmForUser = await PenguinHomework.find({
             _id: next

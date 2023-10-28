@@ -15,9 +15,7 @@ export const POST = async (request) => {
   const newUser = new User({ name, email, password: hashedPassword });
   try {
     await newUser.save();
-    return new NextResponse("User has been created", {
-      status: 201,
-    });
+    return new NextResponse(JSON.stringify({ msg: `${name} has been registered with id ${email}`, name, id: email}), { status: 201 });
   } catch (err) {
     return new NextResponse(err.message, {
       status: 500,
