@@ -42,17 +42,15 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-    console.log('uploadActions', 'uploadHomework');
     const title = formData.get('title')
     const desc = formData.get('desc');
-    console.log(title, desc);
 
     try {
         
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
         const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
 
-        return JSON.stringify({ msg: 'apload success! 22:47', length: bValidArr ? hmPhotoFiles.length : -1});
+        return JSON.stringify({ msg: 'apload success! 22:58', length: bValidArr ? hmPhotoFiles.length : -1});
         /*
         if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
             console.log('Homework saved to local √');
