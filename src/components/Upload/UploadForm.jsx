@@ -126,11 +126,11 @@ const UploadForm = ({ refreshHomeworkData }) => {
             const res = await uploadHomework(formData, session?.data?.user);
 
             if(res?.errMsg) {
-                console.log(`Error: ${res?.errMsg}`);
+                console.log(`UploadForm.jsx - Error: ${res?.errMsg}`);
                 toast({
                     position: 'top',
                     title: 'Error',
-                    description: `Error: ${res?.errMsg}`,
+                    description: `UploadForm.jsx - Error: ${res?.errMsg}`,
                     status: 'warning',
                     duration: 9000,
                     isClosable: true,

@@ -41,42 +41,50 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
 }
 
 export async function uploadHomework(formData, user) {
-
+    console.log('uploadActions', 'uploadHomework');
     const title = formData.get('title')
     const desc = formData.get('desc');
-    
+    console.log(title, desc);
+
     try {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
-        const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
-        if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
-            console.log('uploaded to Cloudinary √');
+        if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
+            console.log('Homework saved to local √');
+            const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
+            if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
+                console.log('uploaded to Cloudinary √');
 
-             // Delete photo files in temp folder after successful upload!
-             hmPhotoFiles.map(file => fs.unlink(file.filepath))
-    
-            const homeworkModelArr = homeworkPhotos.map(hmObj => {
-                const newHomework = new PenguinHomework({
-                    publicId: hmObj.public_id, 
-                    secureUrl: hmObj.secure_url,
-                    name: user.name,
-                    slug: "",
-                    title,
-                    desc
-                })
-                return newHomework;
-            });
-            
-            await connect();
-            console.log('uploadHomework - db connected √');
-            const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
-            if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
-                console.log('uploadHomework - uploaded to Mongodb √');
-                revalidatePath("/homework/page");
-                return { msg: 'Upload Success!' }
+                // Delete photo files in temp folder after successful upload!
+                hmPhotoFiles.map(file => fs.unlink(file.filepath))
+        
+                const homeworkModelArr = homeworkPhotos.map(hmObj => {
+                    const newHomework = new PenguinHomework({
+                        publicId: hmObj.public_id, 
+                        secureUrl: hmObj.secure_url,
+                        name: user.name,
+                        slug: "",
+                        title,
+                        desc
+                    })
+                    return newHomework;
+                });
+                
+                await connect();
+                console.log('uploadHomework - db connected √');
+                const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
+                if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
+                    console.log('uploadHomework - uploaded to Mongodb √');
+                    revalidatePath("/homework/page");
+                    return { msg: 'Upload Success!' }
+                } else {
+                    throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
+                }
             } else {
-                throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
+                console.log(`X Could not upload to Cloudinary`);
             }
-        }
+        } else {
+            console.log('X Could not save homework to local');
+        }     
     } catch (error) { return { errMsg: error.message } }
 }
 
