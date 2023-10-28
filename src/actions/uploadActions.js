@@ -89,7 +89,7 @@ export async function uploadHomework(formData, user) {
         }    
         */
        
-        return new NextResponse.json(JSON.stringify({'msg': 'ok'}), { status: 200 });
+        return new NextResponse(JSON.stringify({'msg': 'ok'}), { status: 200 });
     } catch (error) { return { errMsg: error.message } }
 }
 
