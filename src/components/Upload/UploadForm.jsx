@@ -138,7 +138,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
             }
 
-            console.log('UploadForm - clean up forms and UI');
+            console.log('UploadForm - clean up forms and UI', session?.data?.user.name);
             
             setFiles([]);
             formRef.current.reset();

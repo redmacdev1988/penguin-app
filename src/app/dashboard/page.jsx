@@ -172,7 +172,6 @@ const Dashboard = () => {
       router?.push("/dashboard/login");
     }
     else if (session.status === 'authenticated') {
-      console.log('dashboard authenticated');
     }
     
   }, [session.status]);
