@@ -70,7 +70,6 @@ const Login = ({ from }) => {
   }
 
   const renderLoginPage = () => {
-    console.log('Login', 'renderLoginPage')
     return !loading && (
       <div className={styles.container}>
         <div>
