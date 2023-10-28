@@ -50,9 +50,9 @@ export async function uploadHomework(formData, user) {
     try {
         
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
-        const validArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
+        const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
 
-        return JSON.stringify({ msg: 'apload success! 22:47', length: validArr.length || 8});
+        return JSON.stringify({ msg: 'apload success! 22:47', length: bValidArr ? hmPhotoFiles.length : -1});
         /*
         if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
             console.log('Homework saved to local √');
