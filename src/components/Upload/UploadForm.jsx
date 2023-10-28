@@ -124,7 +124,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             }
     
             const res = await uploadHomework(formData, session?.data?.user);
-
+            console.log('res', res);
             if(res?.errMsg) {
                 console.log(`UploadForm.jsx - Error: ${res?.errMsg}`);
                 toast({
@@ -137,6 +137,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 });
 
             }
+
+            console.log('UploadForm - clean up forms and UI');
             
             setFiles([]);
             formRef.current.reset();
