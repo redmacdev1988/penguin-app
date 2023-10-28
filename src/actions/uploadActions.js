@@ -48,8 +48,12 @@ export async function uploadHomework(formData, user) {
     console.log(title, desc);
 
     try {
-        /*
+        
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
+        const validArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
+
+        return JSON.stringify({ msg: 'Upload Success!', length: validArr.length});
+        /*
         if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
             console.log('Homework saved to local √');
             const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
@@ -92,7 +96,7 @@ export async function uploadHomework(formData, user) {
 
 
         // return JSON.stringify({msg:'hello'}); // works!
-        return JSON.stringify({ msg: 'Upload Success!', title, desc});
+        // return JSON.stringify({ msg: 'Upload Success!', title, desc});
     } catch (error) { return { errMsg: error.message } }
 }
 
