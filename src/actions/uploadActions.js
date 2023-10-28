@@ -50,11 +50,16 @@ export async function uploadHomework(formData, user) {
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
         const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
 
-        return JSON.stringify({ msg: 'apload success! 22:58', length: bValidArr ? hmPhotoFiles.length : -1});
-        /*
-        if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
+        // return JSON.stringify({ msg: 'apload success! 22:58', length: bValidArr ? hmPhotoFiles.length : -1});
+        if (bValidArr) {
             console.log('Homework saved to local √');
+
             const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
+            const bValidHmPhotos = homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0;
+
+            return JSON.stringify({ msg: 'upload hm to cloudinary a success! 01:43', length: bValidHmPhotos ? homeworkPhotos.length : -1, user});
+
+            /*
             if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
                 console.log('uploaded to Cloudinary √');
 
@@ -87,11 +92,12 @@ export async function uploadHomework(formData, user) {
             } else {
                 console.log(`X Could not upload to Cloudinary`);
             }
+            */
         } else {
-            console.log('X Could not save homework to local');
+            const errorMsg = 'Error at saveHomeworkToLocal - Could not save homework to local';
+            console.log('uploadActions', errorMsg);
+            return JSON.stringify({ msg: errorMsg});
         }    
-        */
-
 
         // return JSON.stringify({msg:'hello'}); // works!
         // return JSON.stringify({ msg: 'Upload Success!', title, desc});
