@@ -114,10 +114,8 @@ const Register = () => {
     }
     else if (session.status === "unauthenticated") {
       router?.push("/dashboard/login");
-      // setNode(renderRegisterPage());
     }
     else if (session.status === 'authenticated') {
-      console.log('dashboard authenticated');
       setNode(renderRegisterPage());
     }
     
