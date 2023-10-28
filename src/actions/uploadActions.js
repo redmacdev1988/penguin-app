@@ -88,8 +88,9 @@ export async function uploadHomework(formData, user) {
             console.log('X Could not save homework to local');
         }    
         */
-       
-        return new NextResponse(JSON.stringify({'msg': 'ok'}), { status: 200 });
+
+        // return JSON.parse(`{'title':${title}, 'desc': ${desc}`);
+        return JSON.stringify({msg:'hello'});
     } catch (error) { return { errMsg: error.message } }
 }
 
