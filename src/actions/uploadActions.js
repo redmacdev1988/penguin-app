@@ -36,16 +36,28 @@ async function saveHomeworkToLocal(formData) {
     return await Promise.all(multiplePhotoBuffersPromises)
 }
 
+/*
+await Promise.all([some promises])
+    .then(doIfNoError) // Promise.all resolved
+    .catch(console.log) // Promise.all has at least one rejection
+*/
 // todo make sure folder matches names
 async function uploadHomeworkToCloudinary(newFiles, user) {
     console.log(`√ uploadHomeworkToCloudinary - user name:`, user.name);
     const multipleHmPhotosPromise = newFiles.map(file =>  {
-        console.log('√ file: ', file.filePath);
+        console.log('√ file: ', file.filepath);
             return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
         }
     );
     console.log(`√ length of multipleHmPhotosPromise: `, multipleHmPhotosPromise.length);
-    return await Promise.all(multipleHmPhotosPromise)
+  
+    return await Promise.all(multipleHmPhotosPromise).then(res => {
+        console.log('√ success!', res);
+        return res;
+    }).catch(err => {
+        console.log('uploadHomeworkToCloudinary caught err: ', err);
+    });
+
 }
 
 export async function uploadHomework(formData, user) {
