@@ -78,6 +78,7 @@ export async function uploadHomework(formData, user) {
                     console.log('uploadHomework - uploaded to Mongodb √');
                     revalidatePath("/homework/page");
                     // return JSON.stringify({ msg: 'Upload Success!', title, desc});
+
                 } else {
                     throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
                 }
@@ -89,8 +90,9 @@ export async function uploadHomework(formData, user) {
         }    
         */
 
-        // return JSON.parse(`{'title':${title}, 'desc': ${desc}`);
-        return JSON.stringify({msg:'hello'});
+
+        // return JSON.stringify({msg:'hello'}); // works!
+        return JSON.stringify({ msg: 'Upload Success!', title, desc});
     } catch (error) { return { errMsg: error.message } }
 }
 
