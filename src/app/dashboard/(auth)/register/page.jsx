@@ -47,8 +47,6 @@ const Register = () => {
       const result = await res.json();
       const { id, msg } = result;
 
-      console.log(id, msg);
-
       // if the result status is 201, then we put the string
       res.status === 201 && router.push(`/dashboard?id=${id}&name=${name}&msg=${msg}`);
     } catch (err) {
