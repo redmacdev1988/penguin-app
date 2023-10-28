@@ -8,6 +8,7 @@ import path from 'path'
 import PenguinHomework from '@/models/PenguinHomework';
 import { revalidatePath } from 'next/cache';
 import connect from "@/utils/db";
+import { NextResponse } from "next/server";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -47,6 +48,7 @@ export async function uploadHomework(formData, user) {
     console.log(title, desc);
 
     try {
+        /*
         const hmPhotoFiles = await saveHomeworkToLocal(formData);
         if (hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0) {
             console.log('Homework saved to local √');
@@ -84,7 +86,10 @@ export async function uploadHomework(formData, user) {
             }
         } else {
             console.log('X Could not save homework to local');
-        }     
+        }    
+        */
+       
+        return new NextResponse.json(JSON.stringify({'msg': 'ok'}), { status: 200 });
     } catch (error) { return { errMsg: error.message } }
 }
 
