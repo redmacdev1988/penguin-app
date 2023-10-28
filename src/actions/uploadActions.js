@@ -35,9 +35,13 @@ async function saveHomeworkToLocal(formData) {
 
 // todo make sure folder matches names
 async function uploadHomeworkToCloudinary(newFiles, user) {
-    const multipleHmPhotosPromise = newFiles.map(file => 
-        cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
+    alert(user.name);
+    const multipleHmPhotosPromise = newFiles.map(file =>  {
+        alert(file.filePath)
+            return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
+        }
     );
+    alert(multipleHmPhotosPromise.length);
     return await Promise.all(multipleHmPhotosPromise)
 }
 
@@ -47,17 +51,18 @@ export async function uploadHomework(formData, user) {
 
     try {
         
-        const hmPhotoFiles = await saveHomeworkToLocal(formData);
-        const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0;
+        const hmPhotoFiles = await saveHomeworkToLocal(formData); // ok
+        const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0; // ok
 
         // return JSON.stringify({ msg: 'apload success! 22:58', length: bValidArr ? hmPhotoFiles.length : -1});
+
         if (bValidArr) {
             console.log('Homework saved to local √');
 
             const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
             const bValidHmPhotos = homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0;
 
-            return JSON.stringify({ msg: 'upload hm to cloudinary a success! 01:43', length: bValidHmPhotos ? homeworkPhotos.length : -1, user});
+            return JSON.stringify({ msg: 'cloudinary success! 02:07', length: bValidHmPhotos ? homeworkPhotos.length : -1, user});
 
             /*
             if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
@@ -101,7 +106,9 @@ export async function uploadHomework(formData, user) {
 
         // return JSON.stringify({msg:'hello'}); // works!
         // return JSON.stringify({ msg: 'Upload Success!', title, desc});
-    } catch (error) { return { errMsg: error.message } }
+    } catch (error) { 
+        return { errMsg: error } 
+    }
 }
 
 
