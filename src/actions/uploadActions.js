@@ -35,13 +35,13 @@ async function saveHomeworkToLocal(formData) {
 
 // todo make sure folder matches names
 async function uploadHomeworkToCloudinary(newFiles, user) {
-    alert(user.name);
+    console.log(`√ uploadHomeworkToCloudinary - user name:`, user.name);
     const multipleHmPhotosPromise = newFiles.map(file =>  {
-        alert(file.filePath)
+        console.log('√ file: ', file.filePath);
             return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
         }
     );
-    alert(multipleHmPhotosPromise.length);
+    console.log(`√ length of multipleHmPhotosPromise: `, multipleHmPhotosPromise.length);
     return await Promise.all(multipleHmPhotosPromise)
 }
 
@@ -107,7 +107,9 @@ export async function uploadHomework(formData, user) {
         // return JSON.stringify({msg:'hello'}); // works!
         // return JSON.stringify({ msg: 'Upload Success!', title, desc});
     } catch (error) { 
-        return { errMsg: error } 
+        return { 
+            errMsg: error.message 
+        } 
     }
 }
 
