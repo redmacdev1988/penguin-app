@@ -75,7 +75,7 @@ export async function uploadHomework(formData, user) {
                 if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
                     console.log('uploadHomework - uploaded to Mongodb √');
                     revalidatePath("/homework/page");
-                    return JSON.stringify({ msg: 'Upload Success!', title, desc});
+                    // return JSON.stringify({ msg: 'Upload Success!', title, desc});
                 
                 } else {
                     throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
