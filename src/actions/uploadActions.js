@@ -9,6 +9,7 @@ import PenguinHomework from '@/models/PenguinHomework';
 import { revalidatePath } from 'next/cache';
 import connect from "@/utils/db";
 import { NextResponse } from "next/server";
+import DatauriParser from 'datauri/parser';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -17,20 +18,27 @@ cloudinary.config({
 });
 
 async function saveHomeworkToLocal(formData) {
+    const parser = new DatauriParser();
+
     const hmPhotoFiles = formData.getAll('files');
     const multiplePhotoBuffersPromises = hmPhotoFiles.map(photo => (
         photo.arrayBuffer()
           .then(data => {
             const buffer = Buffer.from(data)
             const name = uuidv4()
-            const ext = photo.type.split("/")[1]
+            const ext = photo.type.split("/")[1];
             const tempdir = os.tmpdir();
             console.log('tempdir: ', tempdir);
             console.log('path', path);
             const uploadDir = path.join(tempdir, `/${name}.${ext}`) // work in Vercel
             console.log('uploadDir: ', uploadDir);
             fs.writeFile(uploadDir, buffer)
-            return { filepath: uploadDir, filename: photo.name }
+            
+            return { 
+                base64Image: parser.format(ext, buffer), 
+                filepath: uploadDir, 
+                filename: photo.name 
+            }
         })
     ));
     return await Promise.all(multiplePhotoBuffersPromises)
@@ -44,11 +52,24 @@ await Promise.all([some promises])
 // todo make sure folder matches names
 async function uploadHomeworkToCloudinary(newFiles, user) {
     console.log(`√ uploadHomeworkToCloudinary - user name:`, user.name);
+
     const multipleHmPhotosPromise = newFiles.map(file =>  {
-        console.log('√ file: ', file.filepath);
-            return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
+            console.log('√ file: ', file.filepath);
+            console.log('√ base64Image.content: ', file.base64Image.content);
+            // return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
+            return cloudinary.uploader.upload(
+                file.base64Image.content, 
+                `${user.name}-${user.email}`, 
+                { 
+                    folder: `${user.name}-${user.email}`,
+                    resource_type: 'image' 
+                }
+            );
         }
     );
+
+    // const uploadedImageResponse = await cloudinary.uploader.upload(base64Image.content, 'flashcards', { resource_type: 'image' });
+
     console.log(`√ length of multipleHmPhotosPromise: `, multipleHmPhotosPromise.length);
   
     return await Promise.all(multipleHmPhotosPromise).then(res => {
@@ -77,11 +98,11 @@ export async function uploadHomework(formData, user) {
             const homeworkPhotos = await uploadHomeworkToCloudinary(hmPhotoFiles, user);
             const bValidHmPhotos = homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0;
 
-            return JSON.stringify({ msg: 'cloudinary success! 02:07', length: bValidHmPhotos ? homeworkPhotos.length : -1, user});
-
-            /*
-            if (homeworkPhotos && Array.isArray(homeworkPhotos) && homeworkPhotos.length > 0) {
-                console.log('uploaded to Cloudinary √');
+            // works
+            // return JSON.stringify({ msg: 'cloudinary success! 02:07', length: bValidHmPhotos ? homeworkPhotos.length : -1, user});
+            
+            if (bValidHmPhotos) {
+                console.log(`${homeworkPhotos.length} image(s) uploaded to Cloudinary √`);
 
                 // Delete photo files in temp folder after successful upload!
                 hmPhotoFiles.map(file => fs.unlink(file.filepath))
@@ -99,20 +120,18 @@ export async function uploadHomework(formData, user) {
                 });
                 
                 await connect();
-                console.log('uploadHomework - db connected √');
                 const dbOpResponse = await PenguinHomework.insertMany(homeworkModelArr);
                 if (dbOpResponse && Array.isArray(dbOpResponse) && dbOpResponse.length > 0) {
-                    console.log('uploadHomework - uploaded to Mongodb √');
+                    console.log('PenguinHomework model uploaded to Mongodb √');
                     revalidatePath("/homework/page");
-                    // return JSON.stringify({ msg: 'Upload Success!', title, desc});
-
+                    return JSON.stringify({ msg: 'Upload Success!', title, desc});
                 } else {
                     throw Error ({ message: `Uh oh, error in writing ${homeworkModelArr.length} homework images to mongodb` });
                 }
             } else {
-                console.log(`X Could not upload to Cloudinary`);
+                throw Error ({ message: `X Could not upload to Cloudinary` });
             }
-            */
+            
         } else {
             const errorMsg = 'Error at saveHomeworkToLocal - Could not save homework to local';
             console.log('uploadActions', errorMsg);

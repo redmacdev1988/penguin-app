@@ -124,7 +124,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             }
     
             const res = await uploadHomework(formData, session?.data?.user);
-            console.log('res', res);
+        
             if(res?.errMsg) {
                 console.log(`UploadForm.jsx - Error: ${res?.errMsg}`);
                 toast({
@@ -136,10 +136,21 @@ const UploadForm = ({ refreshHomeworkData }) => {
                     isClosable: true,
                 });
 
-            }
+            } else {
 
-            console.log('UploadForm - clean up forms and UI', session?.data?.user.name);
-            
+                const registerUserRes = JSON.parse(res);
+                console.log('res', registerUserRes);
+                const { msg, title, desc } = registerUserRes;
+                toast({
+                    position: 'top',
+                    title: msg,
+                    description: `You have uploaded homework ${title}, ${desc}`,
+                    status: 'success',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            }
+ 
             setFiles([]);
             formRef.current.reset();
             setDisabled(false);
