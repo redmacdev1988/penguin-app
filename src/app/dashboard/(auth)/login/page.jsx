@@ -21,9 +21,10 @@ const Login = ({ from }) => {
   const params = useSearchParams();
   const [error, setError] = useState();
   const [success, setSuccess] = useState("");
-  const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
+  const {csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   const [showPwd, setShowPwd] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [progressing, setProgressing] = useState(false);
+
   const [node, setNode] = useState("");
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const Login = ({ from }) => {
       setError(errObj);
     }
     setSuccess(params.get("success"));
+    setProgressing(false);
   }, [params]);
 
   useEffect(() => {
@@ -51,13 +53,14 @@ const Login = ({ from }) => {
   }, [session.status]);
 
   useEffect(() => {
-    if (!loading && session.status===SESSION_UNAUTHENTICATED) setNode(renderLoginPage());
+    if (session.status===SESSION_UNAUTHENTICATED) setNode(renderLoginPage());
   }, [showPwd, error]);
 
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setProgressing(true);
     const email = e.target[0].value;
     const password = e.target[1].value;
     signIn("credentials", { email, password });
@@ -70,7 +73,7 @@ const Login = ({ from }) => {
   }
 
   const renderLoginPage = () => {
-    return !loading && (
+    return (
       <div className={styles.container}>
         <div>
           {error && <Alert status='warning'>
@@ -117,7 +120,10 @@ const Login = ({ from }) => {
                 </Button>
             </InputRightElement>
           </InputGroup>
-          <button className={styles.button}>Login</button>
+          <button className={styles.button}>
+            Login
+            {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
+          </button>
         </form>
       </div>
         

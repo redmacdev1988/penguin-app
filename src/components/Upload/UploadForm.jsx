@@ -176,8 +176,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 </div>
                 <button 
                     className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
-                    disabled={disabled}
-                    style={{ marginTop: '30px', marginBottom: '20px'}}
+                    disabled={disabled} style={{ marginTop: '30px', marginBottom: '20px'}}
                 >
                     Upload Homework
                     {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
