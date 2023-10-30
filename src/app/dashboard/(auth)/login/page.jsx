@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useTransition } from "react";
 import styles from "./page.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { initLocalStorageForTut } from '@/app/tutorial/page';
 import { GlobalContext } from '@/context/GlobalContext';
-import { CloseButton, Box, Alert, AlertTitle, AlertIcon, AlertDescription, Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
+import { CircularProgress, CloseButton, Box, Alert, AlertTitle, AlertIcon, AlertDescription, Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
 import { LuUserCircle2 } from "react-icons/lu";
 import PenguinBanner from "@/../public/horizontal-logo-title.png";
 import Image from "next/image";
@@ -23,7 +23,9 @@ const Login = ({ from }) => {
   const [success, setSuccess] = useState("");
   const {csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   const [showPwd, setShowPwd] = useState(false);
-  const [progressing, setProgressing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [isSigningin, setIsSigningin] = useState(false);
 
   const [node, setNode] = useState("");
 
@@ -33,17 +35,20 @@ const Login = ({ from }) => {
       setError(errObj);
     }
     setSuccess(params.get("success"));
-    setProgressing(false);
   }, [params]);
 
   useEffect(() => {
+    console.log('session status: ', session.status);
+
     if (session.status === SESSION_LOADING) {
-      setNode(loadingHTML());
+
     }
     else if (session.status === SESSION_UNAUTHENTICATED) {
-      setNode(renderLoginPage());
+      setLoading(false);
     }
     else if (session.status === SESSION_AUTHENTICATED) {
+
+      setLoading(true);
       if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
         initLocalStorageForTut();
       } 
@@ -52,15 +57,9 @@ const Login = ({ from }) => {
     }
   }, [session.status]);
 
-  useEffect(() => {
-    if (session.status===SESSION_UNAUTHENTICATED) setNode(renderLoginPage());
-  }, [showPwd, error]);
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setProgressing(true);
+    setIsSigningin(true);
     const email = e.target[0].value;
     const password = e.target[1].value;
     signIn("credentials", { email, password });
@@ -72,33 +71,36 @@ const Login = ({ from }) => {
     </div>;
   }
 
-  const renderLoginPage = () => {
-    return (
-      <div className={styles.container}>
-        <div>
-          {error && <Alert status='warning'>
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Log In</AlertTitle>
-              <AlertDescription>{error && error[LOGIN_ERR_KEY]}</AlertDescription>
-            </Box>
-            <CloseButton
-              alignSelf='flex-start'
-              position='relative'
-              right={-1}
-              top={-1}
-              onClick={() => {
-                console.log('setError');
-                setError(null);
-              }}
-            />
-          </Alert>}
+  return loading ? loadingHTML() : (
 
-          <Heading>{success ? success : "Welcome"}</Heading>
-        </div>
+    <div className={styles.container}>
+
+      <div>
+        {error && <Alert status='warning'>
+          <AlertIcon />
+          <Box>
+            <AlertTitle>Log In</AlertTitle>
+            <AlertDescription>{error && error[LOGIN_ERR_KEY]}</AlertDescription>
+          </Box>
+          <CloseButton
+            alignSelf='flex-start'
+            position='relative'
+            right={-1}
+            top={-1}
+            onClick={() => {
+              console.log('setError');
+              setError(null);
+            }}
+          />
+        </Alert>}
+
+        <Heading>{success ? success : "Welcome"}</Heading>
+      </div>
+
       <div className={styles.bannerOuter}>
         <Image src={PenguinBanner} alt="" className={styles.banner} />
       </div>
+
       <div>
         <form onSubmit={handleSubmit} className={styles.form}>
           <InputGroup size='lg'>
@@ -107,7 +109,7 @@ const Login = ({ from }) => {
             </InputLeftElement>
             <Input size='lg' placeholder='Your ID' variant='outline' />
           </InputGroup>
-  
+
           <InputGroup size='lg'>
             <Input
               pr='4.5rem'
@@ -120,19 +122,17 @@ const Login = ({ from }) => {
                 </Button>
             </InputRightElement>
           </InputGroup>
-          <button className={styles.button}>
+          <button className={styles.button} disabled={isSigningin}>
             Login
-            {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
+            {isSigningin && <CircularProgress size='25px' style={{margin: '5px'}} isIndeterminate color='red.300' />}
           </button>
         </form>
       </div>
-        
+      
       <div className={styles.msg}>No Account? Please ask a Penguin admin to create one for you</div>
-      </div>
-    );
-  }
-  
-  return node;
+    </div>
+  );
+
 };
 
 export default Login;

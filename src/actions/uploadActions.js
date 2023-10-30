@@ -28,8 +28,6 @@ async function saveHomeworkToLocal(formData) {
             const name = uuidv4()
             const ext = photo.type.split("/")[1];
             const tempdir = os.tmpdir();
-            console.log('tempdir: ', tempdir);
-            console.log('path', path);
             const uploadDir = path.join(tempdir, `/${name}.${ext}`) // work in Vercel
             console.log('uploadDir: ', uploadDir);
             fs.writeFile(uploadDir, buffer)
