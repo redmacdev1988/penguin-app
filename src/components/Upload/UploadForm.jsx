@@ -7,20 +7,19 @@ import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
 import { useToast } from '@chakra-ui/react'
 import { CircularProgress, Input, Button, Flex, Text, Heading, Box } from '@chakra-ui/react'
-
+import { DateTime } from "luxon";
 
 const UploadForm = ({ refreshHomeworkData }) => {
     const toast = useToast()
     const session = useSession();
     const formRef = useRef();
     const [files, setFiles] = useState([]);
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
+
     const [disabled, setDisabled] = useState(false);
     const [progressing, setProgressing] = useState(false);
 
     const fileInputRef = useRef(null);
-    const [letter, setLetter] = useState("");
+
 
 
     const handleUploadHomeworkClick = () => {
@@ -41,7 +40,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
             return toast({
                 position: 'top',
                 title: 'Upload Warning',
-                description: 'Upload up to 3 image files only.',
+                description: 'Up to 3 image files only.',
                 status: 'warning',
                 duration: 9000,
                 isClosable: true,
@@ -61,26 +60,12 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 const compressedFile = await imageCompression(files[i], options);
                 compressedFilesArr.push(compressedFile);
             }
-            
             const newFiles = [...compressedFilesArr].filter(file => {
                 if(file.type.startsWith('image/')){
                     return file;
                 }
             })
-            
-            console.log('newFiles ', newFiles.length);
-
-            toast({
-                position: 'top',
-                title: 'newFiles.length',
-                description: newFiles.length,
-                status: 'warning',
-                duration: 9000,
-                isClosable: true,
-            });
-
             setFiles(newFiles);
-
         } catch (error) {
             console.log('Compress Image error: ', error);
         }
@@ -95,36 +80,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
         setFiles(newFiles) // set our files again
     }
 
-    // when title string is being updated this is called
-    const handleInputTitle = async (e) => {
-        e.preventDefault();
-        setTitle(e.target.value);   
-
-        return toast({
-            position: 'top',
-            title: 'Upload Warning',
-            description: e.nativeEvent.data,
-            status: 'warning',
-            duration: 9000,
-            isClosable: true,
-        });
-    }
-
-    // when description string is being updated this is called
-    const handleInputDesc = async (e) => {
-        e.preventDefault();
-        setDesc(e.target.value);
-
-        return toast({
-            position: 'top',
-            title: 'Upload Warning',
-            description: e.nativeEvent.data,
-            status: 'warning',
-            duration: 9000,
-            isClosable: true,
-        });
-
-    }
 
     // when upload homework form is submitted
     const handleUpload = async (e) => {
@@ -145,27 +100,16 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 });
             }
 
-
-            if (!title || !desc) {
-                setDisabled(false);
-                return toast({
-                    position: 'top',
-                    title: 'Upload Warning',
-                    description: 'Please enter a title and a description',
-                    status: 'warning',
-                    duration: 9000,
-                    isClosable: true,
-                });
-            }
-
             setProgressing(true);
 
             const formData = new FormData();
             files.forEach(file => {
                 formData.append('files', file)
             })
-            formData.append('title', title);
-            formData.append('desc', desc);
+
+            console.log('date time: ', DateTime.now());
+            formData.append('title',  DateTime.now());
+            formData.append('desc', "homework");
     
             console.log('files and everything appended to form √');
     
@@ -180,8 +124,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 toast({
                     position: 'top',
                     title: 'Error',
-                    description: `UploadForm.jsx - Error: ${res?.errMsg}`,
-                    status: 'warning',
+                    description: `${res?.errMsg}`,
+                    status: 'error',
                     duration: 9000,
                     isClosable: true,
                 });
@@ -200,15 +144,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                     isClosable: true,
                 });
             }
- 
-            toast({
-                position: 'top',
-                title: msg,
-                description: `Cleaning out files and all that`,
-                status: 'success',
-                duration: 9000,
-                isClosable: true,
-            });
 
             setFiles([]);
             formRef.current.reset();
@@ -222,14 +157,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
         } 
     }
 
-    // const handleAnswerChange = (evt) => {
-    //     console.log(evt.code, `key ${evt.key}  keyCode ${evt.keyCode}`);
-    //     setLetter(`code: ${evt.code} keyCode: ${evt.keyCode}`);
-    // }
-
     return (
         <form onSubmit={handleUpload} ref={formRef} style={{width: "100%", textAlign: 'center'}}>
-            <h1>Letter pressed: {letter}</h1>
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
                     
@@ -280,24 +209,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                         </Box>    
                     </Flex>}
 
-                    <Input 
-                        style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} 
-                        placeholder="homework title" 
-                        size='lg' 
-                        onChange={handleInputTitle} 
-                        onSubmit={e=> {
-                            console.log('e', e);
-                        }}
-                        onReset={e => {
-                            console.log('reset', e);
-                        }}
-                        enterKeyHint={undefined}
-                    />
-                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} 
-                        placeholder="homework description" 
-                        size='lg' 
-                        onChange={handleInputDesc} 
-                    />
                 </div>
 
                 <button 
