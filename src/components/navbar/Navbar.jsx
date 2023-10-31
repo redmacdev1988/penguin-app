@@ -26,7 +26,7 @@ const links = [
     },
     {
       id: 2,
-      title: "Tutorials",
+      title: "Study",
       url: "/tutorial",
     },
     {
@@ -46,12 +46,12 @@ const links = [
     // },
     {
       id: 6,
-      title: "Dashboard",
+      title: "Me",
       url: "/dashboard",
     },
     {
       id: 7,
-      title: "Register",
+      title: "Create",
       url: "/dashboard/register"
     }
   ];
@@ -85,7 +85,6 @@ export const Navbar = () => {
             })}
         </div>
 
-        <h3>{username ? "Welcome " : ""} {username}</h3>
         {session.status === SESSION_AUTHENTICATED && (
            <Button 
             leftIcon={<Icon as={LuLogOut} color='black.300' />} 

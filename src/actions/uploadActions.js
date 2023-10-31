@@ -51,9 +51,6 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
     console.log(`√ uploadHomeworkToCloudinary - user name:`, user.name);
 
     const multipleHmPhotosPromise = newFiles.map(file =>  {
-            console.log('√ file: ', file.filepath);
-            console.log('√ base64Image.content: ', file.base64Image.content);
-            // return cloudinary.v2.uploader.upload(file.filepath, { folder: `${user.name}-${user.email}` })
             return cloudinary.uploader.upload(
                 file.base64Image.content, 
                 `${user.name}-${user.email}`, 

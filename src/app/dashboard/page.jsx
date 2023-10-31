@@ -76,7 +76,7 @@ const Dashboard = () => {
           </Box>
         </Alert>}
 
-        <Heading>Your Dashboard</Heading>
+        <Heading>Hi {session?.data?.user.name}</Heading>
         <StatGroup>
           <Stat>
             <StatLabel># of homeworks</StatLabel>

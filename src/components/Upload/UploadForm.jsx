@@ -6,10 +6,18 @@ import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
 import { useToast } from '@chakra-ui/react'
-import { CircularProgress, Input, Button, Flex, Text, Heading, Box } from '@chakra-ui/react'
+import { CircularProgress, HStack, Button, Flex, Text, Heading, Box, Icon, useRadioGroup } from '@chakra-ui/react'
 import { DateTime } from "luxon";
+import RadioCard from './RadioCard';
+
+
+const VOCAB_STR = 'Vocab';
+const ESSAY_STR = 'Essay';
+
+const homeworkOptionsArr = [VOCAB_STR, ESSAY_STR];
 
 const UploadForm = ({ refreshHomeworkData }) => {
+
     const toast = useToast()
     const session = useSession();
     const formRef = useRef();
@@ -19,8 +27,17 @@ const UploadForm = ({ refreshHomeworkData }) => {
     const [progressing, setProgressing] = useState(false);
 
     const fileInputRef = useRef(null);
+    const [homeworkType, setHomeworkType] = useState(VOCAB_STR)
 
-
+    const { getRootProps, getRadioProps } = useRadioGroup({
+        name: 'Homework',
+        defaultValue: VOCAB_STR,
+        onChange: (titleStr) => {
+            console.log('on change', titleStr);
+            setHomeworkType(titleStr);
+        },
+    })
+    const group = getRootProps();
 
     const handleUploadHomeworkClick = () => {
         if (fileInputRef.current) {
@@ -108,8 +125,8 @@ const UploadForm = ({ refreshHomeworkData }) => {
             })
 
             console.log('date time: ', DateTime.now());
-            formData.append('title',  DateTime.now());
-            formData.append('desc', "homework");
+            formData.append('title',  session?.data?.user.name + '-' + DateTime.now().toFormat('MM-dd-yyyy-hh:mm', { locale: "cn" }));
+            formData.append('desc', homeworkType);
     
             console.log('files and everything appended to form √');
     
@@ -159,7 +176,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
         <form onSubmit={handleUpload} ref={formRef} style={{width: "100%", textAlign: 'center'}}>
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
-                    
                     <Flex direction="column" width="100%" minHeight="300px" alignItems="center" justifyContent="center">
                         <h5>3 images or less</h5>
                         <Flex flex={1} style={{width: '100%'}} justifyContent={"center"} alignItems={"center"}>
@@ -173,6 +189,44 @@ const UploadForm = ({ refreshHomeworkData }) => {
                             </Button>
                         </Flex>
 
+                        <div style={{display: 'flex', gap: '10px', alignItems: 'center', alignContent:'space-evenly', flexDirection: 'column'}}>
+                            <Flex p={5} w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+                                <Box flex='1' bg='#111'>
+                                    <Flex direction={"column"}>
+                                        <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>{files.length} files loaded</Heading>
+                                        {/* Preview Images */}
+                                        <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
+                                            {
+                                            files.map((file, index) => (
+                                                <HomeworkCard 
+                                                    key={index} 
+                                                    secureImageUrl={URL.createObjectURL(file)} 
+                                                    onClickDelete={() => handleDeleteLocalStateFile(index)} 
+                                                />
+                                            ))
+                                            }
+                                        </div>
+                                    </Flex>
+                                </Box>    
+                            </Flex>
+                        </div>
+
+
+
+                        <Flex direction="column" width="100%" alignItems={"center"} justifyContent={"space-evenly"}>
+                            <Box flex='1' bg='#111' style={{width: '100%'}}>
+                                <HStack {...group} style={{ display: 'flex', justifyContent: 'space-evenly'}}>
+                                    {homeworkOptionsArr.map((value) => {
+                                        const radio = getRadioProps({ value })
+                                        return (
+                                        <RadioCard key={value} {...radio}>
+                                            {value}
+                                        </RadioCard>
+                                        )
+                                    })}
+                                </HStack>
+                            </Box>
+                        </Flex>
                         <input className={styles.defaultBtn}
                             type="file" accept='image/*' 
                             ref={fileInputRef} 
@@ -180,41 +234,18 @@ const UploadForm = ({ refreshHomeworkData }) => {
                             style={{ display: 'none' }} 
                             multiple  
                         />
-
                     </Flex>
-
                 </div>
                 
-                <div style={{display: 'flex', gap: '10px', alignItems: 'center', alignContent:'space-evenly', flexDirection: 'column'}}>
-
-                    {<Flex p={5} w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
-                        <Box flex='1' bg='#111'>
-                            <Flex direction={"column"}>
-                                <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>{files.length} files loaded</Heading>
-                                {/* Preview Images */}
-                                <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
-                                    {
-                                    files.map((file, index) => (
-                                        <HomeworkCard 
-                                            key={index} 
-                                            secureImageUrl={URL.createObjectURL(file)} 
-                                            onClickDelete={() => handleDeleteLocalStateFile(index)} 
-                                        />
-                                    ))
-                                    }
-                                </div>
-                            </Flex>
-                        </Box>    
-                    </Flex>}
-
-                </div>
+                
 
                 <button 
                     className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
                     disabled={disabled} 
-                    style={{ height: '80px', borderRadius: '20px', marginTop: '30px', marginBottom: '20px'}}
+                    style={{ borderRadius: '50px', marginTop: '30px', marginBottom: '20px', padding: '50px'}}
                 >
-                    Upload Homework
+                    
+                    <Heading size="lg" fontFamily={"mono"} color={"white"}>Upload Homework</Heading>
                     {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
                 </button>
 
