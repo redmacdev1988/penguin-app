@@ -13,7 +13,7 @@ const handler = NextAuth({
       async authorize(credentials) {
         await connect();
         try {
-          const user = await User.findOne({email: credentials.email});
+          const user = await User.findOne({email: credentials.email.toLowerCase()});
           if (user) {
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,

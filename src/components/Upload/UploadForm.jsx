@@ -19,14 +19,11 @@ const UploadForm = ({ refreshHomeworkData }) => {
     const [disabled, setDisabled] = useState(false);
     const [progressing, setProgressing] = useState(false);
 
-
     const fileInputRef = useRef(null);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [dataLength, setDataLength] = useState(0);
+    const [letter, setLetter] = useState("");
+
 
     const handleUploadHomeworkClick = () => {
-        setSelectedFile(null);
-        setDataLength(0);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
             fileInputRef.current.click(); // programmatically click the file input's browse button
@@ -186,9 +183,15 @@ const UploadForm = ({ refreshHomeworkData }) => {
             console.log('Please wait, submit btn disabled, already processing upload request');
         } 
     }
+
+    const handleAnswerChange = (evt) => {
+        console.log('key pressed:', evt.key);
+        setLetter(evt.key);
+    }
+
     return (
         <form onSubmit={handleUpload} ref={formRef} style={{width: "100%", textAlign: 'center'}}>
-
+            <h1>Letter pressed: {letter}</h1>
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
                     
@@ -239,23 +242,15 @@ const UploadForm = ({ refreshHomeworkData }) => {
                         </Box>    
                     </Flex>}
 
-                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework title" size='lg' onChange={handleInputTitle} />
+                    <Input 
+                        style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} 
+                        placeholder="homework title" 
+                        size='lg' 
+                        onChange={handleInputTitle} 
+                        onKeyDown={handleAnswerChange}
+                    />
                     <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
-
-                    {/* <Button height='80px' width='50%' border='2px' borderColor='orange.500' variant='solid' size='lg' 
-                        shadow={"xl"} backgroundColor="orange.300" _hover={{ backgroundColor: 'orange.200' }} 
-                        style={{borderRadius: '80px'}}
-                        disabled={disabled}
-                        className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
-                    >
-                        <Heading size="lg" fontFamily={"mono"} color={"white"}>Upload Homework</Heading>
-                        {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
-                    </Button> */}
-
                 </div>
-
-                
-
 
                 <button 
                     className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
