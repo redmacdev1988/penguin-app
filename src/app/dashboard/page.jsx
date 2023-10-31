@@ -51,7 +51,6 @@ const Dashboard = () => {
     const id = params.get("id");
     const name = params.get("name");
     if (id && name) {
-      console.log('Dashboard', `You have registered user ${name} with id ${id}`);
       setMsg(`You have registered user ${name} with id ${id}`);
     }
   }, [params]);
@@ -118,7 +117,6 @@ const Dashboard = () => {
         return improvementsURL;
       });
 
-      console.log('total homeworks with improvements: ', hmWithImprovements);
       setNumOfCorrected(hmWithImprovements.length);
     }
 
@@ -143,7 +141,6 @@ const Dashboard = () => {
         const diffInDays = latestDay.diff(firstDay, 'days');
         const days = diffInDays.toObject().days;
   
-        console.log(`It takes ${days/allHmForUser.length} days to do 1 homework`);
         setNumOfDaysPerHm((days/allHmForUser.length).toFixed(2));
   
         const daysPerHm = days/allHmForUser.length;
