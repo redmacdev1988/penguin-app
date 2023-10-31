@@ -80,6 +80,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
         
     }
 
+    // called when local files are deleted after browsing
     async function handleDeleteLocalStateFile(index) {
         const newFiles = files.filter((_, i) => i !== index) // filter out the one with the index
         setFiles(newFiles) // set our files again
@@ -88,7 +89,13 @@ const UploadForm = ({ refreshHomeworkData }) => {
     // when title string is being updated this is called
     const handleInputTitle = async (e) => {
         e.preventDefault();
-        setTitle(e.target.value);    
+        console.log('e', e);
+        
+        console.log(`key ${e.nativeEvent.data}`);
+        setLetter(`key ${e.nativeEvent.data}`);
+
+        setTitle(e.target.value);   
+
     }
 
     // when description string is being updated this is called
@@ -184,10 +191,10 @@ const UploadForm = ({ refreshHomeworkData }) => {
         } 
     }
 
-    const handleAnswerChange = (evt) => {
-        console.log(evt.code, `key ${evt.key}  keyCode ${evt.keyCode}`);
-        setLetter(`code: ${evt.code} keyCode: ${evt.keyCode}`);
-    }
+    // const handleAnswerChange = (evt) => {
+    //     console.log(evt.code, `key ${evt.key}  keyCode ${evt.keyCode}`);
+    //     setLetter(`code: ${evt.code} keyCode: ${evt.keyCode}`);
+    // }
 
     return (
         <form onSubmit={handleUpload} ref={formRef} style={{width: "100%", textAlign: 'center'}}>
@@ -247,7 +254,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                         placeholder="homework title" 
                         size='lg' 
                         onChange={handleInputTitle} 
-                        onKeyDown={handleAnswerChange}
                     />
                     <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
                 </div>
