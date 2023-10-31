@@ -29,7 +29,6 @@ async function saveHomeworkToLocal(formData) {
             const ext = photo.type.split("/")[1];
             const tempdir = os.tmpdir();
             const uploadDir = path.join(tempdir, `/${name}.${ext}`) // work in Vercel
-            console.log('uploadDir: ', uploadDir);
             fs.writeFile(uploadDir, buffer)
             
             return { 
@@ -65,10 +64,6 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
             );
         }
     );
-
-    // const uploadedImageResponse = await cloudinary.uploader.upload(base64Image.content, 'flashcards', { resource_type: 'image' });
-
-    console.log(`√ length of multipleHmPhotosPromise: `, multipleHmPhotosPromise.length);
   
     return await Promise.all(multipleHmPhotosPromise).then(res => {
         return res;
