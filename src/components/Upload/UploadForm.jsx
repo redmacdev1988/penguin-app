@@ -186,7 +186,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
     const handleAnswerChange = (evt) => {
         console.log(evt.code, `key ${evt.key}  keyCode ${evt.keyCode}`);
-        setLetter(`${evt.code} ${evt.keyCode}`);
+        setLetter(`code: ${evt.code} keyCode: ${evt.keyCode}`);
     }
 
     return (
