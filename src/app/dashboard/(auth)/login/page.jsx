@@ -24,10 +24,7 @@ const Login = ({ from }) => {
   const {csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const [isSigningin, setIsSigningin] = useState(false);
-
-  const [node, setNode] = useState("");
 
   useEffect(() => {
     const errObj = JSON.parse(params.get("error"));
@@ -38,8 +35,6 @@ const Login = ({ from }) => {
   }, [params]);
 
   useEffect(() => {
-    console.log('session status: ', session.status);
-
     if (session.status === SESSION_LOADING) {
 
     }
