@@ -102,20 +102,19 @@ const HomeworkCard = ({
             <Link href={secureImageUrl} target='_blank'>
                 <Image src={secureImageUrl} 
                   alt='image' 
-                  width={250}
-                  height={200}
+                  width={300}
+                  height={240}
                 />
               </Link>
             </div>) : (<Image src={secureImageUrl} 
                 alt='image' 
-                width={250}
-                height={200}
+                width={300}
+                height={240}
             />)
           }
         </div>
 
         <div style={{display: 'flex', flexDirection: 'column', width: "70%"}}>
-          
           <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
             {improvementsURL && (<i>see improvements</i>)}
             {improvementsURL && (<Link href={improvementsURL} target='_blank'>
@@ -134,7 +133,7 @@ const HomeworkCard = ({
           <div style={{padding: '20px',  display: 'flex', flexDirection: 'column' }}>
             {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
               <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
-                <Input placeholder='slug URL' size='lg' />
+                <Input placeholder='slug URL' size='lg' style={{}} />
                 <Button 
                   type='submit'
                   leftIcon={<Image alt={'update'} priority height={32} width={32} src={approvalIcon} />} 
@@ -173,6 +172,7 @@ const HomeworkCard = ({
         </div>
 
         {createdAt ? (<Button  
+              size='lg'
               leftIcon={<Icon boxSize={6} as={LuXCircle} color='white.100' />} 
               colorScheme='red'
               disabled={isPending}

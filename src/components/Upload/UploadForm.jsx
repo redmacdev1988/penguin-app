@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import imageCompression from 'browser-image-compression';
 import styles from "./upload.module.css";
 import { useToast } from '@chakra-ui/react'
-import { CircularProgress, Input, Button } from '@chakra-ui/react'
+import { CircularProgress, Input, Button, Flex, Text, Heading, Box } from '@chakra-ui/react'
 
 
 const UploadForm = ({ refreshHomeworkData }) => {
@@ -19,9 +19,27 @@ const UploadForm = ({ refreshHomeworkData }) => {
     const [disabled, setDisabled] = useState(false);
     const [progressing, setProgressing] = useState(false);
 
+
+    const fileInputRef = useRef(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [dataLength, setDataLength] = useState(0);
+
+    const handleUploadHomeworkClick = () => {
+        setSelectedFile(null);
+        setDataLength(0);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+            fileInputRef.current.click(); // programmatically click the file input's browse button
+        }
+    };
+
+    // when tne file input has browsed and loaded in files, we come here
+
     async function handleInputFiles(e) {
         const files = e.target.files;
-
+        console.log('files', files);
+        
+        debugger
         if (files.length > 3) {
             formRef.current.reset();
             return toast({
@@ -54,6 +72,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 }
             })
             
+            console.log('newFiles', newFiles.length);
             setFiles(newFiles);
 
         } catch (error) {
@@ -61,6 +80,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
         }
 
         formRef.current.reset();
+        
     }
 
     async function handleDeleteLocalStateFile(index) {
@@ -68,17 +88,21 @@ const UploadForm = ({ refreshHomeworkData }) => {
         setFiles(newFiles) // set our files again
     }
 
+    // when title string is being updated this is called
     const handleInputTitle = async (e) => {
         e.preventDefault();
         setTitle(e.target.value);    
     }
 
+    // when description string is being updated this is called
     const handleInputDesc = async (e) => {
         e.preventDefault();
         setDesc(e.target.value);
     }
 
+    // when upload homework form is submitted
     const handleUpload = async (e) => {
+        debugger
         if (!disabled) {
             setDisabled(true);
             e.preventDefault();
@@ -160,41 +184,88 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
         } else {
             console.log('Please wait, submit btn disabled, already processing upload request');
-        }  
+        } 
     }
     return (
-        <form onSubmit={handleUpload} ref={formRef}>
+        <form onSubmit={handleUpload} ref={formRef} style={{width: "100%", textAlign: 'center'}}>
 
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
-                    <input className={styles.defaultBtn} type="file" accept='image/*' multiple onChange={handleInputFiles} />
+                    
+                    <Flex direction="column" width="100%" minHeight="300px" alignItems="center" justifyContent="center">
+                        <h5>3 images or less</h5>
+                        <Flex flex={1} style={{width: '100%'}} justifyContent={"center"} alignItems={"center"}>
+                            <Button height='120px' width='100%' border='2px' borderColor='green.500' variant='solid' size='lg' 
+                                shadow={"xl"} backgroundColor="gray.700" _hover={{ backgroundColor: 'gray.800' }} 
+                                _active={{ backgroundColor: "gray.900" }} 
+                                style={{borderRadius: '50px'}}
+                                onClick={handleUploadHomeworkClick}
+                            >
+                                <Heading size="lg" fontFamily={"mono"} color={"white"}>Browse</Heading>
+                            </Button>
+                        </Flex>
+
+                        <input className={styles.defaultBtn}
+                            type="file" accept='image/*' 
+                            ref={fileInputRef} 
+                            onChange={handleInputFiles} 
+                            style={{ display: 'none' }} 
+                            multiple  
+                        />
+
+                    </Flex>
+
                 </div>
                 
-                <div style={{display: 'flex', alignItems: 'left', alignContent:'space-evenly', flexDirection: 'column'}}>
-                    <Input style={{marginTop: '20px'}} placeholder="homework title" size='lg' onChange={handleInputTitle} />
-                    <Input style={{marginTop: '20px'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
+                <div style={{display: 'flex', gap: '10px', alignItems: 'center', alignContent:'space-evenly', flexDirection: 'column'}}>
+
+                    {<Flex p={5} w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
+                        <Box flex='1' bg='#111'>
+                            <Flex direction={"column"}>
+                                <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>{files.length} files loaded</Heading>
+                                {/* Preview Images */}
+                                <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
+                                    {
+                                    files.map((file, index) => (
+                                        <HomeworkCard 
+                                            key={index} 
+                                            secureImageUrl={URL.createObjectURL(file)} 
+                                            onClickDelete={() => handleDeleteLocalStateFile(index)} 
+                                        />
+                                    ))
+                                    }
+                                </div>
+                            </Flex>
+                        </Box>    
+                    </Flex>}
+
+                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework title" size='lg' onChange={handleInputTitle} />
+                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
+
+                    {/* <Button height='80px' width='50%' border='2px' borderColor='orange.500' variant='solid' size='lg' 
+                        shadow={"xl"} backgroundColor="orange.300" _hover={{ backgroundColor: 'orange.200' }} 
+                        style={{borderRadius: '80px'}}
+                        disabled={disabled}
+                        className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
+                    >
+                        <Heading size="lg" fontFamily={"mono"} color={"white"}>Upload Homework</Heading>
+                        {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
+                    </Button> */}
+
                 </div>
+
+                
+
+
                 <button 
                     className={`${disabled ? styles.disabled : styles.enabled} ${styles.defaultBtn}`} 
-                    disabled={disabled} style={{ marginTop: '30px', marginBottom: '20px'}}
+                    disabled={disabled} 
+                    style={{ height: '80px', borderRadius: '20px', marginTop: '30px', marginBottom: '20px'}}
                 >
                     Upload Homework
                     {progressing && <CircularProgress style={{margin: '10px'}} isIndeterminate color='green.300' />}
                 </button>
 
-                {/* Preview Images */}
-                <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
-                    {
-                    files.map((file, index) => (
-                        <HomeworkCard 
-                            key={index} 
-                            secureImageUrl={URL.createObjectURL(file)} 
-                            onClickDelete={() => handleDeleteLocalStateFile(index)} 
-                        />
-                    ))
-                    }
-                </div>
-                <h5>3 images or less</h5>
             </div>
       </form>
     )

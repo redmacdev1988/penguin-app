@@ -71,7 +71,6 @@ async function uploadHomeworkToCloudinary(newFiles, user) {
     console.log(`√ length of multipleHmPhotosPromise: `, multipleHmPhotosPromise.length);
   
     return await Promise.all(multipleHmPhotosPromise).then(res => {
-        console.log('√ success!', res);
         return res;
     }).catch(err => {
         console.log('uploadHomeworkToCloudinary caught err: ', err);
@@ -83,8 +82,7 @@ export async function uploadHomework(formData, user) {
     const title = formData.get('title')
     const desc = formData.get('desc');
 
-    try {
-        
+    try { 
         const hmPhotoFiles = await saveHomeworkToLocal(formData); // ok
         const bValidArr = hmPhotoFiles && Array.isArray(hmPhotoFiles) && hmPhotoFiles.length > 0; // ok
 

@@ -10,10 +10,10 @@ import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 import { isAdmin } from '@/utils';
 import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
-
+import { CircularProgress, Input, Button, Flex, Text, Heading } from '@chakra-ui/react'
 
 const loadingHTML = () => {
-  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
+  return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '6.8em'}}>
     <h1>Loading...</h1>
   </div>;
 }
@@ -33,7 +33,7 @@ const HomeworkPage = () => {
     return (
       <div className={styles.container}>
 
-        {!bUserAdmin && <h1>Your Homework</h1>}
+        {!bUserAdmin && <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>Your Homework</Heading>}
         {!bUserAdmin && <UploadForm refreshHomeworkData={async() => {
           const responseData = await fetchHomework({name: session?.data?.user.name, limit: data.length + 1});
           if (responseData) {
