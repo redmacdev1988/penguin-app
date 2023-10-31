@@ -34,7 +34,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
     async function handleInputFiles(e) {
         const files = e.target.files;
-        console.log('files', files);
         
         debugger
         if (files.length > 3) {
@@ -69,7 +68,17 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 }
             })
             
-            console.log('newFiles', newFiles.length);
+            console.log('newFiles ', newFiles.length);
+
+            toast({
+                position: 'top',
+                title: 'newFiles.length',
+                description: newFiles.length,
+                status: 'warning',
+                duration: 9000,
+                isClosable: true,
+            });
+
             setFiles(newFiles);
 
         } catch (error) {
@@ -192,6 +201,15 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 });
             }
  
+            toast({
+                position: 'top',
+                title: msg,
+                description: `Cleaning out files and all that`,
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+            });
+
             setFiles([]);
             formRef.current.reset();
             setDisabled(false);
