@@ -89,19 +89,32 @@ const UploadForm = ({ refreshHomeworkData }) => {
     // when title string is being updated this is called
     const handleInputTitle = async (e) => {
         e.preventDefault();
-        console.log('e', e);
-        
-        console.log(`key ${e.nativeEvent.data}`);
-        setLetter(`key ${e.nativeEvent.data}`);
-
         setTitle(e.target.value);   
 
+        return toast({
+            position: 'top',
+            title: 'Upload Warning',
+            description: e.nativeEvent.data,
+            status: 'warning',
+            duration: 9000,
+            isClosable: true,
+        });
     }
 
     // when description string is being updated this is called
     const handleInputDesc = async (e) => {
         e.preventDefault();
         setDesc(e.target.value);
+
+        return toast({
+            position: 'top',
+            title: 'Upload Warning',
+            description: e.nativeEvent.data,
+            status: 'warning',
+            duration: 9000,
+            isClosable: true,
+        });
+
     }
 
     // when upload homework form is submitted
@@ -254,8 +267,19 @@ const UploadForm = ({ refreshHomeworkData }) => {
                         placeholder="homework title" 
                         size='lg' 
                         onChange={handleInputTitle} 
+                        onSubmit={e=> {
+                            console.log('e', e);
+                        }}
+                        onReset={e => {
+                            console.log('reset', e);
+                        }}
+                        enterKeyHint={undefined}
                     />
-                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} placeholder="homework description" size='lg' onChange={handleInputDesc} />
+                    <Input style={{marginTop: '10px', height: '100px', fontSize: 'xxx-large'}} 
+                        placeholder="homework description" 
+                        size='lg' 
+                        onChange={handleInputDesc} 
+                    />
                 </div>
 
                 <button 
