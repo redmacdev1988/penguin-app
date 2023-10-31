@@ -152,7 +152,6 @@ const Dashboard = () => {
           console.log(`It takes  ${daysPerHm * 24} hours to do 1 homework`);
         }
       }
-      console.log('set node of rendered dashboard');
       setNode(renderDashboard());
     }
     

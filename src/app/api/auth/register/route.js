@@ -7,11 +7,8 @@ export const POST = async (request) => {
     // the fetch is called from dashboard/auth/register/page.jsx
     // we need to look at the json format of the body, and retrieve name/email/password
   const { name, email, password } = await request.json();
-  console.log(name, email);
   await connect();
-
   const hashedPassword = await bcrypt.hash(password, 5);
-
   const newUser = new User({ name, email, password: hashedPassword });
   try {
     await newUser.save();

@@ -131,9 +131,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 });
 
             } else {
-
                 const registerUserRes = JSON.parse(res);
-                console.log('res', registerUserRes);
                 const { msg, title, desc } = registerUserRes;
                 toast({
                     position: 'top',
