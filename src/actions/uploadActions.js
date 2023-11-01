@@ -100,6 +100,7 @@ export async function uploadHomework(formData, user) {
                         publicId: hmObj.public_id, 
                         secureUrl: hmObj.secure_url,
                         name: user.name,
+                        userId: user.email,
                         slug: "",
                         title,
                         desc

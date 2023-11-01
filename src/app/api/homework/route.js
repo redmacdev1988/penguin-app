@@ -3,7 +3,7 @@ import cloudinary from 'cloudinary'
 import connect from "@/utils/db";
 import PenguinHomework from "@/models/PenguinHomework";
 
-const bAdminNames = (name) => ['rtsao', 'admin', 'root'].filter(item => item === name).length > 0;
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -13,9 +13,12 @@ cloudinary.config({
 
 export const GET = async (request) => {
     const url = new URL(request.url);
-    const name = url.searchParams.get("name");
+    const userId = url.searchParams.get("id");
+    const userRole = url.searchParams.get("role");
     const searchParams = url.searchParams.get("searchParams");
     const reqLimit = url.searchParams.get("limit");
+
+    console.log('GET', `${url}, ${userId}, ${userRole}`);
     try {
         await connect();
 
@@ -25,15 +28,16 @@ export const GET = async (request) => {
         
         // if its me or admin, search result should be all entries that are NOT rtsao or admin
         // if its the normal student name, then give me entries with the student name
-        const nameFilter = bAdminNames(name) ?  {$ne: name}  :  name;
+        const userIdFilter = userRole === "admin" ? {$ne: userId}  :  userId;
 
         const allHmForUser = await PenguinHomework.find({
-            _id: next
-              ? sort === '_id'
-                ? { $gt: next } : { $lt: next }
-              : { $exists: true },
-            name: nameFilter
+            _id: next ?  // is there a next?
+                sort === '_id' ? { $gt: next } : { $lt: next } // if next, do this
+              : { $exists: true }, // else, do this
+            userId: userIdFilter
           }).limit(limit).sort(sort)
+
+          console.log('allHmForUser: ', allHmForUser);
 
         const next_cursor = allHmForUser[limit - 1]?._id.toString() || null; 
         return new NextResponse(JSON.stringify({allHmForUser, next_cursor}), { status: 200 });

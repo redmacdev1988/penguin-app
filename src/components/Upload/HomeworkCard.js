@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import React, { useTransition, useContext } from 'react'
+import React, { useTransition, useContext, useState } from 'react'
 import { MyThemeContext } from "../../context/MyThemeContext";
 import moment from 'moment'
 import Link from "next/link";
@@ -21,7 +21,14 @@ import {
   ModalCloseButton, 
   Button,
   useDisclosure,
-  Icon
+  Icon,
+  Flex,
+  Box,
+  Text,
+  Square,
+  Spacer,
+  Heading,
+  useToast
 } from '@chakra-ui/react'
 import { LuX, LuXCircle } from "react-icons/lu";
 
@@ -45,9 +52,9 @@ const HomeworkCard = ({
   title,
   desc
 }) => {
-
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const [updatingCorrection, setUpdatingCorrection] = useState(false);
   const { mode } = useContext(MyThemeContext);
 
   // isPending - a boolean indicating whether the transition is currently in progress or not.
@@ -56,7 +63,20 @@ const HomeworkCard = ({
 
   const handleUpdateSlug = async (e) => {
     e.preventDefault();
+    
     const inputSlug = e.target[0].value;
+    if (!inputSlug) {
+      return toast({
+          position: 'top',
+          title: 'Slug Input',
+          description: 'Please enter a slug for tutorial',
+          status: 'warning',
+          duration: 8000,
+          isClosable: true,
+      });
+    }
+
+    setUpdatingCorrection(true);
     try {
       const response = await fetch(strUrlToGetCorrectionLink(inputSlug), {
         method: "GET"
@@ -73,6 +93,7 @@ const HomeworkCard = ({
         if (res && res.status === 200) {
           console.log('response ok', 'lets update corrections');
           onClickRefreshHomework();
+          setUpdatingCorrection(false);
         } else {
           // todo error box
         }
@@ -133,13 +154,19 @@ const HomeworkCard = ({
           <div style={{padding: '20px',  display: 'flex', flexDirection: 'column' }}>
             {isAdmin && (<div style={{display: 'flex', flexDirection: 'row', alignContent:'space-evenly'}}>
               <form onSubmit={handleUpdateSlug} style={{marginBottom: '10px', padding: '15px', width: '100%'}}>
-                <Input placeholder='slug URL' size='lg' style={{}} />
+                <Input placeholder='slug URL' size='lg' />
                 <Button 
                   type='submit'
-                  leftIcon={<Image alt={'update'} priority height={32} width={32} src={approvalIcon} />} 
-                  colorScheme='yellow' variant='solid' style={{marginTop: '15px'}}
+                  leftIcon={<Image alt={'update'} priority height={64} width={64} src={approvalIcon} />} 
+                  colorScheme='yellow' variant='solid' style={{marginTop: '15px', width: '100%', height: '100%'}}
                 >
-                  Update Correction
+                  <Box width="40%">
+                    <Heading>Update Correction</Heading>
+                  </Box>
+                  <Spacer />
+                  <Box width="50%">
+                    {updatingCorrection && <CircularProgress size='30px' thickness='15px' isIndeterminate color='green.300' />}
+                  </Box>
                 </Button>
               </form>
               </div>
@@ -184,15 +211,6 @@ const HomeworkCard = ({
       </div>
     </>
   )
-
-
 }
 
 export default HomeworkCard
-
-/*
-
-LuX
-
-
-*/

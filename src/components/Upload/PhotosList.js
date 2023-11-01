@@ -5,8 +5,7 @@ import useInView from '@/hooks/useInView'
 import { fetchHomework } from '@/actions/homeworkActions';
 import { useToast, Button } from '@chakra-ui/react'
 
-const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkData }) => {
-  const toast = useToast()
+const PhotoList = ({  isAdmin, homeworkArr, user, nextCursor, refreshHomeworkData }) => {
   const {ref, inView} = useInView();
   const [loading, setLoading] = useState(false);
   const [next, setNext] = useState(true);
@@ -22,7 +21,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
     }
     setLoading(true);
 
-    const responseData = await fetchHomework({name: author, nextCursor});
+    const responseData = await fetchHomework({user, nextCursor});
     if (responseData) {
       const { allHmForUser, next_cursor} = responseData;
       refreshHomeworkData(allHmForUser, next_cursor);
@@ -52,6 +51,7 @@ const PhotoList = ({  isAdmin, homeworkArr, author, nextCursor, refreshHomeworkD
     }
   }, [inView]);
 
+  console.log('isAdmin', isAdmin);
   return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
   <>
     <div style={{ display: 'flex',  gap: 6,  flexWrap: 'wrap', margin: '10px 0',  }}>

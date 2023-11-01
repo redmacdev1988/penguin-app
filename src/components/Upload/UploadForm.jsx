@@ -50,8 +50,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
     async function handleInputFiles(e) {
         const files = e.target.files;
-        
-        debugger
         if (files.length > 3) {
             formRef.current.reset();
             return toast({
@@ -62,7 +60,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 duration: 9000,
                 isClosable: true,
             });
-
         }
 
         const options = {
@@ -119,6 +116,14 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
             setProgressing(true);
 
+            // todo check this out.
+            // shouldn't it be formData.append('files', files);
+
+            // https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
+            // formData.append("name", true);
+            // formData.append("name", 72);
+            // formData.getAll("name"); // ["true", "72"]
+            
             const formData = new FormData();
             files.forEach(file => {
                 formData.append('files', file)
@@ -177,7 +182,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
             <div style={{ minHeight: 200, margin: '10px 0', padding: 10}}>
                 <div>
                     <Flex direction="column" width="100%" minHeight="300px" alignItems="center" justifyContent="center">
-                        <h5>3 images or less</h5>
                         <Flex flex={1} style={{width: '100%'}} justifyContent={"center"} alignItems={"center"}>
                             <Button height='120px' width='100%' border='2px' borderColor='green.500' variant='solid' size='lg' 
                                 shadow={"xl"} backgroundColor="gray.700" _hover={{ backgroundColor: 'gray.800' }} 
@@ -231,8 +235,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                             type="file" accept='image/*' 
                             ref={fileInputRef} 
                             onChange={handleInputFiles} 
-                            style={{ display: 'none' }} 
-                            multiple  
+                            style={{ display: 'none' }}  
                         />
                     </Flex>
                 </div>

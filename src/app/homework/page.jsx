@@ -8,7 +8,6 @@ import { GlobalContext } from "../../context/GlobalContext";
 import UploadForm from '@/components/Upload/UploadForm';
 import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
-import { isAdmin } from '@/utils';
 import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
 import { CircularProgress, Input, Button, Flex, Text, Heading } from '@chakra-ui/react'
 
@@ -27,35 +26,36 @@ const HomeworkPage = () => {
   const { csFromUrl } = useContext(GlobalContext);
  
   const authenticatedHTML = () => {
-
-    const bUserAdmin = isAdmin(session?.data?.user.name);
-
+    const bUserAdmin = session?.data?.user.role === "admin";
+    console.log('bUserAdmin', bUserAdmin);
     return (
       <div className={styles.container}>
 
         {!bUserAdmin && <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>Your Homework</Heading>}
         {!bUserAdmin && <UploadForm refreshHomeworkData={async() => {
-          const responseData = await fetchHomework({name: session?.data?.user.name, limit: data.length + 1});
+          const responseData = await fetchHomework({user: session?.data?.user, limit: data.length + 1});
           if (responseData) {
             const {allHmForUser, next_cursor} = responseData;
             setData(allHmForUser);
             setNextCursor(next_cursor);
           }
         }}/>}
-        <h1>{bUserAdmin ? `Welcome Administrator ${session?.data?.user.name}` : ``}</h1>
+        <Heading size="lg" fontFamily={"mono"} color={"white"}>
+          {bUserAdmin ? `Welcome Administrator ${session?.data?.user.name}` : ``}
+        </Heading>
 
         {data && data && Array.isArray(data) && data.length > 0 && 
         <PhotoList
           nextCursor={nextCursor}
-          isAdmin={isAdmin(session?.data?.user.name)} 
+          isAdmin={bUserAdmin} 
           homeworkArr={data || []} 
-          author={session?.data?.user.name} 
+          user={session?.data?.user} 
           refreshHomeworkData={ async (additionalData, nextCursor) => {
             if (additionalData) {
               setData(prev => [...prev, ...additionalData]);
               setNextCursor(nextCursor)
             } else { // update correctional link
-              const responseData = await fetchHomework({name: session?.data?.user.name, limit: data.length});
+              const responseData = await fetchHomework({user: session?.data?.user, limit: data.length});
               if (responseData) {
                 const {allHmForUser, next_cursor} = responseData;
                 setData(allHmForUser);
@@ -71,7 +71,8 @@ const HomeworkPage = () => {
 
   useEffect(() => {
     (async () => {
-      const responseData = await fetchHomework({ name: session?.data?.user.name });
+      const responseData = await fetchHomework({ user: session?.data?.user });
+      console.log('responseData', responseData);
       if (responseData) {
         const {allHmForUser, next_cursor} = responseData;
         setData([...allHmForUser]);
@@ -96,7 +97,7 @@ const HomeworkPage = () => {
 
     if (session.status === SESSION_AUTHENTICATED) {
       (async () => {
-        const responseData = await fetchHomework({ name: session?.data?.user.name });
+        const responseData = await fetchHomework({ user: session?.data?.user });
         if (responseData) {
           const {allHmForUser, next_cursor} = responseData;
           setData([...allHmForUser]);

@@ -22,6 +22,10 @@ const penguinHomeworkSchema = new Schema(
       type: String,
       required: true,
     },
+    userId: {
+      type: String,
+      required: true
+    },
     slug: {
       type: String,
     },

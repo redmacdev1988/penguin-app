@@ -1,25 +1,27 @@
 
 
-const firstPageURL = (name) => `/api/homework?name=${name}`;
-const nthPageURL = (name, nextCursor) => `/api/homework?name=${name}&searchParams=${nextCursor}`;
-const pageWithLimitURL = (name, limit) => `/api/homework?name=${name}&limit=${limit}`;
+const firstPageURL = (user) => `/api/homework?id=${user.email}&role=${user.role}`;
+const nthPageURL = (user, nextCursor) => `/api/homework?id=${user.email}&role=${user.role}&searchParams=${nextCursor}`;
+const pageWithLimitURL = (user, limit) => `/api/homework?id=${user.email}&role=${user.role}&limit=${limit}`;
 
 // Passing 0 means no limit.
-export const fetchHomework = async ({name, nextCursor, limit}) => {
+export const fetchHomework = async ({user, nextCursor, limit}) => {
+  console.log('===> user', user);
 
-  if (!name && !nextCursor && !limit) return;
+  if (!user && !nextCursor && !limit) return;
 
   let url;
 
-  if (name && !nextCursor && !limit) {
-    url = firstPageURL(name);
-  } else if (name && nextCursor && !limit) {
-    url = nthPageURL(name, nextCursor);
-  } else if (name && !nextCursor && limit) {
-    url = pageWithLimitURL(name, limit);
+  if (user && !nextCursor && !limit) {
+    url = firstPageURL(user);
+  } else if (user && nextCursor && !limit) {
+    url = nthPageURL(user, nextCursor);
+  } else if (user && !nextCursor && limit) {
+    url = pageWithLimitURL(user, limit);
   }
 
   if (url) {
+    console.log('===> url', url);
     try {
       const res = await fetch(url);
       if (res && res.status === 200) {
