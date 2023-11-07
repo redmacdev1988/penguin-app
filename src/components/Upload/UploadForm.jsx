@@ -128,7 +128,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
                 formData.append('files', file)
             })
 
-            console.log('date time: ', DateTime.now());
             formData.append('title',  session?.data?.user.name + '-' + DateTime.now().toFormat('MM-dd-yyyy-hh:mm', { locale: "cn" }));
             formData.append('desc', homeworkType);
     

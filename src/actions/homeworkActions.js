@@ -6,7 +6,6 @@ const pageWithLimitURL = (user, limit) => `/api/homework?id=${user.email}&role=$
 
 // Passing 0 means no limit.
 export const fetchHomework = async ({user, nextCursor, limit}) => {
-  console.log('===> user', user);
 
   if (!user && !nextCursor && !limit) return;
 

@@ -54,7 +54,6 @@ const allCached = (arr, lsKeyStr_numOfTutPages) => {
   let tutsArray = [];
   if (arr && Array.isArray(arr) && arr.length > 0) {
     tutsArray = arr.slice(0, numOfPagesTutorials);
-    console.log('tutsArray', tutsArray);
     return (tutsArray.filter((item) => { return item === false }).length === 0);
   }
   return false;
@@ -127,7 +126,6 @@ const useFetchAndCacheTutorials = () => {
 
   }, [tutorialsData]);
 
-  console.log('totalItems', totalItems);
   return { tutorialsData, totalItems, totalPages, setPage, page };
 }
 

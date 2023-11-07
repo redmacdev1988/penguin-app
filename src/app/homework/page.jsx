@@ -70,8 +70,6 @@ const HomeworkPage = () => {
     );
   }
 
-  const { tutorialsData, totalItems, totalPages, page, setPage, } = useFetchAndCacheTutorials();
-
   useEffect(() => {
     (async () => {
       const responseData = await fetchHomework({ user: session?.data?.user });

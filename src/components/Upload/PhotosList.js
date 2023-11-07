@@ -51,7 +51,6 @@ const PhotoList = ({  isAdmin, homeworkArr, user, nextCursor, refreshHomeworkDat
     }
   }, [inView]);
 
-  console.log('isAdmin', isAdmin);
   return (Array.isArray(homeworkArr) && homeworkArr.length > 0) ? 
   <>
     <div style={{ display: 'flex',  gap: 6,  flexWrap: 'wrap', margin: '10px 0',  }}>
