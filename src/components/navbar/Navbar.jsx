@@ -18,6 +18,8 @@ import RickyABCDarkLogo from  "@/../public/rickyabc-dark-logo-370X280.png";
 
 import Image from "next/image";
 import { SESSION_AUTHENTICATED } from "@/utils/index";
+import { initLocalStorageForTut  } from '@/hooks/useFetchAndCacheTutorials';
+
 const links = [
     {
       id: 1,
@@ -58,9 +60,10 @@ const links = [
 
 export const Navbar = () => {
   const { mode } = useContext(MyThemeContext);
-  const { csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials } = useContext(GlobalContext);
   const session = useSession();
   const username = session && session?.data?.user?.name || "";
+  const {lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials } = useContext(GlobalContext);
+
   return (
     <div className={styles.container}>
         
@@ -90,9 +93,7 @@ export const Navbar = () => {
             leftIcon={<Icon as={LuLogOut} color='black.300' />} 
             colorScheme='yellow' variant='solid' style={{marginTop: '15px'}}
             onClick={() => { 
-              localStorage.setItem(csCacheTutorials, JSON.stringify([false, false, false]));
-              localStorage.setItem(csShouldCacheTutorials, 'yes');
-              localStorage.setItem(csCacheTimeStamp, Date.now());
+              initLocalStorageForTut({lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials});
               signOut(); 
           }}
          >

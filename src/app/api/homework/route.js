@@ -37,8 +37,6 @@ export const GET = async (request) => {
             userId: userIdFilter
           }).limit(limit).sort(sort)
 
-          console.log('allHmForUser: ', allHmForUser);
-
         const next_cursor = allHmForUser[limit - 1]?._id.toString() || null; 
         return new NextResponse(JSON.stringify({allHmForUser, next_cursor}), { status: 200 });
     } catch (err) {

@@ -97,7 +97,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
 
     // when upload homework form is submitted
     const handleUpload = async (e) => {
-        debugger
         if (!disabled) {
             setDisabled(true);
             e.preventDefault();

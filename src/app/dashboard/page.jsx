@@ -37,7 +37,7 @@ const Dashboard = () => {
   const [node, setNode] = useState();
   const [msg, setMsg] = useState('');
 
-  const { csFromUrl } = useContext(GlobalContext);
+  const { lsKeyStr_fromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   
@@ -164,7 +164,7 @@ const Dashboard = () => {
       setNode(loadingHTML());
     }
     else if (session.status === "unauthenticated") {
-      localStorage.setItem(csFromUrl, "dashboard");
+      localStorage.setItem(lsKeyStr_fromUrl, "dashboard");
       router?.push("/dashboard/login");
     }
     else if (session.status === 'authenticated') {

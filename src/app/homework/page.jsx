@@ -10,6 +10,7 @@ import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
 import { CircularProgress, Input, Button, Flex, Text, Heading } from '@chakra-ui/react'
+import useFetchAndCacheTutorials from "@/hooks/useFetchAndCacheTutorials";
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '6.8em'}}>
@@ -23,7 +24,7 @@ const HomeworkPage = () => {
   const [node, setNode] = useState();
   const [data, setData] = useState([]);
   const [nextCursor, setNextCursor] = useState();
-  const { csFromUrl } = useContext(GlobalContext);
+  const { lsKeyStr_fromUrl } = useContext(GlobalContext);
  
   const authenticatedHTML = () => {
     const bUserAdmin = session?.data?.user.role === "admin";
@@ -69,6 +70,8 @@ const HomeworkPage = () => {
     );
   }
 
+  const { tutorialsData, totalItems, totalPages, page, setPage, } = useFetchAndCacheTutorials();
+
   useEffect(() => {
     (async () => {
       const responseData = await fetchHomework({ user: session?.data?.user });
@@ -91,7 +94,7 @@ const HomeworkPage = () => {
     }
   
     if (session.status === SESSION_UNAUTHENTICATED) {
-      localStorage.setItem(csFromUrl, "homework");
+      localStorage.setItem(lsKeyStr_fromUrl, "homework");
       router?.push("/dashboard/login");
     }
 

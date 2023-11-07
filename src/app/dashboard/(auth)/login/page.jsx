@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext, useTransition } from "react";
 import styles from "./page.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { initLocalStorageForTut } from '@/app/tutorial/page';
+import { initLocalStorageForTut } from '@/hooks/useFetchAndCacheTutorials';
 import { GlobalContext } from '@/context/GlobalContext';
 import { CircularProgress, CloseButton, Box, Alert, AlertTitle, AlertIcon, AlertDescription, Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
 import { LuUserCircle2 } from "react-icons/lu";
@@ -11,8 +11,8 @@ import PenguinBanner from "@/../public/horizontal-logo-title.png";
 import Image from "next/image";
 import { LOGIN_ERR_KEY, SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from "@/utils/index";
 
-const cacheTutPropMissing = (csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials) => {
-  return !localStorage.getItem(csCacheTimeStamp) || !localStorage.getItem(csCacheTutorials) || !localStorage.getItem(csShouldCacheTutorials);
+const cacheTutPropMissing = (lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials) => {
+  return !localStorage.getItem(lsKeyStr_cacheTimeStamp) || !localStorage.getItem(lsKeyStr_cacheTutPageArr) || !localStorage.getItem(lsKeyStr_shouldCacheTutorials);
 }
 
 const Login = ({ from }) => {
@@ -21,7 +21,7 @@ const Login = ({ from }) => {
   const params = useSearchParams();
   const [error, setError] = useState();
   const [success, setSuccess] = useState("");
-  const {csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials, csFromUrl } = useContext(GlobalContext);
+  const {lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials, lsKeyStr_fromUrl } = useContext(GlobalContext);
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSigningin, setIsSigningin] = useState(false);
@@ -44,10 +44,10 @@ const Login = ({ from }) => {
     else if (session.status === SESSION_AUTHENTICATED) {
 
       setLoading(true);
-      if (cacheTutPropMissing(csCacheTimeStamp, csCacheTutorials, csShouldCacheTutorials)) {
-        initLocalStorageForTut();
+      if (cacheTutPropMissing(lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials)) {
+        initLocalStorageForTut(lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials);
       } 
-      const fromUrl = localStorage.getItem(csFromUrl);
+      const fromUrl = localStorage.getItem(lsKeyStr_fromUrl);
       router?.push(`/${fromUrl}`);
     }
   }, [session.status]);
