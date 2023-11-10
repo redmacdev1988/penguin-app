@@ -10,7 +10,7 @@ import PhotoList from '@/components/Upload/PhotosList';
 import { fetchHomework } from '@/actions/homeworkActions';
 import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
 import { CircularProgress, Input, Button, Flex, Text, Heading } from '@chakra-ui/react'
-import useFetchAndCacheTutorials from "@/hooks/useFetchAndCacheTutorials";
+import useFetchAndCacheTutorialsForAdmin from "@/hooks/useFetchAndCacheTutorialsForAdmin";
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '6.8em'}}>
@@ -28,7 +28,6 @@ const HomeworkPage = () => {
  
   const authenticatedHTML = () => {
     const bUserAdmin = session?.data?.user.role === "admin";
-    console.log('bUserAdmin', bUserAdmin);
     return (
       <div className={styles.container}>
 
@@ -70,10 +69,11 @@ const HomeworkPage = () => {
     );
   }
 
+  useFetchAndCacheTutorialsForAdmin({bFull: true});
+  
   useEffect(() => {
     (async () => {
       const responseData = await fetchHomework({ user: session?.data?.user });
-      console.log('responseData', responseData);
       if (responseData) {
         const {allHmForUser, next_cursor} = responseData;
         setData([...allHmForUser]);

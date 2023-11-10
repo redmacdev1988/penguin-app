@@ -43,8 +43,8 @@ export const POST = async (request) => {
 
     await connect();
     Tutorial.insertMany(tutorialArr).then(function() {
-    }).catch(function(error){
-        console.log(error)
+    }).catch(function(error) {
+        console.log('ERROR in Tutorial.insertMany: ', error)
     });
 
     return error ? new NextResponse("Database Error", { status: 500 }) : new NextResponse("Tutorials have been cached.", { status: 201 })

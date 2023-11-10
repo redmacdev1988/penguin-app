@@ -91,7 +91,6 @@ const HomeworkCard = ({
         });
 
         if (res && res.status === 200) {
-          console.log('response ok', 'lets update corrections');
           onClickRefreshHomework();
           setUpdatingCorrection(false);
         } else {

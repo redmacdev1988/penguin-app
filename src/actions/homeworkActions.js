@@ -20,7 +20,6 @@ export const fetchHomework = async ({user, nextCursor, limit}) => {
   }
 
   if (url) {
-    console.log('===> url', url);
     try {
       const res = await fetch(url);
       if (res && res.status === 200) {

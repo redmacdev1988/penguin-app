@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext, useTransition } from "react";
 import styles from "./page.module.css";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { initLocalStorageForTut } from '@/hooks/useFetchAndCacheTutorials';
+import { initLocalStorageForTut } from '@/hooks/useFetchAndCacheTutorialsForAdmin';
 import { GlobalContext } from '@/context/GlobalContext';
 import { CircularProgress, CloseButton, Box, Alert, AlertTitle, AlertIcon, AlertDescription, Icon, Heading, InputGroup, Input, InputRightElement, InputLeftElement, Button } from '@chakra-ui/react'
 import { LuUserCircle2 } from "react-icons/lu";

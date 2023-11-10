@@ -7,8 +7,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 import { FiExternalLink } from 'react-icons/fi'
 import { Divider, AbsoluteCenter, Button, Box, Text, SimpleGrid, Card, CardHeader, CardBody, Heading, Icon, Link } from '@chakra-ui/react'
 import { SESSION_AUTHENTICATED, SESSION_UNAUTHENTICATED, SESSION_LOADING } from '@/utils/index';
-import useFetchAndCacheTutorials from "@/hooks/useFetchAndCacheTutorials";
-
+import useFetchAndCacheTutorialsForAdmin from "@/hooks/useFetchAndCacheTutorialsForAdmin";
 
 const loadingHTML = () => {
   return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
@@ -93,7 +92,8 @@ const TutorialList = () => {
   const [loading, setLoading] = useState(false);
   const { lsKeyStr_fromUrl } = useContext(GlobalContext);
 
-  const { tutorialsData, totalItems, totalPages, page, setPage, } = useFetchAndCacheTutorials();
+  const {tutorialsData, totalItems, totalPages, page, setPage } = useFetchAndCacheTutorialsForAdmin({bFull: false});
+
 
   useEffect(() => {
     if (session.status === SESSION_LOADING) {

@@ -18,7 +18,7 @@ import RickyABCDarkLogo from  "@/../public/rickyabc-dark-logo-370X280.png";
 
 import Image from "next/image";
 import { SESSION_AUTHENTICATED } from "@/utils/index";
-import { initLocalStorageForTut  } from '@/hooks/useFetchAndCacheTutorials';
+import { initLocalStorageForTut  } from '@/hooks/useFetchAndCacheTutorialsForAdmin';
 
 const links = [
     {
