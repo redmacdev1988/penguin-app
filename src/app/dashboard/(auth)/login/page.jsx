@@ -45,7 +45,7 @@ const Login = ({ from }) => {
 
       setLoading(true);
       if (cacheTutPropMissing(lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials)) {
-        initLocalStorageForTut(lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials);
+        initLocalStorageForTut({lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials});
       } 
       const fromUrl = localStorage.getItem(lsKeyStr_fromUrl);
       router?.push(`/${fromUrl}`);
