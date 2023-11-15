@@ -40,9 +40,9 @@ const Dashboard = () => {
   const { lsKeyStr_fromUrl } = useContext(GlobalContext);
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  
+
   const { data, mutate, error, isLoading } = useSWR(
-    `/api/homework?name=${session?.data?.user.name}&&limit=0`,
+    `/api/homework?name=${session?.data?.user.name}&&id=${session?.data?.user.email}&&limit=0`,
     fetcher
   );  
 
@@ -106,23 +106,15 @@ const Dashboard = () => {
   // when the data is updated, we need to re-render the react node
   useEffect(() => {
     if (data) {
-      const { allHmForUser } = data;
+      const { allHmForUser } = data;  
       setNumOfHms(allHmForUser.length);
-    }
-
-    if (data) {
-      const { allHmForUser } = data;
       const hmWithImprovements = allHmForUser.filter(hm => {
         const { improvementsURL } = hm;
         return improvementsURL;
       });
-
       setNumOfCorrected(hmWithImprovements.length);
-    }
 
-    if (data) {
-      const { allHmForUser } = data;
-      
+
       if (allHmForUser && Array.isArray(allHmForUser) && allHmForUser.length > 0) {
         const sortedByCreatedAt = allHmForUser.sort((a,b) => {
           const left = DateTime.fromISO(a.createdAt);
