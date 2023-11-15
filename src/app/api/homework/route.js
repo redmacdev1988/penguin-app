@@ -25,16 +25,15 @@ export const GET = async (request) => {
         const sort = '-_id';
         const limit = reqLimit || 5;
         const next = searchParams || null;
-        
+
         // if its me or admin, search result should be all entries that are NOT rtsao or admin
         // if its the normal student name, then give me entries with the student name
-        const userIdFilter = userRole === "admin" ? {$ne: userId}  :  userId;
-
+   
         const allHmForUser = await PenguinHomework.find({
             _id: next ?  // is there a next?
                 sort === '_id' ? { $gt: next } : { $lt: next } // if next, do this
               : { $exists: true }, // else, do this
-            userId: userIdFilter
+            userId: userRole === "admin" ? { $ne: userId }  :  userId
           }).limit(limit).sort(sort)
 
         const next_cursor = allHmForUser[limit - 1]?._id.toString() || null; 

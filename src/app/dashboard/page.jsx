@@ -42,7 +42,7 @@ const Dashboard = () => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, mutate, error, isLoading } = useSWR(
-    `/api/homework?name=${session?.data?.user.name}&&id=${session?.data?.user.email}&&limit=0`,
+    `/api/homework?name=${session?.data?.user.name}&&id=${session?.data?.user.email}&&limit=0&&role=${session?.data?.user.role}`,
     fetcher
   );  
 
