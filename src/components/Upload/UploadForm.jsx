@@ -195,7 +195,7 @@ const UploadForm = ({ refreshHomeworkData }) => {
                             <Flex p={5} w={"100%"} justifyContent={"space-between"} alignItems={"center"}>
                                 <Box flex='1' bg='#111'>
                                     <Flex direction={"column"}>
-                                        <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>{files.length} files loaded</Heading>
+                                        {/* <Heading size="lg" fontFamily={"mono"} color={"gray.500"}>{files.length} files loaded</Heading> */}
                                         {/* Preview Images */}
                                         <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', margin: '10px 0'}}>
                                             {
