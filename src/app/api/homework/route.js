@@ -18,12 +18,14 @@ export const GET = async (request) => {
     const searchParams = url.searchParams.get("searchParams");
     const reqLimit = url.searchParams.get("limit");
 
-    console.log('GET', `${url}, ${userId}, ${userRole}`);
+    // console.log('GET', `${url}, ${userId}, ${userRole}`);
     try {
         await connect();
-
         const sort = '-_id';
-        const limit = reqLimit || 5;
+        let limit = (reqLimit > 0) ? reqLimit : 0;
+        if (reqLimit === null || reqLimit === undefined) {
+            limit = 5;
+        }
         const next = searchParams || null;
 
         // if its me or admin, search result should be all entries that are NOT rtsao or admin

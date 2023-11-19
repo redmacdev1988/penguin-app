@@ -92,7 +92,7 @@ const TutorialList = () => {
   const [loading, setLoading] = useState(false);
   const { lsKeyStr_fromUrl } = useContext(GlobalContext);
 
-  const {tutorialsData, totalItems, totalPages, page, setPage } = useFetchAndCacheTutorialsForAdmin({bFull: false});
+  const {tutorialsData, totalItems, totalPages, page, setPage } = useFetchAndCacheTutorialsForAdmin({bFull: false, isAdmin: session?.data?.user.role === "admin"});
 
 
   useEffect(() => {

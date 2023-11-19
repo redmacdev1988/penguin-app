@@ -8,7 +8,6 @@ import path from 'path'
 import PenguinHomework from '@/models/PenguinHomework';
 import { revalidatePath } from 'next/cache';
 import connect from "@/utils/db";
-import { NextResponse } from "next/server";
 import DatauriParser from 'datauri/parser';
 
 cloudinary.config({

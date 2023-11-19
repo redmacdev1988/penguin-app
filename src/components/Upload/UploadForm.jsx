@@ -33,7 +33,6 @@ const UploadForm = ({ refreshHomeworkData }) => {
         name: 'Homework',
         defaultValue: VOCAB_STR,
         onChange: (titleStr) => {
-            console.log('on change', titleStr);
             setHomeworkType(titleStr);
         },
     })

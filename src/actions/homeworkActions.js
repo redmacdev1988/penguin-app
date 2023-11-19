@@ -11,11 +11,11 @@ export const fetchHomework = async ({user, nextCursor, limit}) => {
 
   let url;
 
-  if (user && !nextCursor && !limit) {
+  if (user && !nextCursor && (limit === null || limit === undefined)) {
     url = firstPageURL(user);
-  } else if (user && nextCursor && !limit) {
+  } else if (user && nextCursor && (limit === null || limit === undefined)) {
     url = nthPageURL(user, nextCursor);
-  } else if (user && !nextCursor && limit) {
+  } else if (user && !nextCursor && limit >= 0) {
     url = pageWithLimitURL(user, limit);
   }
 

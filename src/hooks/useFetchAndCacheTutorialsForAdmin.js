@@ -1,7 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "@/context/GlobalContext";
-import { useSession } from "next-auth/react";
-import { SESSION_AUTHENTICATED } from '@/utils/index';
 
 const API_TUTORIALS_URL = "/api/tutorials";
 const HOURS = 168;
@@ -18,7 +16,6 @@ export const initLocalStorageForTut = ({lsKeyStr_cacheTimeStamp, lsKeyStr_cacheT
 }
 
 const withinHours = (timestamp) => (Math.floor((Date.now() - timestamp)/1000) < HOURS * 3600);
-
 
 const deleteTutorialsInDB = async () => {
   try {
@@ -114,26 +111,12 @@ const alreadyCachedWithinHours = ({lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPag
   return (strShouldCache === 'no' && bWithinHours);
 }
 
-
-
 // full fetch is fetch everything (used in homework)
 // partial fetch is page by page (used in tutorials)
 
 // tutorialsData, totalItems, totalPages, page, setPage
-const useFetchAndCacheTutorialsForAdmin = ({bFull}) => {
-  const session = useSession();
-  if (session.status !== SESSION_AUTHENTICATED) {
-    return {
-      tutorialsData: null,
-      totalItems: 0,
-      totalPages: 0,
-      page: -1,
-      setPage: null
-    }
-  };
-
-  const isAdmin = session?.data?.user?.role === 'admin';
-
+const useFetchAndCacheTutorialsForAdmin = ({bFull, isAdmin}) => {
+   
   const { lsKeyStr_numOfTutPages, lsKeyStr_cacheTimeStamp, lsKeyStr_cacheTutPageArr, lsKeyStr_shouldCacheTutorials } = useContext(GlobalContext);
   const [page, setPage] = useState(1);
   const [tutorialsData, setTutorialsData] = useState();
@@ -145,7 +128,8 @@ const useFetchAndCacheTutorialsForAdmin = ({bFull}) => {
 
   // standard fetch from wordpress
   useEffect(() => {
-    fetch(url)
+    try {
+      fetch(url)
       .then((res) => { 
         setTotalItems(res.headers.get('x-wp-total'));
         setTotalPages(res.headers.get('X-WP-TotalPages'));
@@ -154,7 +138,12 @@ const useFetchAndCacheTutorialsForAdmin = ({bFull}) => {
       }).then(data => {
           setTutorialsData(data);
       });
+    } catch (e) {
+      console.log(`Error fetching from ${url}`, e);
+    }
+    
   }, [page])
+
 
   // when new data comes in, we re-cache once a week and only through the admin account
   useEffect(() => {
