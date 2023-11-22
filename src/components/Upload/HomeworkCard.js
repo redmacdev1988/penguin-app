@@ -66,6 +66,7 @@ const HomeworkCard = ({
     
     const inputSlug = e.target[0].value;
     if (!inputSlug) {
+      setUpdatingCorrection(false);
       return toast({
           position: 'top',
           title: 'Slug Input',
@@ -98,8 +99,15 @@ const HomeworkCard = ({
         }
   
       } else {
-        alert(`Sorry, correction link for ${inputSlug} not available.`);
-        return;
+        setUpdatingCorrection(false);
+        return toast({
+            position: 'top',
+            title: 'Erroneous Slug',
+            description: `Sorry, correction link for ${inputSlug} not available.`,
+            status: 'warning',
+            duration: 8000,
+            isClosable: true,
+        });
       }
     } catch (err) { console.log(err); }
   };

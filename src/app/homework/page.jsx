@@ -30,6 +30,7 @@ const HomeworkPage = () => {
   const bUserAdmin = session?.data?.user.role === "admin";
   const [loading, setLoading] = useState(false);
   const [updatedUser, setUpdatedUser] = useState(null);
+  const [updatingSelectStudent, setUpdatingSelectStudent] = useState(false);
 
   useFetchAndCacheTutorialsForAdmin({bFull: true, isAdmin: bUserAdmin});
   
@@ -81,6 +82,8 @@ const HomeworkPage = () => {
 
   const handleStudentOnChange = (e) => {
 
+    setUpdatingSelectStudent(true);
+
     if (!e.target.value) {
       console.log(`User wants to look at ALL users`);
       setUpdatedUser(session?.data?.user);
@@ -90,6 +93,8 @@ const HomeworkPage = () => {
           setData([...allHmForUser]);
           setNextCursor(next_cursor);
         }
+
+        setUpdatingSelectStudent(false);
       });
       return;
     } 
@@ -108,15 +113,16 @@ const HomeworkPage = () => {
         setData([...allHmForUser]);
         setNextCursor(next_cursor);
       }
+      setUpdatingSelectStudent(false);
     });
   }
 
 
   if (loading) return loadingHTML();
 
-  return logged && (
+  return logged && !loading && (
     <div className={styles.container}>
-
+      {updatingSelectStudent && <CircularProgress isIndeterminate color='green.300' />}
       {bUserAdmin && students && Array.isArray(students) && 
       <Select
         onChange={handleStudentOnChange}
