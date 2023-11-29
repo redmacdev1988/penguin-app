@@ -45,6 +45,7 @@ const HomeworkPage = () => {
 
       const responseUsers = await fetchUsers({});
       if(responseUsers) {
+        console.log('response: ', responseUsers);
         const {allUsers} = responseUsers;
         setStudents(allUsers);
       }

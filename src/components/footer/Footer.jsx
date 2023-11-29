@@ -18,7 +18,7 @@ import {
 const Footer = () => {
     return (
       <div className={styles.container}>
-        <div>©2023 RickyABC. All rights reserved. v1.1122.1606</div>
+        <div>©2023 RickyABC. All rights reserved. v1.1.1129.0820</div>
 
         <Popover style={{color: 'black'}}>
           <PopoverTrigger>

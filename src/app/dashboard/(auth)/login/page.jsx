@@ -62,7 +62,7 @@ const Login = ({ from }) => {
 
   const loadingHTML = () => {
     return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '4.8em'}}>
-      <h1>Logging in...</h1>
+      <h1>Verifying...</h1>
     </div>;
   }
 
